@@ -1,7 +1,14 @@
 import NextAuth from "next-auth"
 import authConfig from "./auth.config"
- 
+import { publiRoutes } from "./routes";
 export const { auth: middleware } = NextAuth(authConfig)
+
+
+export default middleware((req)=>{
+  const { nextUrl, auth } = req
+  const isLoggedIn = !!auth?.user
+  //TODO : VALIDATE ACCESS TO PUBLIC ROUTES AND PROTECTED ROUTES
+});
 
 export const config = {
     

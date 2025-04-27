@@ -14,13 +14,54 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model User {
-  id             Int      @id @default(autoincrement())
+  id             String    @id @default(cuid())
   name           String?
-  lastName       String?  @unique
-  lastName2      String?  @unique
-  email          String?  @unique
-  hashedPassword String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  lastName       String?   @unique
+  lastName2      String?   @unique
+  email          String    @unique
+  emailVerified  DateTime? @map("email_verified")
+  image          String?
+  hashedPassword String?   @map("hashed_password")
+  role           Role      @default(USER)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  accounts Account[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
 }

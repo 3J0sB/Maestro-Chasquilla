@@ -1,7 +1,11 @@
+
 import Credentials from "next-auth/providers/credentials"
 import type { NextAuthConfig } from "next-auth"
- 
-// Notice this is only an object, not a full Auth.js instance
+import { loginSchema } from "./lib/zod"
+import { getUserByEmail } from "../utils/getUserByEmail"
+import { compare} from "bcrypt-ts";
+import { error } from "console";
+
 export default {
   providers: [
     Credentials({
@@ -11,18 +15,30 @@ export default {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        console.log("credentials", credentials)
+        const {data, success} = loginSchema.safeParse(credentials)
 
-        if (credentials.email !== "test@test.com") {
-            throw new Error("Invalid email")
+        if (!success) {
+          throw new Error("Invalid credentials 1")
         }
 
+        const response = await fetch(`${process.env.NEXTAUTH_URL}/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: data.email,
+              password: data.password
+            }),
+          })
 
-        return{
-            id: "1",
-            name: "Test User",
-            email: "test@test.com"
-        }
+        const user = await response.json()
+        
+
+        if (!response.ok || !user) {
+            throw new Error(user.error || "Invalid credentials 2")
+          }
+
+        return user;
+        
       },
     }),
 

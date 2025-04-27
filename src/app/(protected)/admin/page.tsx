@@ -4,14 +4,14 @@ import LogoutButton from '@/components/logoutButton'
 async function admin() {
     const session = await auth()
  
-    if (!session) {
-      return <div>Not authenticated</div>
+    if (session?.user.role !== 'ADMIN') {
+      return <div>YOU R NOT AN ADMIN<LogoutButton/></div>
     }
    
     return (
       <div className="container">
         <header>
-            <LogoutButton></LogoutButton>
+            <LogoutButton/>
         </header>
         <pre>{JSON.stringify(session, null, 2)}</pre>
       </div>
