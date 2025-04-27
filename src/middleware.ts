@@ -1,21 +1,64 @@
 import NextAuth from "next-auth"
 import authConfig from "./auth.config"
-import { publiRoutes } from "./routes";
-export const { auth: middleware } = NextAuth(authConfig)
+import { publicRoutes, authRoutes, protectedRoutes } from "./routes";
+import { NextResponse } from "next/server";
 
 
-export default middleware((req)=>{
-  const { nextUrl, auth } = req
-  const isLoggedIn = !!auth?.user
-  //TODO : VALIDATE ACCESS TO PUBLIC ROUTES AND PROTECTED ROUTES
+const { auth: middleware } = NextAuth(authConfig)
+
+
+export default middleware((req) => {
+  const { nextUrl } = req;
+  const isLoggedIn = !!req.auth;
+
+  console.log("session from middleware", {
+    user: req.auth?.user,
+    id: req.auth?.user?.id,
+    role: req.auth?.user?.role,
+    expires: req.auth?.expires
+  });
+  
+  const isPublicRoute = publicRoutes.some(route =>
+    nextUrl.pathname === route || nextUrl.pathname.startsWith('/api/auth/')
+  );
+
+  console.log("isPublicRoute", isPublicRoute)
+
+  const isAuthRoute = authRoutes.some(route =>
+    nextUrl.pathname === route
+  );
+
+  // if route is api auth or public, do nothing
+  if (isAuthRoute || isPublicRoute) {
+    console.log("[MIDDLEWARE]--> do nothing 1")
+    return NextResponse.next();
+  }
+  if (isAuthRoute) {
+    // if is already loged in, send it directly to /landing page
+    if (isLoggedIn) {
+      console.log("[MIDDLEWARE]--> sending to /home")
+      return NextResponse.redirect(new URL('/home', nextUrl));
+    }
+    // else, do nothing, let the user fill in the login form
+    console.log("[MIDDLEWARE]--> do nothin 2")
+    return NextResponse.next();
+  }
+
+
+  // if user is not logged in and route is not public, send him to /login page
+  if (!isLoggedIn && !isPublicRoute) {
+    console.log("[MIDDLEWARE]--> sending to /login")
+    return NextResponse.redirect(new URL('/login', nextUrl));
+  }
+  // any other case, do nothing
+  console.log("[MIDDLEWARE]--> do nothin 3")
+  return NextResponse.next();
 });
 
 export const config = {
-    
-    matcher: [
-      // Skip Next.js internals and all static files, unless found in search params
-      '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-      // Always run for API routes
-      '/(api|trpc)(.*)',
-    ],
-  }
+
+
+  matcher: [
+    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
+  ],
+}

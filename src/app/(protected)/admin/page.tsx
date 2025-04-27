@@ -3,9 +3,14 @@ import React from 'react'
 import LogoutButton from '@/components/logoutButton'
 async function admin() {
     const session = await auth()
- 
+    console.log("session", session)
     if (session?.user.role !== 'ADMIN') {
-      return <div>YOU R NOT AN ADMIN<LogoutButton/></div>
+      return(      
+      <div>
+        <div>YOU R NOT AN ADMIN<LogoutButton/></div>
+        <pre>{JSON.stringify(session, null, 2)}</pre>
+      </div>) 
+
     }
    
     return (
