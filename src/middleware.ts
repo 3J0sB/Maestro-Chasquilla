@@ -11,12 +11,12 @@ export default middleware((req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
 
-  console.log("session from middleware", {
-    user: req.auth?.user,
-    id: req.auth?.user?.id,
-    role: req.auth?.user?.role,
-    expires: req.auth?.expires
-  });
+  // console.log("session from middleware", {
+  //   user: req.auth?.user,
+  //   id: req.auth?.user?.id,
+  //   role: req.auth?.user?.role,
+  //   expires: req.auth?.expires
+  // });
   
   const isPublicRoute = publicRoutes.some(route =>
     nextUrl.pathname === route || nextUrl.pathname.startsWith('/api/auth/')
@@ -59,6 +59,6 @@ export const config = {
 
 
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
+    '/((?!api|_next/static|_next/image|img|icons|favicon.ico|sitemap.xml|robots.txt).*)',
   ],
 }
