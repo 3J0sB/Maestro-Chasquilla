@@ -45,8 +45,7 @@ function LoginPage() {
             priority
           />
         </div>
-
-        {/* Lado derecho con formulario */}
+        <div className="hidden md:block w-[2px] border rounded-2xl h-auto self-stretch border-gray-200 bg-gray-200 my-6"></div>        {/* Lado derecho con formulario */}
         <div className="w-full md:w-1/2 py-8 px-8">
           <div className="w-full max-w-md mx-auto">
             {/* Logo */}
