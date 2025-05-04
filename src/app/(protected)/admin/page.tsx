@@ -1,6 +1,8 @@
 import { auth } from '@/auth'
 import React from 'react'
 import LogoutButton from '@/components/logoutButton'
+
+
 async function admin() {
     const session = await auth()
     console.log("session", session)
