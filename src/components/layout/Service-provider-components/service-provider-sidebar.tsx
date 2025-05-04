@@ -13,6 +13,11 @@ type SidebarLinkProps = {
   active?: boolean;
 };
 
+type SidebarProps = {
+  userName: string;
+  userType: string;
+}
+
 const SidebarLink = ({ href, icon, text, active }: SidebarLinkProps) => {
   return (
     <Link 
@@ -29,14 +34,14 @@ const SidebarLink = ({ href, icon, text, active }: SidebarLinkProps) => {
   );
 };
 
-function ServiceProviderSidebar() {
+function ServiceProviderSidebar({userName, userType}: SidebarProps) {
   const pathname = usePathname();
   
   return (
     <aside className="w-64 h-screen bg-white border-r border-gray-200 flex flex-col">
       {/* Logo */}
       <div className="p-4 border-b border-gray-100">
-        <Link href="/serviceprovider/dashboard" className="flex items-center gap-2">
+        <Link href="/home" className="flex items-center gap-2">
           <Image 
             src="/img/miau.jpg" 
             width={40} 
@@ -55,9 +60,7 @@ function ServiceProviderSidebar() {
         <SidebarLink 
           href="/serviceprovider/dashboard" 
           icon={
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-            </svg>
+            <Image src={'icons/view-dashboard-outline.svg'} alt='dashboard' height={20} width={20}/>
           } 
           text="Dashboard" 
           active={pathname === "/serviceprovider/dashboard"}
@@ -135,8 +138,8 @@ function ServiceProviderSidebar() {
             </svg>
           </div>
           <div>
-            <p className="text-sm font-medium text-gray-700">Juan Pérez</p>
-            <p className="text-xs text-gray-500">Cuenta Profesional</p>
+            <p className="text-sm font-medium text-gray-700">{userName}</p>
+            <p className="text-xs text-gray-500">Cuenta {userType}</p>
           </div>
         </Link>
         <div className='flex justify-center mt-4'>

@@ -33,7 +33,7 @@ export default async function RootLayout({
       
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SessionProvider session={session}>
+        <SessionProvider session={session} key={session?.user.id}>
         {children}
         </SessionProvider>
       </body>

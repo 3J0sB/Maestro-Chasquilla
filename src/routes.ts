@@ -19,5 +19,5 @@ export const authRoutes = [
     '/auth/login',
     '/auth/register',
     '/login',
-    '/register'
+    '/register',
   ];

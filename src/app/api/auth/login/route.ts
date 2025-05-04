@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
   if (!isValidPassword) {
     return NextResponse.json({ error: "Credenciales invalidas" }, { status: 401 })
   }
-  console.log("user from endpoint --->", user)
+  // console.log("user from endpoint --->", user)
   return NextResponse.json({
     id: user.id,
     name: user.name,

@@ -36,8 +36,8 @@ export default middleware((req) => {
   if (isAuthRoute) {
     // if is already loged in, send it directly to /landing page
     if (isLoggedIn) {
-      console.log("[MIDDLEWARE]--> sending to /home")
-      return NextResponse.redirect(new URL('/home', nextUrl));
+      console.log("[MIDDLEWARE]--> sending to /redirect")
+      return NextResponse.redirect(new URL('/redirect', nextUrl));
     }
     // else, do nothing, let the user fill in the login form
     console.log("[MIDDLEWARE]--> do nothin 2")

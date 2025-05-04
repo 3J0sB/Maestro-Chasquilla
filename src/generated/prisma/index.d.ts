@@ -35,7 +35,8 @@ export type VerificationToken = $Result.DefaultSelection<Prisma.$VerificationTok
 export namespace $Enums {
   export const Role: {
   USER: 'USER',
-  ADMIN: 'ADMIN'
+  ADMIN: 'ADMIN',
+  SERVICE_PROVIDER: 'SERVICE_PROVIDER'
 };
 
 export type Role = (typeof Role)[keyof typeof Role]

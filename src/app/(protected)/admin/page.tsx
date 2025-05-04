@@ -1,16 +1,16 @@
 import { auth } from '@/auth'
 import React from 'react'
 import LogoutButton from '@/components/logoutButton'
+import AccessDenied from '@/components/Access-denied/access-denied'
 
 
 async function admin() {
     const session = await auth()
-    console.log("session", session)
+    // console.log("session", session)
     if (session?.user.role !== 'ADMIN') {
       return(      
       <div>
-        <div>YOU R NOT AN ADMIN<LogoutButton/></div>
-        <pre>{JSON.stringify(session, null, 2)}</pre>
+        <AccessDenied/>
       </div>) 
 
     }
