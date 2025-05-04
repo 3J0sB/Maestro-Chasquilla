@@ -18,7 +18,7 @@ export default {
         const {data, success} = loginSchema.safeParse(credentials)
 
         if (!success) {
-          throw new Error("Invalid credentials 1")
+          throw new Error("Email o contraseña inválidos")
         }
 
         const response = await fetch(`${process.env.NEXTAUTH_URL}/login`, {
