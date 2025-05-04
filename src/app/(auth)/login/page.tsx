@@ -26,7 +26,7 @@ function LoginPage() {
         setError(res.error)
       } else {
         setError(null)
-        router.push("/home")
+        router.push("/redirect")
       }
     })
   })

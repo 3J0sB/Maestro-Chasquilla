@@ -12,6 +12,7 @@ export const protectedRoutes = [
     '/admin',
     '/admin/:path*',
     '/home',
+    '/redirect',
 
 ]
 
