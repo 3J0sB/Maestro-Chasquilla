@@ -32,15 +32,17 @@ model User {
   role           Role      @default(USER)
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime? @map("deleted_at")
 
-  accounts Account[]
-  services Services[]
+  accounts       Account[]
+  services       Services[]
+  serviceRequest ServiceRequest[]
 
   @@map("users")
 }
 
 model Services {
-  id              String   @id @default(cuid())
+  id              String    @id @default(cuid())
   title           String
   price           Float?
   minServicePrice Float?
@@ -50,12 +52,32 @@ model Services {
   serviceTag2     String?
   serviceTag3     String?
   image           String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  userId          String   @map("user_id") 
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime? @map("deleted_at")
+  userId          String    @map("user_id")
+
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  serviceRequest ServiceRequest[]
 
   @@map("services")
+}
+
+model ServiceRequest {
+  id         String    @id @default(cuid())
+  message    String
+  status     String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime? @map("deleted_at")
+  providerId String?   @map("provider_id")
+  consumerId String    @map("consumer_id")
+  serviceId  String    @map("service_id")
+
+  service Services @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  user    User     @relation(fields: [consumerId], references: [id], onDelete: Cascade)
+
+  @@map("service_request")
 }
 
 model Account {

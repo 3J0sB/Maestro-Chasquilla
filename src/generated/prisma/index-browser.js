@@ -128,7 +128,8 @@ exports.Prisma.UserScalarFieldEnum = {
   hashedPassword: 'hashedPassword',
   role: 'role',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.ServicesScalarFieldEnum = {
@@ -144,7 +145,20 @@ exports.Prisma.ServicesScalarFieldEnum = {
   image: 'image',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
   userId: 'userId'
+};
+
+exports.Prisma.ServiceRequestScalarFieldEnum = {
+  id: 'id',
+  message: 'message',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
+  providerId: 'providerId',
+  consumerId: 'consumerId',
+  serviceId: 'serviceId'
 };
 
 exports.Prisma.AccountScalarFieldEnum = {
@@ -191,6 +205,7 @@ exports.Role = exports.$Enums.Role = {
 exports.Prisma.ModelName = {
   User: 'User',
   Services: 'Services',
+  ServiceRequest: 'ServiceRequest',
   Account: 'Account',
   VerificationToken: 'VerificationToken'
 };

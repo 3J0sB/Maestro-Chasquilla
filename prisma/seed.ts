@@ -86,6 +86,19 @@ async function main() {
     }
   })
   console.log(`[SEED] ---> Created ServiceTest2 with id: ${serviceTest3.id}`)
+
+
+  const serviceRequestTest = await prisma.serviceRequest.create({
+    data: {
+      consumerId: ConsumerUser.id,
+      serviceId: serviceTest.id,
+      providerId: ServiceProviderUser.id,
+      status: 'PENDING',
+      message: 'This is a test service request',
+    }
+  })
+  // console.table(serviceRequestTest)
+  console.log(`[SEED] ---> Created Service request test with id: ${serviceRequestTest.id}`)
 }
 main()
   .then(async () => {

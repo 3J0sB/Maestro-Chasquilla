@@ -86,7 +86,7 @@ function Home() {
   const serviceTypes = ['all', ...new Set(requestsTestData.map(request => request.serviceType))];
 
   // Buscar en los campos relevantes
-  const searchInRequest = (request: any	, query: string) => {
+  const searchInRequest = (request: any, query: string) => {
     const searchTerms = query.toLowerCase().trim();
     if (!searchTerms) return true;
 
@@ -137,7 +137,7 @@ function Home() {
         <div className="mb-4">
           <div className="border border-gray-200 rounded-lg p-4 bg-white shadow-md">
             <div className="mb-6">
-              
+
               <div className='flex justify-between items-center mb-4'>
                 <h2 className="text-xl font-semibold mb-4">Solicitudes Recientes</h2>
                 <div className="flex flex-col md:flex-row md:justify-end gap-3">
@@ -183,7 +183,7 @@ function Home() {
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Buscar por cliente, tipo de servicio o descripción..."
+                      placeholder="Busca por cliente, tipo de servicio o descripción..."
                       className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     />
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
