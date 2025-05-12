@@ -43,7 +43,7 @@ function RequestCard({
             <p className="text-xs sm:text-sm text-gray-500">{serviceType}</p>
           </div>
         </div>
-        
+
         <div className="flex gap-2 self-start sm:self-center">
           {isNew && (
             <span className="px-2 py-0.5 sm:py-1 bg-blue-50 text-blue-600 rounded-md text-xs font-medium">
@@ -57,12 +57,12 @@ function RequestCard({
           )}
         </div>
       </div>
-      
+
       {/* Request description */}
       <p className="text-gray-700 mb-3 text-sm sm:text-base line-clamp-2">
         {description}
       </p>
-      
+
       {/* Footer: Date and action buttons */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mt-4 pt-2 border-t border-gray-100">
         <div className="flex items-center text-gray-500 text-xs sm:text-sm">
@@ -71,21 +71,21 @@ function RequestCard({
           </svg>
           Recibido: {requestDate}
         </div>
-        
+
         <div className="flex gap-2 w-full sm:w-auto">
-          <button 
+          <button
             onClick={onDecline}
             className="px-3 sm:px-4 py-1.5 text-xs sm:text-sm cursor-pointer border border-gray-200 rounded-md hover:bg-gray-50 transition-colors flex-1 sm:flex-none"
           >
             Rechazar
           </button>
-          <button 
+          <button
             onClick={onAccept}
             className="px-3 sm:px-4 py-1.5 text-xs sm:text-sm cursor-pointer bg-orange-500 hover:bg-orange-600 text-white rounded-md transition-colors flex-1 sm:flex-none"
           >
             Aceptar
           </button>
-          <button 
+          <button
             onClick={onMessage}
             className="p-1.5 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
             aria-label="Enviar mensaje al cliente"

@@ -8,7 +8,7 @@ import RequestCard from '@/components/layout/Service-provider-components/Service
 
 function Home() {
   const { status, data: session } = useSession();
-  
+
 
   const requestsTestData = [
     {
@@ -29,7 +29,7 @@ function Home() {
       requestDate: "5 Mayo, 2025 - 16:45",
       isNew: false,
       isPriority: false,
-      clientAvatar: "/img/avatars/client2.jpg", 
+      clientAvatar: "/img/avatars/client2.jpg",
       onAccept: () => console.log("Solicitud de María aceptada"),
       onDecline: () => console.log("Solicitud de María rechazada"),
       onMessage: () => console.log("Enviando mensaje a María")
@@ -56,7 +56,7 @@ function Home() {
       onDecline: () => console.log("Solicitud de Ana rechazada"),
       onMessage: () => console.log("Enviando mensaje a Ana")
     },
-        {
+    {
       clientName: "Ana López",
       serviceType: "Carpintería",
       description: "Reparación de puerta de armario que no cierra correctamente. La bisagra parece estar suelta.",
@@ -67,7 +67,7 @@ function Home() {
       onDecline: () => console.log("Solicitud de Ana rechazada"),
       onMessage: () => console.log("Enviando mensaje a Ana")
     },
-        {
+    {
       clientName: "Ana López",
       serviceType: "Carpintería",
       description: "Reparación de puerta de armario que no cierra correctamente. La bisagra parece estar suelta.",
@@ -81,7 +81,7 @@ function Home() {
   ];
 
   if (!session || session.user.role !== 'SERVICE_PROVIDER') {
-    return <AccessDenied 
+    return <AccessDenied
       message="Esta área es solo para proveedores de servicios"
     />;
   }
@@ -92,18 +92,18 @@ function Home() {
         userName={session?.user.name || ''}
         userType={session?.user.role || ''}
       />
-      
+
       <div className="flex-1 p-8 overflow-y-auto px-40">
         <h1 className="text-2xl font-bold mb-2">Panel de emprendedor</h1>
         <p className="mb-6">Bienvenido, {session?.user.name}!</p>
-        
+
         <div className="mb-8">
-          <HomeCards/>
+          <HomeCards />
         </div>
-        
+
         <div className="mb-4">
-          <h2 className="text-xl font-semibold mb-4">Solicitudes Recientes</h2>
-          <div className="space-y-4">
+          <div className="space-y-4 border border-gray-200 rounded-lg p-4 bg-white shadow-md">
+            <h2 className="text-xl font-semibold mb-4">Solicitudes Recientes</h2>
             {requestsTestData.map((request, index) => (
               <RequestCard
                 key={index}
