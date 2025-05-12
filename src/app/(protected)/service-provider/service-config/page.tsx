@@ -18,7 +18,9 @@ function ServiceConfig() {
                 userName={session?.user.name || ''}
                 userType={session?.user.role || ''}
             />
+            <div className='flex p-8 overflow-y-auto px-40'>
 
+            </div>
         </div>
     )
 }
