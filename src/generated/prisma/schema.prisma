@@ -34,8 +34,28 @@ model User {
   updatedAt      DateTime  @updatedAt
 
   accounts Account[]
+  services Services[]
 
   @@map("users")
+}
+
+model Services {
+  id              String   @id @default(cuid())
+  title           String
+  price           Float?
+  minServicePrice Float?
+  maxServicePrice Float?
+  description     String?
+  serviceTag      String?
+  serviceTag2     String?
+  serviceTag3     String?
+  image           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  userId          String   @map("user_id")
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("services")
 }
 
 model Account {

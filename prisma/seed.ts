@@ -5,25 +5,25 @@ const prisma = new PrismaClient()
 async function main() {
   const ServiceProviderUser = await prisma.user.create({
     data: {
-        email: 'Service@test.com',
-        hashedPassword: await bcrypt.hash('1234', 10),
-        name: 'Service provider User',
-        lastName: 'service provider',
-        lastName2: 'service provider',
-        role: 'SERVICE_PROVIDER',
+      email: 'Service@test.com',
+      hashedPassword: await bcrypt.hash('1234', 10),
+      name: 'Service provider User',
+      lastName: 'service provider',
+      lastName2: 'service provider',
+      role: 'SERVICE_PROVIDER',
     },
   })
 
   console.log(`[SEED] ---> Created SERVICE PROVIDER user with id: ${ServiceProviderUser.id}`)
-    
+
   const ConsumerUser = await prisma.user.create({
     data: {
-        email: 'Consumer@test.com',
-        hashedPassword: await bcrypt.hash('1234', 10),
-        name: 'Consumer User',
-        lastName: 'Consumer User',
-        lastName2: 'Consumer User ',
-        role: 'USER',
+      email: 'Consumer@test.com',
+      hashedPassword: await bcrypt.hash('1234', 10),
+      name: 'Consumer User',
+      lastName: 'Consumer User',
+      lastName2: 'Consumer User ',
+      role: 'USER',
     },
   })
 
@@ -31,17 +31,61 @@ async function main() {
 
   const AdminUser = await prisma.user.create({
     data: {
-        email: 'Admin@test.com',
-        hashedPassword: await bcrypt.hash('1234', 10),
-        name: 'Admin User',
-        lastName: 'Admin User',
-        lastName2: 'Admin User ',
-        role: 'ADMIN',
+      email: 'Admin@test.com',
+      hashedPassword: await bcrypt.hash('1234', 10),
+      name: 'Admin User',
+      lastName: 'Admin User',
+      lastName2: 'Admin User ',
+      role: 'ADMIN',
     },
   })
-  
+
   console.log(`[SEED] ---> Created ADMIN user with id: ${AdminUser.id}`)
 
+
+  const serviceTest = await prisma.services.create({
+    data: {
+      title: 'Test Service',
+      price: 100,
+      description: 'This is a test service',
+      userId: ServiceProviderUser.id,
+      serviceTag: 'Test Tag1',
+      serviceTag2: 'Test Tag2',
+      serviceTag3: 'Test Tag3',
+    }
+  })
+
+  console.log(`[SEED] ---> Created ServiceTest with id: ${serviceTest.id}`)
+
+  const serviceTest2 = await prisma.services.create({
+    data: {
+      title: 'Test Service2',
+      price: 500,
+      minServicePrice: 50,
+      maxServicePrice: 1000,
+      description: 'This is a test service',
+      userId: ServiceProviderUser.id,
+      serviceTag: 'Test Tag1',
+      serviceTag2: 'Test Tag2',
+      serviceTag3: 'Test Tag3',
+    }
+  })
+  console.log(`[SEED] ---> Created ServiceTest2 with id: ${serviceTest2.id}`)
+
+  const serviceTest3 = await prisma.services.create({
+    data: {
+      title: 'Test Service3',
+      price: 500,
+      minServicePrice: 50,
+      maxServicePrice: 1000,
+      description: 'This is a test service',
+      userId: ServiceProviderUser.id,
+      serviceTag: 'Test Tag1',
+      serviceTag2: 'Test Tag2',
+      serviceTag3: 'Test Tag3',
+    }
+  })
+  console.log(`[SEED] ---> Created ServiceTest2 with id: ${serviceTest3.id}`)
 }
 main()
   .then(async () => {

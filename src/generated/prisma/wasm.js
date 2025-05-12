@@ -131,6 +131,22 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ServicesScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  price: 'price',
+  minServicePrice: 'minServicePrice',
+  maxServicePrice: 'maxServicePrice',
+  description: 'description',
+  serviceTag: 'serviceTag',
+  serviceTag2: 'serviceTag2',
+  serviceTag3: 'serviceTag3',
+  image: 'image',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId'
+};
+
 exports.Prisma.AccountScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -174,6 +190,7 @@ exports.Role = exports.$Enums.Role = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  Services: 'Services',
   Account: 'Account',
   VerificationToken: 'VerificationToken'
 };
