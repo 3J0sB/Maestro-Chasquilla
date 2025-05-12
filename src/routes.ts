@@ -4,7 +4,7 @@ export const publicRoutes = [
     '/auth/register',
     '/api/auth',
     '/favicon.ico',
-    '/login',
+
     '/register'
   ];
 
@@ -19,6 +19,6 @@ export const protectedRoutes = [
 export const authRoutes = [
     '/auth/login',
     '/auth/register',
-    '/login',
     '/register',
+    '/login',
   ];
