@@ -51,6 +51,7 @@ model Services {
   serviceTag      String?
   serviceTag2     String?
   serviceTag3     String?
+  status          String?
   image           String?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
