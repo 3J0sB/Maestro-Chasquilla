@@ -27,11 +27,11 @@ export default function RedirectPage() {
 
         switch (userRole) {
             case "SERVICE_PROVIDER":
-                redirectPath = "/home"
+                redirectPath = "/service-provider/home"
                 setMessage("Redirigiendo al panel de proveedor de servicios...")
                 break
             case "ADMIN":
-                redirectPath = "/admin"
+                redirectPath = "/admin/home"
                 setMessage("Redirigiendo al panel de administración...")
                 break
             case "USER":
