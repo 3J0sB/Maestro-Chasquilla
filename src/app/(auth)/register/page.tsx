@@ -21,6 +21,7 @@ function RegisterPage() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const router = useRouter()
+
     const onSubmit = handleSubmit(async (data) => {
         if (data.password !== data.confirmPassword) {
             setError("Las contraseñas no coinciden")
@@ -47,7 +48,7 @@ function RegisterPage() {
             if (!res.ok) {
                 setError(result.error || "Error al registrar usuario")
             } else {
-                // Redireccionar al login después de registro exitoso
+               
                 router.push('/login')
             }
         } catch (error) {
@@ -294,6 +295,7 @@ function RegisterPage() {
                                 <Link href="/login" className="text-sm text-orange-500 hover:text-orange-700 font-medium">
                                     Inicia Sesión
                                 </Link>
+                                
                             </div>
                         </div>
                     </div>

@@ -2,9 +2,17 @@
 import ServiceProviderSidebar from '@/components/layout/Service-provider-components/Service-provider-sidebar/service-provider-sidebar'
 import React from 'react'
 import { useSession } from 'next-auth/react'
+import AccessDenied from '@/components/Access-denied/access-denied'
 
 function RequestPage() {
   const { status, data: session } = useSession()
+
+
+    if (!session || session.user.role !== 'SERVICE_PROVIDER') {
+    return <AccessDenied
+      message="Esta área es solo para proveedores de servicios"
+    />;
+  }
 
   return (
     <div className='flex h-screen'>

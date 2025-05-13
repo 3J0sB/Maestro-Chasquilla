@@ -25,6 +25,7 @@ model User {
   name           String?
   lastName       String?   @unique
   lastName2      String?   @unique
+  rut            String?   @unique
   email          String    @unique
   emailVerified  DateTime? @map("email_verified")
   image          String?
@@ -35,10 +36,30 @@ model User {
   deletedAt      DateTime? @map("deleted_at")
 
   accounts       Account[]
-  services       Services[]
   serviceRequest ServiceRequest[]
 
   @@map("users")
+}
+
+model ServiceProviderUser {
+  id             String    @id @default(cuid())
+  name           String?
+  lastName       String?   @unique
+  lastName2      String?   @unique
+  rut            String    @unique
+  email          String    @unique
+  emailVerified  DateTime? @map("email_verified")
+  image          String?
+  hashedPassword String    @map("hashed_password")
+  role           Role      @default(SERVICE_PROVIDER)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime? @map("deleted_at")
+
+  services Services[]
+  requests ServiceRequest[]
+
+  @@map("service_provider_users")
 }
 
 model Services {
@@ -51,13 +72,14 @@ model Services {
   serviceTag      String?
   serviceTag2     String?
   serviceTag3     String?
+  status          String?
   image           String?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   deletedAt       DateTime? @map("deleted_at")
   userId          String    @map("user_id")
 
-  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user           ServiceProviderUser @relation(fields: [userId], references: [id], onDelete: Cascade)
   serviceRequest ServiceRequest[]
 
   @@map("services")
@@ -70,12 +92,13 @@ model ServiceRequest {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   deletedAt  DateTime? @map("deleted_at")
-  providerId String?   @map("provider_id")
+  providerId String    @map("provider_id")
   consumerId String    @map("consumer_id")
   serviceId  String    @map("service_id")
 
-  service Services @relation(fields: [serviceId], references: [id], onDelete: Cascade)
-  user    User     @relation(fields: [consumerId], references: [id], onDelete: Cascade)
+  service  Services            @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  user     User                @relation(fields: [consumerId], references: [id], onDelete: Cascade)
+  provider ServiceProviderUser @relation(fields: [providerId], references: [id], onDelete: Cascade)
 
   @@map("service_request")
 }

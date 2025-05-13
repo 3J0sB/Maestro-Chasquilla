@@ -122,6 +122,23 @@ exports.Prisma.UserScalarFieldEnum = {
   name: 'name',
   lastName: 'lastName',
   lastName2: 'lastName2',
+  rut: 'rut',
+  email: 'email',
+  emailVerified: 'emailVerified',
+  image: 'image',
+  hashedPassword: 'hashedPassword',
+  role: 'role',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.ServiceProviderUserScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  lastName: 'lastName',
+  lastName2: 'lastName2',
+  rut: 'rut',
   email: 'email',
   emailVerified: 'emailVerified',
   image: 'image',
@@ -142,6 +159,7 @@ exports.Prisma.ServicesScalarFieldEnum = {
   serviceTag: 'serviceTag',
   serviceTag2: 'serviceTag2',
   serviceTag3: 'serviceTag3',
+  status: 'status',
   image: 'image',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -204,6 +222,7 @@ exports.Role = exports.$Enums.Role = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  ServiceProviderUser: 'ServiceProviderUser',
   Services: 'Services',
   ServiceRequest: 'ServiceRequest',
   Account: 'Account',

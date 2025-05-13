@@ -59,7 +59,7 @@ function HowWorks() {
 
       <div className="mt-16 flex justify-center">
         <Link
-          href="/register"
+          href="/register-provider"
           className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg text-center font-medium shadow-md transition-colors"
         >
           Comenzar Ahora

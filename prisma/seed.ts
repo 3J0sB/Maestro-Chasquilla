@@ -3,14 +3,15 @@ import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient()
 async function main() {
-  const ServiceProviderUser = await prisma.user.create({
+  const ServiceProviderUser = await prisma.serviceProviderUser.create({
     data: {
-      email: 'Service@test.com',
+      rut: '11111111-9',
+      email: 'service@test.com',
       hashedPassword: await bcrypt.hash('1234', 10),
       name: 'Service provider User',
       lastName: 'service provider',
       lastName2: 'service provider',
-      role: 'SERVICE_PROVIDER',
+   
     },
   })
 
@@ -18,7 +19,8 @@ async function main() {
 
   const ConsumerUser = await prisma.user.create({
     data: {
-      email: 'Consumer@test.com',
+      email: 'consumer@test.com',
+      rut: '22222222-9',
       hashedPassword: await bcrypt.hash('1234', 10),
       name: 'Consumer User',
       lastName: 'Consumer User',
@@ -31,7 +33,8 @@ async function main() {
 
   const AdminUser = await prisma.user.create({
     data: {
-      email: 'Admin@test.com',
+      email: 'admin@test.com',
+      rut: '33333333-9',
       hashedPassword: await bcrypt.hash('1234', 10),
       name: 'Admin User',
       lastName: 'Admin User',
