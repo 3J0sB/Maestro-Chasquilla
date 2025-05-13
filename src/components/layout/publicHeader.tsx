@@ -11,10 +11,13 @@ function PublicHeader() {
     router.push('/login')
   }
 
-  const handleRegisterClick = () => {
+  const handleRegisterClickUser = () => {
     router.push('/register')
   }
-  
+  const handleRegisterClickProvider = () => {
+    router.push('/register-provider')
+  }
+
   return (
     <header className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -22,11 +25,11 @@ function PublicHeader() {
           {/* Logo y nombre */}
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center gap-2">
-              <Image 
-                src="/img/miau.jpg" 
-                width={40} 
-                height={40} 
-                alt='Maestro Chasquilla logo' 
+              <Image
+                src="/img/miau.jpg"
+                width={40}
+                height={40}
+                alt='Maestro Chasquilla logo'
                 className="rounded-full"
               />
               <h1 className="text-xl font-bold text-gray-800">
@@ -51,17 +54,23 @@ function PublicHeader() {
 
           {/* Botones de acción */}
           <div className="flex items-center space-x-4">
-            <button 
-              onClick={handleLoginClick} 
+            <button
+              onClick={handleLoginClick}
               className="text-orange-500 cursor-pointer hover:text-orange-700 px-4 py-2 rounded-md text-sm font-medium transition-colors"
             >
               Iniciar Sesión
             </button>
-            <button 
-              onClick={handleRegisterClick} 
+            <button
+              onClick={handleRegisterClickUser}
               className="bg-orange-500 cursor-pointer hover:bg-orange-600 text-white px-5 py-2 rounded-md text-sm font-medium shadow-sm transition-colors"
             >
-              Registrarse
+              Unete como Consumidor
+            </button>
+            <button
+              onClick={handleRegisterClickProvider}
+              className="bg-orange-500 cursor-pointer hover:bg-orange-600 text-white px-5 py-2 rounded-md text-sm font-medium shadow-sm transition-colors"
+            >
+              Unete como Proveedor
             </button>
           </div>
         </div>

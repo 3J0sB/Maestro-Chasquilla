@@ -10,6 +10,7 @@ type FormValues = {
     email: string
     password: string
     name: string
+    rut: string
     lastName: string
     lastName2: string
     confirmPassword: string
@@ -48,7 +49,7 @@ function RegisterPage() {
             if (!res.ok) {
                 setError(result.error || "Error al registrar usuario")
             } else {
-               
+
                 router.push('/login')
             }
         } catch (error) {
@@ -92,7 +93,9 @@ function RegisterPage() {
                             </div>
 
                             {/* Título y subtítulo */}
-                            <h1 className="text-2xl font-bold text-center mb-2">Crea tu cuenta</h1>
+                            <h1 className="text-2xl font-bold text-center mb-2">Crea tu cuenta 
+                                <span className='text-orange-500 text-2xl font-bold italic'> Consumidor</span>
+                            </h1>
                             <p className="text-gray-500 text-center mb-8">Regístrate para encontrar servicios cerca tuyo</p>
 
                             {/* Mensaje de error */}
@@ -172,17 +175,22 @@ function RegisterPage() {
                                         {errors.lastName && <p className="mt-1 text-sm text-red-600">{errors.lastName.message}</p>}
                                     </div>
                                 </div>
-
                                 <div>
-                                    <label htmlFor="lastName2" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Apellido Materno
+                                    <label htmlFor="Rut" className="block text-sm font-medium text-gray-700 mb-1">
+                                        Rut
                                     </label>
                                     <input
-                                        id="lastName2"
+                                        id="Rut"
                                         type="text"
-                                        placeholder="Tu apellido materno"
+                                        placeholder="ingresa tu rut"
                                         className="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-                                        {...register("lastName2")}
+                                        {...register("rut", {
+                                            required: {
+                                                value: true,
+                                                message: "El rut es requerido"
+                                            }
+                                        }
+                                        )}
                                     />
                                 </div>
 
@@ -295,7 +303,7 @@ function RegisterPage() {
                                 <Link href="/login" className="text-sm text-orange-500 hover:text-orange-700 font-medium">
                                     Inicia Sesión
                                 </Link>
-                                
+
                             </div>
                         </div>
                     </div>
