@@ -81,7 +81,7 @@ function Home() {
       onMessage: () => console.log("Enviando mensaje a Luisa")
     }
   ];
-
+  console.log(session)
   // Extraer todos los tipos de servicio únicos para el filtro
   const serviceTypes = ['all', ...new Set(requestsTestData.map(request => request.serviceType))];
 
@@ -124,6 +124,7 @@ function Home() {
       <ServiceProviderSidebar
         userName={session?.user.name || ''}
         userType={session?.user.role || ''}
+        userLastName={session?.user.lastName || ''}
       />
 
       <div className="flex-1 p-8 overflow-y-auto px-4 md:px-10 lg:px-20 xl:px-40">

@@ -16,6 +16,7 @@ type SidebarLinkProps = {
 
 type SidebarProps = {
   userName: string;
+  userLastName: string;
   userType: string;
 }
 
@@ -35,7 +36,7 @@ const SidebarLink = ({ href, icon, text, active, collapsed }: SidebarLinkProps) 
   );
 };
 
-function ServiceProviderSidebar({ userName, userType }: SidebarProps) {
+function ServiceProviderSidebar({ userName, userType, userLastName }: SidebarProps) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
 
@@ -48,7 +49,7 @@ function ServiceProviderSidebar({ userName, userType }: SidebarProps) {
       <aside className={`bg-white border-r border-gray-200 shadow-lg flex flex-col ${collapsed ? 'w-16' : 'w-64'} transition-all duration-300`}>
         {/* Logo */}
         <div className={`p-4 border-b border-gray-100 flex ${collapsed ? 'justify-center' : ''}`}>
-          <Link href="/home" className={`flex items-center ${collapsed ? '' : 'gap-2'}`}>
+          <Link href="/service-provider/home" className={`flex items-center ${collapsed ? '' : 'gap-2'}`}>
             <Image
               src="/img/miau.jpg"
               width={40}
@@ -158,7 +159,7 @@ function ServiceProviderSidebar({ userName, userType }: SidebarProps) {
                 </svg>
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-700">{userName}</p>
+                <p className="text-sm font-medium text-gray-700">{userName} {userLastName}</p>
                 <p className="text-xs text-gray-500">Cuenta {userType}</p>
               </div>
             </Link>

@@ -32,6 +32,7 @@ export async function POST(request: NextRequest) {
         name: user.name,
         email: user.email,
         image: user.image,
+        lastName: user.lastName,
         role: user.role,
       };
     }
@@ -43,6 +44,7 @@ export async function POST(request: NextRequest) {
       userData = {
         id: serviceProviderUser.id,
         name: serviceProviderUser.name,
+        lastName: serviceProviderUser.lastName,
         email: serviceProviderUser.email,
         image: serviceProviderUser.image,
         role: serviceProviderUser.role,
