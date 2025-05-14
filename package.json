@@ -2,7 +2,6 @@
   "name": "maestro-chasquilla",
   "version": "0.1.0",
   "private": true,
-
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -11,6 +10,7 @@
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.9.0",
+    "@hookform/resolvers": "^5.0.1",
     "@prisma/client": "^6.6.0",
     "@prisma/extension-accelerate": "^1.3.0",
     "bcrypt": "^5.1.1",
@@ -20,6 +20,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.56.1",
+    "rut.js": "^2.1.0",
     "zod": "^3.24.3"
   },
   "devDependencies": {

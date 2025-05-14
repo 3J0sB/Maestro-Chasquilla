@@ -1,34 +1,39 @@
 'use client'
 import React, { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { Form, useForm } from 'react-hook-form'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import PublicHeader from '@/components/layout/publicHeader'
+import { z } from 'zod'
+import { registerProviderSchema } from '@/lib/zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 
-type FormValues = {
-    email: string
-    password: string
-    name: string
-    rut: string
-    lastName: string
-    lastName2: string
-    confirmPassword: string
-}
+type FormValues = z.infer<typeof registerProviderSchema>;
 
 function RegisterPage() {
-    const { register, handleSubmit, formState: { errors } } = useForm<FormValues>()
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
+    } = useForm<FormValues>({
+        resolver: zodResolver(registerProviderSchema),
+        defaultValues: {
+            email: '',
+            name: '',
+            lastName: '',
+            lastName2: '',
+            rut: '',
+            password: '',
+            confirmPassword: ''
+        }
+    });
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const router = useRouter()
 
     const onSubmit = handleSubmit(async (data) => {
-        if (data.password !== data.confirmPassword) {
-            setError("Las contraseñas no coinciden")
-            return
-        }
-
         try {
             const res = await fetch('/api/auth/register-provider', {
                 method: 'POST',
@@ -94,7 +99,7 @@ function RegisterPage() {
                             </div>
 
                             {/* Título y subtítulo */}
-                            <h1 className="text-2xl font-bold text-center mb-2">Crea tu cuenta 
+                            <h1 className="text-2xl font-bold text-center mb-2">Crea tu cuenta
                                 <span className='text-orange-500 text-2xl font-bold italic'> Proveedor</span>
                             </h1>
                             <p className="text-gray-500 text-center mb-8">Regístrate para dar a cononocer tus servicios!</p>
@@ -121,12 +126,7 @@ function RegisterPage() {
                                             type="email"
                                             placeholder="Ingresa tu email"
                                             className="pl-10 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-                                            {...register("email", {
-                                                required: {
-                                                    value: true,
-                                                    message: "El correo es requerido"
-                                                }
-                                            })}
+                                            {...register("email")}
                                         />
                                     </div>
                                     {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
@@ -146,12 +146,7 @@ function RegisterPage() {
                                                 type="text"
                                                 placeholder="Tu nombre"
                                                 className="pl-10 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-                                                {...register("name", {
-                                                    required: {
-                                                        value: true,
-                                                        message: "El nombre es requerido"
-                                                    }
-                                                })}
+                                                {...register("name")}
                                             />
                                         </div>
                                         {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>}
@@ -166,12 +161,7 @@ function RegisterPage() {
                                             type="text"
                                             placeholder="Tu apellido"
                                             className="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-                                            {...register("lastName", {
-                                                required: {
-                                                    value: true,
-                                                    message: "El apellido es requerido"
-                                                }
-                                            })}
+                                            {...register("lastName")}
                                         />
                                         {errors.lastName && <p className="mt-1 text-sm text-red-600">{errors.lastName.message}</p>}
                                     </div>
@@ -183,16 +173,11 @@ function RegisterPage() {
                                     <input
                                         id="Rut"
                                         type="text"
-                                        placeholder="ingresa tu rut"
+                                        placeholder="ingresa tu rut: (ej: 12.345.678-9)"
                                         className="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-                                        {...register("rut", {
-                                            required: {
-                                                value: true,
-                                                message: "El rut es requerido"
-                                            }
-                                        }
-                                        )}
+                                        {...register("rut")}
                                     />
+                                    {errors.rut && <p className="mt-1 text-sm text-red-600">{errors.rut.message}</p>}
                                 </div>
 
                                 <div>
@@ -208,12 +193,7 @@ function RegisterPage() {
                                             type={showPassword ? "text" : "password"}
                                             placeholder="Crea una contraseña"
                                             className="pl-10 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-                                            {...register("password", {
-                                                required: {
-                                                    value: true,
-                                                    message: "La contraseña es requerida"
-                                                }
-                                            })}
+                                            {...register("password")}
                                         />
                                         <div
                                             className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
@@ -257,12 +237,7 @@ function RegisterPage() {
                                             type={showConfirmPassword ? "text" : "password"}
                                             placeholder="Confirma tu contraseña"
                                             className="pl-10 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-                                            {...register("confirmPassword", {
-                                                required: {
-                                                    value: true,
-                                                    message: "La confirmación es requerida"
-                                                }
-                                            })}
+                                            {...register("confirmPassword")}
                                         />
                                         <div
                                             className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
