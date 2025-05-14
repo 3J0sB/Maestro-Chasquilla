@@ -38,14 +38,14 @@ export default function NotFound() {
         <div className="flex flex-col gap-3">
           <button 
             onClick={() => router.back()} 
-            className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+            className="bg-white border cursor-pointer border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-orange-500 hover:text-white hover:border-transparent transition-colors"
           >
             Volver atrás
           </button>
           
           <Link 
-            href="/" 
-            className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors"
+            href="/redirect" 
+            className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-white hover:text-orange-500 hover:border hover:border-orange-500 transition-colors"
           >
             Ir al inicio
           </Link>

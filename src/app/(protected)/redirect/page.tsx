@@ -8,7 +8,7 @@ import Image from "next/image"
 export default function RedirectPage() {
 
     const { data: session, status } = useSession()
-    console.log("[REDIRECT]--> session", session)
+    // console.log("[REDIRECT]--> session", session)
     const router = useRouter()
     const [message, setMessage] = useState("Verificando tus credenciales...")
 
@@ -46,7 +46,7 @@ export default function RedirectPage() {
 
         const redirectTimer = setTimeout(() => {
             router.push(redirectPath)
-        }, 1500)
+        }, 500)
 
 
         return () => clearTimeout(redirectTimer)
