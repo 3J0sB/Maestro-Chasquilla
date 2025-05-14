@@ -10,7 +10,7 @@ async function admin() {
     if (session?.user.role !== 'ADMIN') {
       return(      
       <div>
-        <AccessDenied/>
+        <AccessDenied message="Esta no deberias estar aqui 🥸"/>
       </div>) 
 
     }

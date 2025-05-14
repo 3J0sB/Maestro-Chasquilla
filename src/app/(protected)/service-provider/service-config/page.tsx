@@ -1,6 +1,6 @@
 'use client'
 import ServiceProviderSidebar from '@/components/layout/Service-provider-components/Service-provider-sidebar/service-provider-sidebar'
-import React, { useState } from 'react'
+import React, { useState, useEffect, useTransition } from 'react'
 import { useSession } from 'next-auth/react'
 import AccessDenied from '@/components/Access-denied/access-denied'
 import Image from 'next/image'
@@ -12,54 +12,51 @@ type ServiceStatus = 'Active' | 'Inactive';
 
 interface Service {
   id: string;
-  icon: string;
   title: string;
-  description: string;
   price: number;
+  minPriceService: number;
+  maxPriceService: number;
+  description: string;
+  serviceTag: string;
+  serviceTag2: string;
+  serviceTag3: string;
   status: ServiceStatus;
+  userId: string;
+  icon: string;
 }
 
 function ServiceConfig() {
   const { status, data: session } = useSession()
   const [searchQuery, setSearchQuery] = useState('');
   const [showForm, setShowForm] = useState(false);
-   console.log( session)
+  const [services, setServices] = useState<Service[]>([]);
+  const [isPending, startTransition] = useTransition()
   // Datos de ejemplo para servicios
-  const servicesData: Service[] = [
-    {
-      id: '1',
-      icon: '✂️',
-      title: 'Corte de cabello',
-      description: 'Corte de cabello a la moda, incluye lavado y peinado. Ideal para un cambio de look o mantenimiento.',
-      price: 45.00,
-      status: 'Active'
-    },
-    {
-      id: '2',
-      icon: '🎨',
-      title: 'Coloración de cabello',
-      description: 'Coloración completa o mechas. Usamos productos de alta calidad para un acabado brillante y duradero.',
-      price: 85.00,
-      status: 'Active'
-    },
-    {
-      id: '3',
-      icon: '⭕',
-      title: 'Tratamiento facial',
-      description: 'Tratamiento facial personalizado según tu tipo de piel. Incluye limpieza, exfoliación, mascarilla y masaje',
-      price: 65.00,
-      status: 'Inactive'
-    },
-    {
-      id: '4',
-      icon: '🧴',
-      title: 'Manicure y Pedicure',
-      description: 'Manicure y pedicure completo. Incluye limado, exfoliación, hidratación y esmaltado.',
-      price: 55.00,
-      status: 'Active'
-    }
-  ];
 
+
+  const fetchServices = async () => {
+    startTransition(async () => {
+      try {
+        const response = await fetch('/api/service-provider/services/' + session?.user.id);
+
+        if (!response.ok) {
+          throw new Error('Error fetching services');
+        }
+
+        const data = await response.json();
+        setServices(data);
+        console.log('Fetched services:', data);
+      } catch (error) {
+        console.error('Error fetching services:', error);
+   
+      }
+    });
+  };
+
+  useEffect(() => {
+    fetchServices();
+
+  }, []);
   const onClose = () => {
     setShowForm(false)
     console.log('Modal closed')
@@ -69,14 +66,15 @@ function ServiceConfig() {
   }
 
   // Filtrar servicios según la búsqueda
-  const filteredServices = servicesData.filter(service =>
+  const filteredServices = services.filter(service =>
     service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     service.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
+  console.log(filteredServices)
 
   if (!session || session.user.role !== 'SERVICE_PROVIDER') {
     return <AccessDenied
-      message="Esta área es solo para proveedores de servicios"
+      message="Esta no deberias estar aqui 🥸"
     />;
   }
 
@@ -118,7 +116,11 @@ function ServiceConfig() {
               className='pl-10 w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent'
             />
           </div>
-
+          {isPending && (
+            <div className="flex justify-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-orange-500"></div>
+            </div>
+          )}
           {/* Grid de servicios */}
           <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
             {filteredServices.map((service) => (
@@ -135,7 +137,7 @@ function ServiceConfig() {
           </div>
 
           {/* Mensaje si no hay servicios */}
-          {filteredServices.length === 0 && (
+          {!isPending && filteredServices.length === 0 && (
             <div className="text-center py-10 bg-white rounded-lg border border-gray-200">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />

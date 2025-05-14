@@ -124,19 +124,19 @@ function ServiceProviderSidebar({ userName, userType, userLastName }: SidebarPro
           )}
 
           <SidebarLink
-            href="//service-provider/profile"
+            href="/service-provider/profile"
             icon={
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
             }
             text="Perfil"
-            active={pathname === "/serviceprovider/profile"}
+            active={pathname === "/service-provider/profile"}
             collapsed={collapsed}
           />
 
           <SidebarLink
-            href="/serviceprovider/settings"
+            href="/service-provider/settings"
             icon={
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -144,7 +144,7 @@ function ServiceProviderSidebar({ userName, userType, userLastName }: SidebarPro
               </svg>
             }
             text="Configuración"
-            active={pathname === "/serviceprovider/settings"}
+            active={pathname === "/service-provider/settings"}
             collapsed={collapsed}
           />
         </nav>
@@ -152,7 +152,7 @@ function ServiceProviderSidebar({ userName, userType, userLastName }: SidebarPro
         {/* User Profile */}
         <div className={`p-4 border-t border-gray-200 ${collapsed ? 'items-center justify-center' : ''}`}>
           {!collapsed ? (
-            <Link href="/serviceprovider/profile" className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg transition-colors">
+            <Link href="/service-provider/profile" className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg transition-colors">
               <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
