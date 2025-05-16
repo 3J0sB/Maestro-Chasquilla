@@ -9749,14 +9749,14 @@ export namespace Prisma {
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    lastName?: string
-    lastName2?: string
     rut?: string
     email?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
     name?: StringNullableFilter<"User"> | string | null
+    lastName?: StringNullableFilter<"User"> | string | null
+    lastName2?: StringNullableFilter<"User"> | string | null
     emailVerified?: DateTimeNullableFilter<"User"> | Date | string | null
     image?: StringNullableFilter<"User"> | string | null
     hashedPassword?: StringNullableFilter<"User"> | string | null
@@ -9766,7 +9766,7 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     accounts?: AccountListRelationFilter
     serviceRequest?: ServiceRequestListRelationFilter
-  }, "id" | "lastName" | "lastName2" | "rut" | "email">
+  }, "id" | "rut" | "email">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
@@ -9847,14 +9847,14 @@ export namespace Prisma {
 
   export type ServiceProviderUserWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    lastName?: string
-    lastName2?: string
     rut?: string
     email?: string
     AND?: ServiceProviderUserWhereInput | ServiceProviderUserWhereInput[]
     OR?: ServiceProviderUserWhereInput[]
     NOT?: ServiceProviderUserWhereInput | ServiceProviderUserWhereInput[]
     name?: StringNullableFilter<"ServiceProviderUser"> | string | null
+    lastName?: StringNullableFilter<"ServiceProviderUser"> | string | null
+    lastName2?: StringNullableFilter<"ServiceProviderUser"> | string | null
     emailVerified?: DateTimeNullableFilter<"ServiceProviderUser"> | Date | string | null
     image?: StringNullableFilter<"ServiceProviderUser"> | string | null
     hashedPassword?: StringFilter<"ServiceProviderUser"> | string
@@ -9864,7 +9864,7 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"ServiceProviderUser"> | Date | string | null
     services?: ServicesListRelationFilter
     requests?: ServiceRequestListRelationFilter
-  }, "id" | "lastName" | "lastName2" | "rut" | "email">
+  }, "id" | "rut" | "email">
 
   export type ServiceProviderUserOrderByWithAggregationInput = {
     id?: SortOrder

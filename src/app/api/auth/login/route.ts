@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
   const body = await request.json()
   const { email, password } = body
   
-  // Buscar en ambas tablas
+
   const user = await prisma.user.findUnique({
     where: { email }
   })

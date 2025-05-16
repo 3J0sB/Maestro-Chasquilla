@@ -7,10 +7,11 @@ type service = {
     description: string;
     price: number;
     status: string
+    serviceTag: string;
 }
 
 
-function ServicesCard({ id, icon, title, status, description, price }: service) {
+function ServicesCard({ id, icon, title, status, description, price, serviceTag }: service) {
   return (
       <div key={id}
                 className='bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden 
@@ -27,13 +28,9 @@ function ServicesCard({ id, icon, title, status, description, price }: service) 
                         <h3 className='font-bold text-lg text-gray-800'>{title}</h3>
                       </div>
                     </div>
-
-                    {/* Badge de estado */}
-                    <div className={`text-sm px-3 py-1 rounded-full ${status === 'Active'
-                      ? 'bg-green-50 text-green-700'
-                      : 'bg-gray-100 text-gray-600'
-                      }`}>
-                      {status}
+                    {/* Etiqueta de servicio */}
+                    <div className={`px-2 py-1 text-sm font-semibold rounded-full text-green-600 bg-green-100 ${status === 'Inactive' ? 'opacity-60' : ''}`}>
+                      {serviceTag? serviceTag : 'Sin etiqueta'}
                     </div>
                   </div>
 

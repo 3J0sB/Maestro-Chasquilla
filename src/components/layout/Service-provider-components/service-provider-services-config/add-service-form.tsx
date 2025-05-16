@@ -1,46 +1,95 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, use } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { addServiceSchema } from '@/lib/zod'
+import { set, type z } from 'zod'
+import { useSession } from 'next-auth/react'
+// Use the type from zod schema
+type FormInputs = z.infer<typeof addServiceSchema>
 
 interface AddServiceFormProps {
   onClose: () => void;
   onSave: (serviceData: any) => void;
 }
 
+interface Category {
+  id: string;
+  name: string;
+}
+
 function AddServiceForm({ onClose, onSave }: AddServiceFormProps) {
-  // Estado para los campos del formulario
-  const [serviceName, setServiceName] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [duration, setDuration] = useState('60');
-  const [category, setCategory] = useState('');
-  const [isActive, setIsActive] = useState(true);
-  
-  // Categorías de ejemplo
-  const categories = [
-    'Haircut & Styling',
-    'Hair Coloring',
-    'Facial Treatment',
-    'Manicure & Pedicure',
-    'Massage',
-    'Makeup',
-    'Other'
-  ];
-  
-  // Función para manejar el envío del formulario
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Crear objeto con los datos del servicio
+  const [categories, setCategories] = useState<Category[]>([]);
+  const { data: session } = useSession()
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch
+  } = useForm<FormInputs>({
+    resolver: zodResolver(addServiceSchema),
+    defaultValues: {
+      serviceName: '',
+      description: '',
+      price: '',
+      category: '',
+    }
+  });
+
+
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('/api/service-provider/service-categories');
+      if (!response.ok) {
+        throw new Error('Error fetching categories');
+      }
+      const data = await response.json();
+      setCategories(data);
+      console.log('Fetched categories:', data);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+
+    }
+  }
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  // Form submission handler - now uses the Zod validated data
+  const onSubmit = handleSubmit((data) => {
+    // Create object with the service data
     const serviceData = {
-      name: serviceName,
-      description,
-      price: parseFloat(price),
-      duration: parseInt(duration),
-      category,
-      status: isActive ? 'Active' : 'Inactive',
+      name: data.serviceName,
+      description: data.description,
+      price: parseFloat(data.price),
+      serviceTag: data.category,
+      userId: session?.user.id,
     };
+
+    const res = fetch('http://localhost:3000/api/service-provider/services/add-service', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(serviceData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log('Service created:', data);
+        onSave(serviceData);
+        onClose();
+      })
+      .catch((error) => {
+        console.error('Error creating service:', error);
+      });
+    });
     
-    onSave(serviceData);
-  };
+
+
+
+
 
   return (
     <div className="fixed inset-0 bg-black/25 flex items-center justify-center z-50">
@@ -48,7 +97,7 @@ function AddServiceForm({ onClose, onSave }: AddServiceFormProps) {
         {/* Header */}
         <div className="flex justify-between items-center border-b p-4">
           <h2 className="text-xl font-bold text-gray-800">Add New Service</h2>
-          <button 
+          <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 transition-colors"
             aria-label="Close"
@@ -58,44 +107,45 @@ function AddServiceForm({ onClose, onSave }: AddServiceFormProps) {
             </svg>
           </button>
         </div>
-        
-        {/* Formulario */}
-        <form onSubmit={handleSubmit} className="p-6">
-          {/* Nombre del servicio */}
+
+        {/* Form */}
+        <form onSubmit={onSubmit} className="p-6">
+          {/* Service Name */}
           <div className="mb-4">
             <label htmlFor="serviceName" className="block text-sm font-medium text-gray-700 mb-1">
               Nombre del Servicio
             </label>
             <input
-              type="text"
               id="serviceName"
-              value={serviceName}
-              onChange={(e) => setServiceName(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${errors.serviceName ? 'border-red-500' : 'border-gray-300'}`}
               placeholder="Enter service name"
-              required
+              {...register("serviceName")}
             />
+            {errors.serviceName && (
+              <p className="mt-1 text-sm text-red-600">{errors.serviceName.message}</p>
+            )}
           </div>
-          
-          {/* Descripción */}
+
+          {/* Description */}
           <div className="mb-4">
             <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
               Descripcion
             </label>
             <textarea
               id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
               rows={4}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${errors.description ? 'border-red-500' : 'border-gray-300'}`}
               placeholder="Describe your service"
-              required
+              {...register("description")}
             />
+            {errors.description && (
+              <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>
+            )}
           </div>
-          
-          {/* Precio y duración (en fila para pantallas más grandes) */}
+
+          {/* Price and Duration (in row for larger screens) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            {/* Precio */}
+            {/* Price */}
             <div>
               <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
                 Precio
@@ -109,84 +159,44 @@ function AddServiceForm({ onClose, onSave }: AddServiceFormProps) {
                   id="price"
                   min="0"
                   step="0.01"
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                  className="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className={`w-full pl-7 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${errors.price ? 'border-red-500' : 'border-gray-300'}`}
                   placeholder="0.00"
-                  required
+                  {...register("price")}
                 />
-              </div>
-            </div>
-            
-            {/* Duración */}
-            <div>
-              <label htmlFor="duration" className="block text-sm font-medium text-gray-700 mb-1">
-                Duracion 
-              </label>
-              <div className="relative">
-                <input
-                  type="number"
-                  id="duration"
-                  min="1"
-                  value={duration}
-                  onChange={(e) => setDuration(e.target.value)}
-                  className="w-full pr-10 pl-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  required
-                />
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                  <span className="text-gray-500 text-sm">min</span>
-                </div>
+                {errors.price && (
+                  <p className="mt-1 text-sm text-red-600">{errors.price.message}</p>
+                )}
               </div>
             </div>
           </div>
-          
-          {/* Categoría y Estado (en fila para pantallas más grandes) */}
+
+          {/* Category and Status (in row for larger screens) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            {/* Categoría */}
+            {/* Category */}
             <div>
               <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
                 Categoria
               </label>
               <select
                 id="category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 appearance-none bg-white"
-                required
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 appearance-none bg-white ${errors.category ? 'border-red-500' : 'border-gray-300'}`}
+                {...register("category")}
               >
-                <option value="" disabled>Select category</option>
+                <option value="" disabled>Selecciona una Categoria</option>
                 {categories.map((cat) => (
-                  <option key={cat} value={cat}>{cat}</option>
+                  <option key={cat.id} value={cat.name}>{cat.name}</option>
                 ))}
               </select>
+              {errors.category && (
+                <p className="mt-1 text-sm text-red-600">{errors.category.message}</p>
+              )}
             </div>
-            
-            {/* Estado */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Estado
-              </label>
-              <div className="flex items-center">
-                <label className="inline-flex items-center cursor-pointer">
-                  <div className="relative">
-                    <input
-                      type="checkbox"
-                      className="sr-only"
-                      checked={isActive}
-                      onChange={() => setIsActive(!isActive)}
-                    />
-                    <div className={`block w-10 h-6 rounded-full transition-colors ${isActive ? 'bg-orange-500' : 'bg-gray-300'}`}></div>
-                    <div className={`absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform transform ${isActive ? 'translate-x-4' : ''}`}></div>
-                  </div>
-                  <span className="ml-2 text-sm text-gray-700">
-                    {isActive ? 'Active' : 'Inactive'}
-                  </span>
-                </label>
-              </div>
-            </div>
+
+            {/* Status */}
+
           </div>
-          
-          {/* Botones de acción */}
+
+          {/* Action buttons */}
           <div className="flex justify-end gap-3 mt-6 border-t pt-4">
             <button
               type="button"

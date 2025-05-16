@@ -6,6 +6,7 @@ import AccessDenied from '@/components/Access-denied/access-denied'
 import Image from 'next/image'
 import AddServiceForm from '@/components/layout/Service-provider-components/service-provider-services-config/add-service-form'
 import ServicesCard from '@/components/layout/Service-provider-components/service-provider-services-config/service-provider-services-card'
+import { set } from 'zod'
 
 // Tipos para los servicios
 type ServiceStatus = 'Active' | 'Inactive';
@@ -31,6 +32,7 @@ function ServiceConfig() {
   const [showForm, setShowForm] = useState(false);
   const [services, setServices] = useState<Service[]>([]);
   const [isPending, startTransition] = useTransition()
+  const [error, setError] = useState<string | null>(null);
   // Datos de ejemplo para servicios
 
 
@@ -40,15 +42,15 @@ function ServiceConfig() {
         const response = await fetch('/api/service-provider/services/' + session?.user.id);
 
         if (!response.ok) {
-          throw new Error('Error fetching services');
+          throw new Error('Error fetching services response == !ok');
         }
 
         const data = await response.json();
         setServices(data);
         console.log('Fetched services:', data);
       } catch (error) {
-        console.error('Error fetching services:', error);
-   
+        console.log('Error fetching services:', error);
+  
       }
     });
   };
@@ -63,6 +65,8 @@ function ServiceConfig() {
   }
   const onSave = (serviceData: any) => {
     console.log('Service data saved:', serviceData)
+    setShowForm(false)
+    window.location.reload()
   }
 
   // Filtrar servicios según la búsqueda
@@ -123,6 +127,8 @@ function ServiceConfig() {
           )}
           {/* Grid de servicios */}
           <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+
+            {/* Mapeo de servicios */}
             {filteredServices.map((service) => (
               <ServicesCard
                 key={service.id}
@@ -132,6 +138,7 @@ function ServiceConfig() {
                 description={service.description}
                 price={service.price}
                 status={service.status}
+                serviceTag={service.serviceTag}
               />
             ))}
           </div>
@@ -142,15 +149,16 @@ function ServiceConfig() {
               <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
               </svg>
-              <p className="text-gray-500 mb-2">No services found</p>
+              
+              <p className="text-gray-500 mb-2">Aun no tienes servicios</p>
               {searchQuery && (
                 <p className="text-gray-400 text-sm">
-                  Try adjusting your search or add a new service
+                  No se encontraron resultados para "<span className="font-semibold">{searchQuery}</span>"
                 </p>
               )}
               {!searchQuery && (
                 <button className="mt-4 bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition-colors">
-                  Add Your First Service
+                  Agrega tu primer servicio
                 </button>
               )}
             </div>

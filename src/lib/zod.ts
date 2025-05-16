@@ -1,4 +1,4 @@
-import { object, string } from "zod";
+import { object, string, boolean } from "zod";
 import { validate } from "rut.js"
 
 export const loginSchema = object({
@@ -35,20 +35,37 @@ export const registerProviderSchema = object({
         .optional(),
     rut: string()
         .min(1, 'El RUT es requerido')
-        // .regex(/^[0-9]{1,2}(\.[0-9]{3}){2}-[0-9kK]{1}$/, 'Formato de RUT inválido (ej: 12.345.678-9)')
-        // .refine((val) => validate(val), {
-        //     message: "El RUT no es válido"
-        // })
-        ,
-    password: string()
-        .min(8, 'La contraseña debe tener al menos 8 caracteres')
-        .max(50, 'La contraseña no puede exceder los 50 caracteres')
-        .regex(/[A-Z]/, 'Debe incluir al menos una letra mayúscula')
-        .regex(/[a-z]/, 'Debe incluir al menos una letra minúscula')
-        .regex(/[0-9]/, 'Debe incluir al menos un número'),
+    // .regex(/^[0-9]{1,2}(\.[0-9]{3}){2}-[0-9kK]{1}$/, 'Formato de RUT inválido (ej: 12.345.678-9)')
+    // .refine((val) => validate(val), {
+    //     message: "El RUT no es válido"
+    // })
+    ,
+    password: string(),
+    // .min(8, 'La contraseña debe tener al menos 8 caracteres'),
+    //         .max(50, 'La contraseña no puede exceder los 50 caracteres')
+    //         .regex(/[A-Z]/, 'Debe incluir al menos una letra mayúscula')
+    //         .regex(/[a-z]/, 'Debe incluir al menos una letra minúscula')
+    //         .regex(/[0-9]/, 'Debe incluir al menos un número'),
     confirmPassword: string()
-        .min(1, 'La confirmación es requerida'),
-}).refine((data: RegisterProviderSchema) => data.password === data.confirmPassword, {
-    message: "Las contraseñas no coinciden",
-    path: ["confirmPassword"],
+    //         .min(1, 'La confirmación es requerida'),
+    // }).refine((data: RegisterProviderSchema) => data.password === data.confirmPassword, {
+    //     message: "Las contraseñas no coinciden",
+    //     path: ["confirmPassword"],
 });
+
+export const addServiceSchema = object({
+    serviceName: string()
+        .min(1, 'El nombre del servicio es requerido')
+        .max(100, 'El nombre no puede exceder los 100 caracteres'),
+    description: string()
+        .min(1, 'La descripción es requerida')
+        .max(500, 'La descripción no puede exceder los 500 caracteres'),
+    price: string()
+        .min(1, 'El precio es requerido')
+        .refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) >= 0, {
+            message: "El precio debe ser un número positivo"
+        }),
+    category: string()
+        .min(1, 'La categoría es requerida'),
+});
+
