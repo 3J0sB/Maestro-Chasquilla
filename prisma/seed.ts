@@ -102,6 +102,22 @@ async function main() {
   })
   // console.table(serviceRequestTest)
   console.log(`[SEED] ---> Created Service request test with id: ${serviceRequestTest.id}`)
+
+  const category = await prisma.categories.createMany({
+    data: [
+      {name: 'Hogar y mantenimiento'},
+      {name: 'Confección y moda'},
+      {name: 'Automotrices'},
+      {name: 'Creativos y personalizados'},
+      {name: 'Alimentos y catering'},  
+      {name: 'Servicios personales y de bienestar '},
+      {name: 'Educación y apoyo escolar'},
+      {name: 'Artesanías y productos hechos a mano'},
+      {name: 'Servicios técnicos y digitales'},
+    ]
+  })
+
+  console.log(`[SEED] ---> Created: ${category.count} categories`)
 }
 main()
   .then(async () => {

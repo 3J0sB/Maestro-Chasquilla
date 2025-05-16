@@ -179,6 +179,14 @@ exports.Prisma.ServiceRequestScalarFieldEnum = {
   serviceId: 'serviceId'
 };
 
+exports.Prisma.CategoriesScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
 exports.Prisma.AccountScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -225,6 +233,7 @@ exports.Prisma.ModelName = {
   ServiceProviderUser: 'ServiceProviderUser',
   Services: 'Services',
   ServiceRequest: 'ServiceRequest',
+  Categories: 'Categories',
   Account: 'Account',
   VerificationToken: 'VerificationToken'
 };
