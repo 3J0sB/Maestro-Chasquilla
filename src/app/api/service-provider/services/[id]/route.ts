@@ -6,7 +6,7 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  // Necesitamos esperar a que params.id esté disponible
+
  
   const {id: serviceProviderId } = await params;
   

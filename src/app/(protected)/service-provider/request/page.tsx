@@ -5,6 +5,7 @@ import AccessDenied from '@/components/Access-denied/access-denied';
 import ServiceProviderSidebar from '@/components/layout/Service-provider-components/Service-provider-sidebar/service-provider-sidebar';
 import HomeCards from '@/components/layout/Service-provider-components/Service-provider-home/service-provider-home-cards';
 import RequestCard from '@/components/layout/Service-provider-components/Service-provider-home/service-provider-request-card';
+import { on } from 'events';
 
 function Home() {
   const { status, data: session } = useSession();
@@ -98,6 +99,9 @@ function Home() {
     );
   };
 
+  const onAccept = (request: any) => {
+
+  }
   // Filtrar las solicitudes según los filtros seleccionados y búsqueda
   const filteredRequests = requestsTestData.filter(request => {
     // Filtro por búsqueda
@@ -215,7 +219,7 @@ function Home() {
                     isNew={request.isNew}
                     isPriority={request.isPriority}
                     clientAvatar={request.clientAvatar}
-                    onAccept={request.onAccept}
+                    onAccept={onAccept}
                     onDecline={request.onDecline}
                     onMessage={request.onMessage}
                   />
