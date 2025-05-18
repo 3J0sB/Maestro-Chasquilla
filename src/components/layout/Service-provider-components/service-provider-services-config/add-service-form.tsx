@@ -68,7 +68,7 @@ function AddServiceForm({ onClose, onSave }: AddServiceFormProps) {
       userId: session?.user.id,
     };
 
-    const res = fetch('http://localhost:3000/api/service-provider/services/add-service', {
+    const res = fetch('/api/service-provider/services/add-service', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
