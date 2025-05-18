@@ -1,18 +1,18 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import AccessDenied from '@/components/Access-denied/access-denied';
 import ServiceProviderSidebar from '@/components/layout/Service-provider-components/Service-provider-sidebar/service-provider-sidebar';
-import HomeCards from '@/components/layout/Service-provider-components/Service-provider-home/service-provider-home-cards';
 import RequestCard from '@/components/layout/Service-provider-components/Service-provider-home/service-provider-request-card';
-import { on } from 'events';
+import { serviceRequest } from '@/types';
+import { set } from 'zod';
 
 function Home() {
   const { status, data: session } = useSession();
   const [statusFilter, setStatusFilter] = useState('all');
   const [serviceTypeFilter, setServiceTypeFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [serviceRequests, setServiceRequests] = useState([]);
+  const [serviceRequests, setServiceRequests] = useState<serviceRequest[]>([]);
 
   const requestsTestData = [
     {
@@ -84,7 +84,27 @@ function Home() {
     }
   ];
   console.log(session)
-  // Extraer todos los tipos de servicio únicos para el filtro
+
+  const fetchServiceRequests = async () => {
+    try {
+      const response = await fetch('/api/service-provider/service-requests', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      if (!response.ok) {
+        throw new Error('Error al obtener las solicitudes de servicio');
+      }
+      const data = await response.json();
+      setServiceRequests(data);
+      console.log('Datos de las solicitudes de servicio:', data);
+
+    } catch (error) {
+
+    }
+  }
+
   const serviceTypes = ['all', ...new Set(requestsTestData.map(request => request.serviceType))];
 
   // Buscar en los campos relevantes
@@ -99,9 +119,7 @@ function Home() {
     );
   };
 
-  const onAccept = (request: any) => {
 
-  }
   // Filtrar las solicitudes según los filtros seleccionados y búsqueda
   const filteredRequests = requestsTestData.filter(request => {
     // Filtro por búsqueda
@@ -123,6 +141,10 @@ function Home() {
       message="Esta área es solo para proveedores de servicios"
     />;
   }
+
+  useEffect(() => {
+    fetchServiceRequests();
+  }, []);
 
   return (
     <div className="flex h-screen">
@@ -208,20 +230,14 @@ function Home() {
             </div>
 
             <div className="space-y-4">
-              {filteredRequests.length > 0 ? (
-                filteredRequests.map((request, index) => (
+              {serviceRequests.length > 0 ? (
+                serviceRequests.map((request, index) => (
                   <RequestCard
                     key={index}
-                    clientName={request.clientName}
-                    serviceType={request.serviceType}
-                    description={request.description}
-                    requestDate={request.requestDate}
-                    isNew={request.isNew}
-                    isPriority={request.isPriority}
-                    clientAvatar={request.clientAvatar}
-                    onAccept={onAccept}
-                    onDecline={request.onDecline}
-                    onMessage={request.onMessage}
+                    clientName={request.user.name + request.user.lastName || 'test'}
+                    serviceType={request.service.title}
+                    description={request.service.description}
+                    requestDate={request.createdAt}
                   />
                 ))
               ) : (
@@ -233,7 +249,6 @@ function Home() {
                 </div>
               )}
             </div>
-
             {/* Contador de resultados */}
             {filteredRequests.length > 0 && (
               <div className="mt-4 text-sm text-gray-500 text-right">

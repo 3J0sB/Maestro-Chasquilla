@@ -1,17 +1,17 @@
 import React from 'react'
 import Image from 'next/image'
+import { format } from 'path';
+import { formatDate } from '../../../../../utils';
 
 type RequestCardProps = {
   clientName: string;
   serviceType: string;
-  description: string;
+  description: string | null;
   requestDate: string;
   isNew?: boolean;
   isPriority?: boolean;
   clientAvatar?: string;
-  onAccept: () => void;
-  onDecline: () => void;
-  onMessage: () => void;
+
 }
 
 function RequestCard({
@@ -22,9 +22,7 @@ function RequestCard({
   isNew = false,
   isPriority = false,
   clientAvatar,
-  onAccept,
-  onDecline,
-  onMessage
+
 }: RequestCardProps) {
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-3 sm:p-4 hover:shadow-md transition-shadow">
@@ -69,24 +67,24 @@ function RequestCard({
           <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 sm:h-4 sm:w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
-          Recibido: {requestDate}
+          Recibido: {formatDate(requestDate)}
         </div>
 
         <div className="flex gap-2 w-full sm:w-auto">
           <button
-            onClick={onDecline}
+        
             className="px-3 sm:px-4 py-1.5 text-xs sm:text-sm cursor-pointer border border-gray-200 rounded-md hover:bg-gray-50 transition-colors flex-1 sm:flex-none"
           >
             Rechazar
           </button>
           <button
-            onClick={onAccept}
+      
             className="px-3 sm:px-4 py-1.5 text-xs sm:text-sm cursor-pointer bg-orange-500 hover:bg-orange-600 text-white rounded-md transition-colors flex-1 sm:flex-none"
           >
             Aceptar
           </button>
           <button
-            onClick={onMessage}
+          
             className="p-1.5 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
             aria-label="Enviar mensaje al cliente"
           >

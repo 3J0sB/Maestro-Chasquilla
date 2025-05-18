@@ -11,7 +11,7 @@ async function main() {
       name: 'Service provider User',
       lastName: 'service provider',
       lastName2: 'service provider',
-   
+
     },
   })
 
@@ -100,20 +100,43 @@ async function main() {
       message: 'This is a test service request',
     }
   })
-  // console.table(serviceRequestTest)
   console.log(`[SEED] ---> Created Service request test with id: ${serviceRequestTest.id}`)
+
+  const serviceRequestTest2 = await prisma.serviceRequest.create({
+    data: {
+      consumerId: ConsumerUser.id,
+      serviceId: serviceTest.id,
+      providerId: ServiceProviderUser.id,
+      status: 'PENDING',
+      message: 'This is a test service request',
+    }
+  })
+  console.log(`[SEED] ---> Created Service request test with id: ${serviceRequestTest2.id}`)
+
+  const serviceRequestTest3 = await prisma.serviceRequest.create({
+    data: {
+      consumerId: ConsumerUser.id,
+      serviceId: serviceTest.id,
+      providerId: ServiceProviderUser.id,
+      status: 'PENDING',
+      message: 'This is a test service request',
+    }
+  })
+  // console.table(serviceRequestTest)
+  console.log(`[SEED] ---> Created Service request test with id: ${serviceRequestTest3.id}`)
+  
 
   const category = await prisma.categories.createMany({
     data: [
-      {name: 'Hogar y mantenimiento'},
-      {name: 'Confección y moda'},
-      {name: 'Automotrices'},
-      {name: 'Creativos y personalizados'},
-      {name: 'Alimentos y catering'},  
-      {name: 'Servicios personales y de bienestar '},
-      {name: 'Educación y apoyo escolar'},
-      {name: 'Artesanías y productos hechos a mano'},
-      {name: 'Servicios técnicos y digitales'},
+      { name: 'Hogar y mantenimiento' },
+      { name: 'Confección y moda' },
+      { name: 'Automotrices' },
+      { name: 'Creativos y personalizados' },
+      { name: 'Alimentos y catering' },
+      { name: 'Servicios personales y de bienestar ' },
+      { name: 'Educación y apoyo escolar' },
+      { name: 'Artesanías y productos hechos a mano' },
+      { name: 'Servicios técnicos y digitales' },
     ]
   })
 
