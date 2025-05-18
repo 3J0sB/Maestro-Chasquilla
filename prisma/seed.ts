@@ -97,7 +97,7 @@ async function main() {
       serviceId: serviceTest.id,
       providerId: ServiceProviderUser.id,
       status: 'PENDING',
-      message: 'This is a test service request',
+      message: 'This is a test service request number 1',
     }
   })
   console.log(`[SEED] ---> Created Service request test with id: ${serviceRequestTest.id}`)
@@ -105,10 +105,10 @@ async function main() {
   const serviceRequestTest2 = await prisma.serviceRequest.create({
     data: {
       consumerId: ConsumerUser.id,
-      serviceId: serviceTest.id,
+      serviceId: serviceTest2.id,
       providerId: ServiceProviderUser.id,
       status: 'PENDING',
-      message: 'This is a test service request',
+      message: 'This is a test service request number 2',
     }
   })
   console.log(`[SEED] ---> Created Service request test with id: ${serviceRequestTest2.id}`)
@@ -116,10 +116,10 @@ async function main() {
   const serviceRequestTest3 = await prisma.serviceRequest.create({
     data: {
       consumerId: ConsumerUser.id,
-      serviceId: serviceTest.id,
+      serviceId: serviceTest3.id,
       providerId: ServiceProviderUser.id,
       status: 'PENDING',
-      message: 'This is a test service request',
+      message: 'This is a test service request number 3',
     }
   })
   // console.table(serviceRequestTest)

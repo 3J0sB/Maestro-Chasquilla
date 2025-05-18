@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import AccessDenied from '@/components/Access-denied/access-denied';
 import ServiceProviderSidebar from '@/components/layout/Service-provider-components/Service-provider-sidebar/service-provider-sidebar';
@@ -105,36 +105,43 @@ function Home() {
     }
   }
 
-  const serviceTypes = ['all', ...new Set(requestsTestData.map(request => request.serviceType))];
-
+  const serviceTypes = useMemo(() => {
+    if (serviceRequests.length === 0) return ['all'];
+    return ['all', ...new Set(serviceRequests
+      .map(request => request.service.title)
+      .filter(Boolean))];
+  }, [serviceRequests]);
   // Buscar en los campos relevantes
-  const searchInRequest = (request: any, query: string) => {
+  const searchInRequest = (request: serviceRequest, query: string) => {
     const searchTerms = query.toLowerCase().trim();
     if (!searchTerms) return true;
 
     return (
-      request.clientName.toLowerCase().includes(searchTerms) ||
-      request.serviceType.toLowerCase().includes(searchTerms) ||
-      request.description.toLowerCase().includes(searchTerms)
+      (request.user?.name?.toLowerCase() || '').includes(searchTerms) ||
+      (request.user?.lastName?.toLowerCase() || '').includes(searchTerms) ||
+      (request.service?.title?.toLowerCase() || '').includes(searchTerms) ||
+      (request.message?.toLowerCase() || '').includes(searchTerms)
     );
   };
 
 
   // Filtrar las solicitudes según los filtros seleccionados y búsqueda
-  const filteredRequests = requestsTestData.filter(request => {
-    // Filtro por búsqueda
-    if (!searchInRequest(request, searchQuery)) return false;
+  const filteredRequests = useMemo(() => {
+    return serviceRequests.filter(request => {
+      // Filtro por búsqueda
+      if (!searchInRequest(request, searchQuery)) return false;
 
-    // Filtro por estado
-    if (statusFilter === 'new' && !request.isNew) return false;
-    if (statusFilter === 'priority' && !request.isPriority) return false;
-    if (statusFilter === 'regular' && (request.isNew || request.isPriority)) return false;
+      // Filtro por estado
+      if (statusFilter === 'new' && request.status !== 'PENDING') return false;
+      if (statusFilter === 'priority' && request.status !== 'URGENT') return false;
+      if (statusFilter === 'regular' && (request.status === 'PENDING' || request.status === 'URGENT')) return false;
 
-    // Filtro por tipo de servicio
-    if (serviceTypeFilter !== 'all' && request.serviceType !== serviceTypeFilter) return false;
+      // Filtro por tipo de servicio
+      if (serviceTypeFilter !== 'all' && request.service.title !== serviceTypeFilter) return false;
 
-    return true;
-  });
+      return true;
+    });
+  }, [serviceRequests, searchQuery, statusFilter, serviceTypeFilter]);
 
   if (!session || session.user.role !== 'SERVICE_PROVIDER') {
     return <AccessDenied
@@ -234,10 +241,13 @@ function Home() {
                 serviceRequests.map((request, index) => (
                   <RequestCard
                     key={index}
-                    clientName={request.user.name + request.user.lastName || 'test'}
+                    clientName={`${request.user.name} ${request.user.lastName}` || 'test'}
                     serviceType={request.service.title}
-                    description={request.service.description}
+                    description={request.message || request.service.description}
                     requestDate={request.createdAt}
+                    isNew={request.status === 'PENDING'}
+                    isPriority={request.status === 'URGENT'}
+
                   />
                 ))
               ) : (
@@ -252,7 +262,7 @@ function Home() {
             {/* Contador de resultados */}
             {filteredRequests.length > 0 && (
               <div className="mt-4 text-sm text-gray-500 text-right">
-                Mostrando {filteredRequests.length} de {requestsTestData.length} solicitudes
+                Mostrando {filteredRequests.length} de {serviceRequests.length} solicitudes
               </div>
             )}
           </div>

@@ -23,6 +23,7 @@ function RequestCard({
   isPriority = false,
   clientAvatar,
 
+
 }: RequestCardProps) {
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-3 sm:p-4 hover:shadow-md transition-shadow">
