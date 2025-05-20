@@ -6,6 +6,9 @@ import ServiceProviderSidebar from '@/components/layout/Service-provider-compone
 import RequestCard from '@/components/layout/Service-provider-components/Service-provider-home/service-provider-request-card';
 import { serviceRequest } from '@/types';
 import { set } from 'zod';
+import { formatDate } from '../../../../../utils';
+import AcceptRequestModal from '@/components/layout/Service-provider-components/service-provider-services-config/accept-request-modal';
+import DeclineRequestModal from '@/components/layout/Service-provider-components/service-provider-services-config/decline-request-modal';
 
 function Home() {
   const { status, data: session } = useSession();
@@ -13,76 +16,10 @@ function Home() {
   const [serviceTypeFilter, setServiceTypeFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [serviceRequests, setServiceRequests] = useState<serviceRequest[]>([]);
+  const [showAcceptModal, setShowAcceptModal] = useState(false);
+  const [showDeclineModal, setShowDeclineModal] = useState(false);
+  const [currentRequest, setCurrentRequest] = useState<serviceRequest | null>(null);
 
-  const requestsTestData = [
-    {
-      clientName: "Carlos Méndez",
-      serviceType: "Plomería",
-      description: "Reparación de fuga en el baño principal, agua goteando constantemente del lavamanos. Es urgente ya que está causando daños en el piso.",
-      requestDate: "3 Mayo, 2025 - 10:15",
-      isNew: true,
-      isPriority: true,
-      onAccept: () => console.log("Solicitud de Carlos aceptada"),
-      onDecline: () => console.log("Solicitud de Carlos rechazada"),
-      onMessage: () => console.log("Enviando mensaje a Carlos")
-    },
-    {
-      clientName: "María González",
-      serviceType: "Cañería",
-      description: "Instalación de grifo nuevo en la cocina. El actual está oxidado y gotea.",
-      requestDate: "5 Mayo, 2025 - 16:45",
-      isNew: false,
-      isPriority: false,
-      clientAvatar: "",
-      onAccept: () => console.log("Solicitud de María aceptada"),
-      onDecline: () => console.log("Solicitud de María rechazada"),
-      onMessage: () => console.log("Enviando mensaje a María")
-    },
-    {
-      clientName: "Roberto Sánchez",
-      serviceType: "Electricidad",
-      description: "Problema con la instalación eléctrica, los interruptores saltan constantemente cuando enciendo más de dos aparatos. Necesito revisión urgente.",
-      requestDate: "4 Mayo, 2025 - 09:30",
-      isNew: true,
-      isPriority: true,
-      onAccept: () => console.log("Solicitud de Roberto aceptada"),
-      onDecline: () => console.log("Solicitud de Roberto rechazada"),
-      onMessage: () => console.log("Enviando mensaje a Roberto")
-    },
-    {
-      clientName: "Ana López",
-      serviceType: "Carpintería",
-      description: "Reparación de puerta de armario que no cierra correctamente. La bisagra parece estar suelta.",
-      requestDate: "6 Mayo, 2025 - 11:20",
-      isNew: false,
-      isPriority: false,
-      onAccept: () => console.log("Solicitud de Ana aceptada"),
-      onDecline: () => console.log("Solicitud de Ana rechazada"),
-      onMessage: () => console.log("Enviando mensaje a Ana")
-    },
-    {
-      clientName: "Juan Pérez",
-      serviceType: "Plomería",
-      description: "Cambio de grifería en baño principal. Los actuales están desgastados.",
-      requestDate: "5 Mayo, 2025 - 14:30",
-      isNew: true,
-      isPriority: false,
-      onAccept: () => console.log("Solicitud de Juan aceptada"),
-      onDecline: () => console.log("Solicitud de Juan rechazada"),
-      onMessage: () => console.log("Enviando mensaje a Juan")
-    },
-    {
-      clientName: "Luisa Martínez",
-      serviceType: "Electricidad",
-      description: "Revisión de circuito eléctrico, algunas luces parpadean constantemente.",
-      requestDate: "7 Mayo, 2025 - 09:45",
-      isNew: false,
-      isPriority: true,
-      onAccept: () => console.log("Solicitud de Luisa aceptada"),
-      onDecline: () => console.log("Solicitud de Luisa rechazada"),
-      onMessage: () => console.log("Enviando mensaje a Luisa")
-    }
-  ];
   console.log(session)
 
   const fetchServiceRequests = async () => {
@@ -124,7 +61,6 @@ function Home() {
     );
   };
 
-
   // Filtrar las solicitudes según los filtros seleccionados y búsqueda
   const filteredRequests = useMemo(() => {
     return serviceRequests.filter(request => {
@@ -148,6 +84,69 @@ function Home() {
       message="Esta área es solo para proveedores de servicios"
     />;
   }
+
+  const onAccept = (request: serviceRequest) => {
+    console.log('Solicitud aceptada de la request', request.id);
+    setCurrentRequest(request);
+    setShowAcceptModal(true);
+
+  }
+
+  const onDecline = (request: serviceRequest) => {
+    console.log('Solicitud rechazada de la request', request.id);
+    setCurrentRequest(request);
+    setShowDeclineModal(true);
+  }
+  const handleConfirmDecline = async () => {
+    if (!currentRequest) return;
+    
+    try {
+      console.log('Rechazando solicitud:', currentRequest);
+      const response = await fetch(`/api/service-provider/service-requests/decline-service-request`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({requestId: currentRequest.id,})
+      });
+      
+      if (!response.ok) {
+        throw new Error('Error al rechazar la solicitud');
+      }
+      
+      // Actualizar el estado local o recargar los datos
+      fetchServiceRequests();
+      
+    } catch (error) {
+      console.error('Error:', error);
+      // Mostrar mensaje de error
+    }
+  };
+  const handleConfirmAccept = async () => {
+  if (!currentRequest) return;
+  
+  try {
+    console.log('Aceptando solicitud:', currentRequest);
+    const response = await fetch(`/api/service-provider/service-requests/accept-service-request`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({requestId: currentRequest.id,})
+    });
+    
+    if (!response.ok) {
+      throw new Error('Error al aceptar la solicitud');
+    }
+    
+    // Actualizar el estado local o recargar los datos
+    fetchServiceRequests();
+    
+  } catch (error) {
+    console.error('Error:', error);
+    // Mostrar mensaje de error
+  }
+};
 
   useEffect(() => {
     fetchServiceRequests();
@@ -237,16 +236,19 @@ function Home() {
             </div>
 
             <div className="space-y-4">
-              {serviceRequests.length > 0 ? (
-                serviceRequests.map((request, index) => (
+              {filteredRequests.length > 0 ? (
+                filteredRequests.map((request, index) => (
                   <RequestCard
                     key={index}
+                    requestId={request.id}
+                    onAccept={() => onAccept(request)}
+                    onDecline={() => onDecline(request)}
+                    clientId={request.user.id}
                     clientName={`${request.user.name} ${request.user.lastName}` || 'test'}
                     serviceType={request.service.title}
                     description={request.message || request.service.description}
                     requestDate={request.createdAt}
-                    isNew={request.status === 'PENDING'}
-                    isPriority={request.status === 'URGENT'}
+                    isNew={new Date(request.createdAt) < new Date(Date.now() - 24 * 60 * 60 * 1000)} isPriority={request.status === 'URGENT'}
 
                   />
                 ))
@@ -264,6 +266,24 @@ function Home() {
               <div className="mt-4 text-sm text-gray-500 text-right">
                 Mostrando {filteredRequests.length} de {serviceRequests.length} solicitudes
               </div>
+            )}
+            {showAcceptModal && (
+              <AcceptRequestModal 
+              isOpen = {showAcceptModal}
+              onClose ={() => setShowAcceptModal(false)}
+              onConfirm={handleConfirmAccept}
+              clientName={currentRequest?.user.name || ''}
+              serviceType={currentRequest?.service.title || ''}
+              />
+            )}
+            {showDeclineModal && (
+              <DeclineRequestModal
+              isOpen = {showDeclineModal}
+              onClose = {() => setShowDeclineModal(false)}
+              onConfirm = {handleConfirmDecline}
+              clientName = {currentRequest?.user.name || ''}
+              serviceType = {currentRequest?.service.title || ''}
+              />
             )}
           </div>
         </div>

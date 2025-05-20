@@ -2,8 +2,11 @@ import React from 'react'
 import Image from 'next/image'
 import { format } from 'path';
 import { formatDate } from '../../../../../utils';
+import { on } from 'events';
 
 type RequestCardProps = {
+  requestId: string;
+  clientId: string;
   clientName: string;
   serviceType: string;
   description: string | null;
@@ -11,10 +14,14 @@ type RequestCardProps = {
   isNew?: boolean;
   isPriority?: boolean;
   clientAvatar?: string;
+  onAccept: (requestId: string) => void;
+  onDecline: (requestId: string) => void;
 
 }
 
 function RequestCard({
+  requestId,
+  clientId,
   clientName,
   serviceType,
   description,
@@ -22,9 +29,27 @@ function RequestCard({
   isNew = false,
   isPriority = false,
   clientAvatar,
+  onAccept,
+  onDecline,
 
 
 }: RequestCardProps) {
+
+  const handleAccept = () => {
+    try {
+      onAccept(requestId);
+    } catch (error) {
+      console.error("Error accepting request:", error);
+    }
+  }
+
+  const handleDecline = () => {
+    try {
+      onDecline(requestId);
+    } catch (error) {
+      console.error("Error declining request:", error);
+    }
+  }
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-3 sm:p-4 hover:shadow-md transition-shadow">
       {/* Header: Client info and status tags */}
@@ -38,7 +63,7 @@ function RequestCard({
             )}
           </div>
           <div>
-            <h3 className="font-medium text-gray-800 text-sm sm:text-base">{clientName}</h3>
+            <h3 className="font-medium text-gray-800 text-sm sm:text-base">{clientName} {requestId}</h3>
             <p className="text-xs sm:text-sm text-gray-500">{serviceType}</p>
           </div>
         </div>
@@ -73,19 +98,19 @@ function RequestCard({
 
         <div className="flex gap-2 w-full sm:w-auto">
           <button
-        
+            onClick={() => handleDecline()}
             className="px-3 sm:px-4 py-1.5 text-xs sm:text-sm cursor-pointer border border-gray-200 rounded-md hover:bg-gray-50 transition-colors flex-1 sm:flex-none"
           >
             Rechazar
           </button>
           <button
-      
+            onClick={() => handleAccept()}
             className="px-3 sm:px-4 py-1.5 text-xs sm:text-sm cursor-pointer bg-orange-500 hover:bg-orange-600 text-white rounded-md transition-colors flex-1 sm:flex-none"
           >
             Aceptar
           </button>
           <button
-          
+
             className="p-1.5 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
             aria-label="Enviar mensaje al cliente"
           >
