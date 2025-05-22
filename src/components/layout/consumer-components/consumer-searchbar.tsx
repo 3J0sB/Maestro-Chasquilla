@@ -17,11 +17,12 @@ function SearchBar({ onSearch, placeholder = "Buscar servicios, profesionales...
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
+    onSearch(query);
   };
 
   return (
     <div className="w-full max-w-2xl mx-auto px-4">
-      <form onSubmit={handleSubmit} className="relative">
+      
         <div className="relative">
           {/* Icono de búsqueda */}
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -60,7 +61,7 @@ function SearchBar({ onSearch, placeholder = "Buscar servicios, profesionales...
             </button>
           </div>
         </div>
-      </form>
+
     </div>
   );
 }

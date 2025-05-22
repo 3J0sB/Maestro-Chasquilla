@@ -27,6 +27,7 @@ export interface service {
     status: string?;
     image: string?;
     userId: string
+    user: user;
 }
 
 export interface user {

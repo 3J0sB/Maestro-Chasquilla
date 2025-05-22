@@ -16,7 +16,7 @@ function LogoutButton() {
         width={20}
         height={20}
       />
-      Logout 
+     Salir
     </button>   
   )
 }
