@@ -107,6 +107,21 @@ function ServicesHome() {
           }
         </div>
       </div>
+      <div>
+        <div className='max-w-3xl mx-auto'>
+          {filteredServices.length === 0 && (
+            <div className="bg-white rounded-lg shadow-md p-8 text-center">
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                No se encontraron servicios
+              </h2>
+              <p className="text-gray-600 mb-6">
+                Intenta con otra búsqueda o selecciona otra categoría.
+              </p>
+            </div>
+          )}
+
+        </div>
+      </div>
 
     </div>
   )
