@@ -1,8 +1,16 @@
 import React from 'react'
+import {use} from 'react'
 
-function ProviderProfile() {
+type ProviderProfileParams = {
+  params: Promise<{ id: string }>
+
+}
+
+function ProviderProfile({params}: ProviderProfileParams) {
+  const { id } = use(params);
   return (
-    <div>ProviderProfile</div>
+
+    <div>ProviderProfile {id}</div>
   )
 }
 

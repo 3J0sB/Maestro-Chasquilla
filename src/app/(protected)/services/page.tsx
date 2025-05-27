@@ -5,12 +5,13 @@ import ConsumerHeader from '@/components/layout/consumer-components/consumer-hea
 import SearchBar from '@/components/layout/consumer-components/consumer-searchbar';
 import { useState, useEffect, useMemo } from 'react';
 import { service } from '@/types';
-import { set } from 'zod';
 import ServiceCard from '@/components/layout/consumer-components/consumer-service-cards';
+
 function ServicesHome() {
   const [category, setCategory] = useState<string>('all');
   const [services, setServices] = useState<service[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(true);
 
 
   const handleSearch = (query: string) => {
@@ -30,6 +31,7 @@ function ServicesHome() {
 
   const fetchServices = async () => {
     try {
+      setLoading(true);
       const response = await fetch(`/api/consumer/services?category=${category}`, {
         method: 'GET',
         headers: {
@@ -41,6 +43,7 @@ function ServicesHome() {
       }
       const data = await response.json();
       setServices(data);
+      setLoading(false);
       console.log('Datos de los servicios:', data);
 
     } catch (error) {
@@ -94,22 +97,38 @@ function ServicesHome() {
           />
         </div>
       </div>
-      <div className="flex justify-center mt-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl w-full px-4">
-          {filteredServices.length > 0 &&
-            filteredServices.map((service) => (
-              <ServiceCard
-                key={service.id}
-                service={service}
-                onClick={() => console.log(`Servicio seleccionado: ${service.id}`)}
-              />
-            ))
-          }
+
+      {/* Spinner de carga centralizado */}
+      {loading && (
+        <div className="flex justify-center items-center h-64 w-full">
+          <div className="relative w-12 h-12">
+            <div className="w-12 h-12 rounded-full absolute border-4 border-gray-200"></div>
+            <div className="w-12 h-12 rounded-full animate-spin absolute border-4 border-orange-500 border-t-transparent"></div>
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* Grid de servicios - solo visible cuando no está cargando */}
+      {!loading && (
+        <div className="flex justify-center mt-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl w-full px-4">
+            {filteredServices.length > 0 &&
+              filteredServices.map((service) => (
+                <ServiceCard
+                  key={service.id}
+                  service={service}
+                  onClick={() => console.log(`Servicio seleccionado: ${service.id}`)}
+                />
+              ))
+            }
+          </div>
+        </div>
+      )}
+
+      {/* Mensaje de "No se encontraron servicios" */}
       <div>
-        <div className='max-w-3xl mx-auto'>
-          {filteredServices.length === 0 && (
+        <div className='max-w-3xl mx-auto mt-8'>
+          {filteredServices.length === 0 && !loading && (
             <div className="bg-white rounded-lg shadow-md p-8 text-center">
               <h2 className="text-2xl font-bold text-gray-800 mb-4">
                 No se encontraron servicios
@@ -119,10 +138,8 @@ function ServicesHome() {
               </p>
             </div>
           )}
-
         </div>
       </div>
-
     </div>
   )
 }

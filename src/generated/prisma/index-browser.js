@@ -167,6 +167,17 @@ exports.Prisma.ServicesScalarFieldEnum = {
   userId: 'userId'
 };
 
+exports.Prisma.ReviewsScalarFieldEnum = {
+  id: 'id',
+  rating: 'rating',
+  comment: 'comment',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
+  serviceId: 'serviceId',
+  userId: 'userId'
+};
+
 exports.Prisma.ServiceRequestScalarFieldEnum = {
   id: 'id',
   message: 'message',
@@ -232,6 +243,7 @@ exports.Prisma.ModelName = {
   User: 'User',
   ServiceProviderUser: 'ServiceProviderUser',
   Services: 'Services',
+  reviews: 'reviews',
   ServiceRequest: 'ServiceRequest',
   Categories: 'Categories',
   Account: 'Account',

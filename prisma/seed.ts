@@ -28,8 +28,22 @@ async function main() {
       role: 'USER',
     },
   })
-
   console.log(`[SEED] ---> Created CONSUMER user with id: ${ConsumerUser.id}`)
+
+  const ConsumerUser2 = await prisma.user.create({
+    data: {
+      email: 'consumer2@test.com',
+      rut: '22222221-9',
+      hashedPassword: await bcrypt.hash('1234', 10),
+      name: 'Consumer User',
+      lastName: 'Consumer User',
+      lastName2: 'Consumer User ',
+      role: 'USER',
+    },
+  })
+
+  console.log(`[SEED] ---> Created CONSUMER user with id: ${ConsumerUser2.id}`)
+
 
   const AdminUser = await prisma.user.create({
     data: {
@@ -60,6 +74,30 @@ async function main() {
 
   console.log(`[SEED] ---> Created ServiceTest with id: ${serviceTest.id}`)
 
+
+  const review = await prisma.reviews.create({
+
+    data: {
+      rating: 5,
+      comment: 'This is a test review',
+      serviceId: serviceTest.id,
+      userId: ConsumerUser.id,
+    }
+  })
+
+  console.log(`[SEED] ---> Created Review with id: ${review.id}`)
+
+  const review2 = await prisma.reviews.create({
+    data: {
+      rating: 4,
+      comment: 'This is a test review number 2',
+      serviceId: serviceTest.id,
+      userId: ConsumerUser2.id,
+    }
+  })
+
+  console.log(`[SEED] ---> Created Review with id: ${review2.id}`)
+  
   const serviceTest2 = await prisma.services.create({
     data: {
       title: 'Test Service2',
@@ -124,7 +162,7 @@ async function main() {
   })
   // console.table(serviceRequestTest)
   console.log(`[SEED] ---> Created Service request test with id: ${serviceRequestTest3.id}`)
-  
+
 
   const category = await prisma.categories.createMany({
     data: [

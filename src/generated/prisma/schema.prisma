@@ -35,6 +35,7 @@ model User {
   updatedAt      DateTime  @updatedAt
   deletedAt      DateTime? @map("deleted_at")
 
+  reviews        reviews[]
   accounts       Account[]
   serviceRequest ServiceRequest[]
 
@@ -79,10 +80,27 @@ model Services {
   deletedAt       DateTime? @map("deleted_at")
   userId          String    @map("user_id")
 
+  reviews        reviews[]
   user           ServiceProviderUser @relation(fields: [userId], references: [id], onDelete: Cascade)
   serviceRequest ServiceRequest[]
 
   @@map("services")
+}
+
+model reviews {
+  id        String    @id @default(cuid())
+  rating    Int
+  comment   String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? @map("deleted_at")
+  serviceId String    @map("service_id")
+  userId    String    @map("user_id")
+
+  service Services @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("reviews")
 }
 
 model ServiceRequest {
