@@ -23,8 +23,8 @@ enum Role {
 model User {
   id             String    @id @default(cuid())
   name           String?
-  lastName       String?   
-  lastName2      String?   
+  lastName       String?
+  lastName2      String?
   rut            String?   @unique
   email          String    @unique
   emailVerified  DateTime? @map("email_verified")
@@ -35,8 +35,8 @@ model User {
   updatedAt      DateTime  @updatedAt
   deletedAt      DateTime? @map("deleted_at")
 
-  reviews reviews[]
-  accounts Account[]
+  reviews        reviews[]
+  accounts       Account[]
   serviceRequest ServiceRequest[]
 
   @@map("users")
@@ -45,8 +45,10 @@ model User {
 model ServiceProviderUser {
   id             String    @id @default(cuid())
   name           String?
-  lastName       String?   
-  lastName2      String?   
+  lastName       String?
+  lastName2      String?
+  about          String?
+  description    String?
   rut            String    @unique
   email          String    @unique
   emailVerified  DateTime? @map("email_verified")
@@ -58,26 +60,28 @@ model ServiceProviderUser {
   deletedAt      DateTime? @map("deleted_at")
 
   services Services[]
-  requests  ServiceRequest[]
+  requests ServiceRequest[]
+
   @@map("service_provider_users")
 }
 
 model Services {
-  id              String    @id @default(cuid())
-  title           String
-  price           Float?
-  minServicePrice Float?
-  maxServicePrice Float?
-  description     String?
-  serviceTag      String?
-  serviceTag2     String?
-  serviceTag3     String?
-  status          String?
-  image           String?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  deletedAt       DateTime? @map("deleted_at")
-  userId          String    @map("user_id")
+  id               String    @id @default(cuid())
+  title            String
+  price            Float?
+  minServicePrice  Float?
+  maxServicePrice  Float?
+  smallDescription String?
+  description      String?
+  serviceTag       String?
+  serviceTag2      String?
+  serviceTag3      String?
+  status           String?
+  image            String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  deletedAt        DateTime? @map("deleted_at")
+  userId           String    @map("user_id")
 
   reviews        reviews[]
   user           ServiceProviderUser @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -87,20 +91,21 @@ model Services {
 }
 
 model reviews {
-  id         String    @id @default(cuid())
-  rating     Int
-  comment    String?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  deletedAt  DateTime? @map("deleted_at")
-  serviceId  String    @map("service_id")
-  userId     String    @map("user_id")
+  id        String    @id @default(cuid())
+  rating    Int
+  comment   String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? @map("deleted_at")
+  serviceId String    @map("service_id")
+  userId    String    @map("user_id")
 
   service Services @relation(fields: [serviceId], references: [id], onDelete: Cascade)
   user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("reviews")
 }
+
 model ServiceRequest {
   id         String    @id @default(cuid())
   message    String
@@ -108,27 +113,27 @@ model ServiceRequest {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   deletedAt  DateTime? @map("deleted_at")
-  providerId String   @map("provider_id")
+  providerId String    @map("provider_id")
   consumerId String    @map("consumer_id")
   serviceId  String    @map("service_id")
 
-  service Services @relation(fields: [serviceId], references: [id], onDelete: Cascade)
-  user    User     @relation(fields: [consumerId], references: [id], onDelete: Cascade)
+  service  Services            @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  user     User                @relation(fields: [consumerId], references: [id], onDelete: Cascade)
   provider ServiceProviderUser @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
   @@map("service_request")
 }
 
-
-
-model Categories{
+model Categories {
   id        String    @id @default(cuid())
-  name       String
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  deletedAt  DateTime? @map("deleted_at")
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? @map("deleted_at")
 
   @@map("category")
 }
+
 model Account {
   id                String  @id @default(cuid())
   userId            String  @map("user_id")

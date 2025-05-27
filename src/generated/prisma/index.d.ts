@@ -2897,6 +2897,8 @@ export namespace Prisma {
     name: string | null
     lastName: string | null
     lastName2: string | null
+    about: string | null
+    description: string | null
     rut: string | null
     email: string | null
     emailVerified: Date | null
@@ -2913,6 +2915,8 @@ export namespace Prisma {
     name: string | null
     lastName: string | null
     lastName2: string | null
+    about: string | null
+    description: string | null
     rut: string | null
     email: string | null
     emailVerified: Date | null
@@ -2929,6 +2933,8 @@ export namespace Prisma {
     name: number
     lastName: number
     lastName2: number
+    about: number
+    description: number
     rut: number
     email: number
     emailVerified: number
@@ -2947,6 +2953,8 @@ export namespace Prisma {
     name?: true
     lastName?: true
     lastName2?: true
+    about?: true
+    description?: true
     rut?: true
     email?: true
     emailVerified?: true
@@ -2963,6 +2971,8 @@ export namespace Prisma {
     name?: true
     lastName?: true
     lastName2?: true
+    about?: true
+    description?: true
     rut?: true
     email?: true
     emailVerified?: true
@@ -2979,6 +2989,8 @@ export namespace Prisma {
     name?: true
     lastName?: true
     lastName2?: true
+    about?: true
+    description?: true
     rut?: true
     email?: true
     emailVerified?: true
@@ -3068,6 +3080,8 @@ export namespace Prisma {
     name: string | null
     lastName: string | null
     lastName2: string | null
+    about: string | null
+    description: string | null
     rut: string
     email: string
     emailVerified: Date | null
@@ -3101,6 +3115,8 @@ export namespace Prisma {
     name?: boolean
     lastName?: boolean
     lastName2?: boolean
+    about?: boolean
+    description?: boolean
     rut?: boolean
     email?: boolean
     emailVerified?: boolean
@@ -3120,6 +3136,8 @@ export namespace Prisma {
     name?: boolean
     lastName?: boolean
     lastName2?: boolean
+    about?: boolean
+    description?: boolean
     rut?: boolean
     email?: boolean
     emailVerified?: boolean
@@ -3136,6 +3154,8 @@ export namespace Prisma {
     name?: boolean
     lastName?: boolean
     lastName2?: boolean
+    about?: boolean
+    description?: boolean
     rut?: boolean
     email?: boolean
     emailVerified?: boolean
@@ -3152,6 +3172,8 @@ export namespace Prisma {
     name?: boolean
     lastName?: boolean
     lastName2?: boolean
+    about?: boolean
+    description?: boolean
     rut?: boolean
     email?: boolean
     emailVerified?: boolean
@@ -3163,7 +3185,7 @@ export namespace Prisma {
     deletedAt?: boolean
   }
 
-  export type ServiceProviderUserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "lastName" | "lastName2" | "rut" | "email" | "emailVerified" | "image" | "hashedPassword" | "role" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["serviceProviderUser"]>
+  export type ServiceProviderUserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "lastName" | "lastName2" | "about" | "description" | "rut" | "email" | "emailVerified" | "image" | "hashedPassword" | "role" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["serviceProviderUser"]>
   export type ServiceProviderUserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     services?: boolean | ServiceProviderUser$servicesArgs<ExtArgs>
     requests?: boolean | ServiceProviderUser$requestsArgs<ExtArgs>
@@ -3183,6 +3205,8 @@ export namespace Prisma {
       name: string | null
       lastName: string | null
       lastName2: string | null
+      about: string | null
+      description: string | null
       rut: string
       email: string
       emailVerified: Date | null
@@ -3621,6 +3645,8 @@ export namespace Prisma {
     readonly name: FieldRef<"ServiceProviderUser", 'String'>
     readonly lastName: FieldRef<"ServiceProviderUser", 'String'>
     readonly lastName2: FieldRef<"ServiceProviderUser", 'String'>
+    readonly about: FieldRef<"ServiceProviderUser", 'String'>
+    readonly description: FieldRef<"ServiceProviderUser", 'String'>
     readonly rut: FieldRef<"ServiceProviderUser", 'String'>
     readonly email: FieldRef<"ServiceProviderUser", 'String'>
     readonly emailVerified: FieldRef<"ServiceProviderUser", 'DateTime'>
@@ -4114,6 +4140,7 @@ export namespace Prisma {
     price: number | null
     minServicePrice: number | null
     maxServicePrice: number | null
+    smallDescription: string | null
     description: string | null
     serviceTag: string | null
     serviceTag2: string | null
@@ -4132,6 +4159,7 @@ export namespace Prisma {
     price: number | null
     minServicePrice: number | null
     maxServicePrice: number | null
+    smallDescription: string | null
     description: string | null
     serviceTag: string | null
     serviceTag2: string | null
@@ -4150,6 +4178,7 @@ export namespace Prisma {
     price: number
     minServicePrice: number
     maxServicePrice: number
+    smallDescription: number
     description: number
     serviceTag: number
     serviceTag2: number
@@ -4182,6 +4211,7 @@ export namespace Prisma {
     price?: true
     minServicePrice?: true
     maxServicePrice?: true
+    smallDescription?: true
     description?: true
     serviceTag?: true
     serviceTag2?: true
@@ -4200,6 +4230,7 @@ export namespace Prisma {
     price?: true
     minServicePrice?: true
     maxServicePrice?: true
+    smallDescription?: true
     description?: true
     serviceTag?: true
     serviceTag2?: true
@@ -4218,6 +4249,7 @@ export namespace Prisma {
     price?: true
     minServicePrice?: true
     maxServicePrice?: true
+    smallDescription?: true
     description?: true
     serviceTag?: true
     serviceTag2?: true
@@ -4323,6 +4355,7 @@ export namespace Prisma {
     price: number | null
     minServicePrice: number | null
     maxServicePrice: number | null
+    smallDescription: string | null
     description: string | null
     serviceTag: string | null
     serviceTag2: string | null
@@ -4360,6 +4393,7 @@ export namespace Prisma {
     price?: boolean
     minServicePrice?: boolean
     maxServicePrice?: boolean
+    smallDescription?: boolean
     description?: boolean
     serviceTag?: boolean
     serviceTag2?: boolean
@@ -4382,6 +4416,7 @@ export namespace Prisma {
     price?: boolean
     minServicePrice?: boolean
     maxServicePrice?: boolean
+    smallDescription?: boolean
     description?: boolean
     serviceTag?: boolean
     serviceTag2?: boolean
@@ -4401,6 +4436,7 @@ export namespace Prisma {
     price?: boolean
     minServicePrice?: boolean
     maxServicePrice?: boolean
+    smallDescription?: boolean
     description?: boolean
     serviceTag?: boolean
     serviceTag2?: boolean
@@ -4420,6 +4456,7 @@ export namespace Prisma {
     price?: boolean
     minServicePrice?: boolean
     maxServicePrice?: boolean
+    smallDescription?: boolean
     description?: boolean
     serviceTag?: boolean
     serviceTag2?: boolean
@@ -4432,7 +4469,7 @@ export namespace Prisma {
     userId?: boolean
   }
 
-  export type ServicesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "price" | "minServicePrice" | "maxServicePrice" | "description" | "serviceTag" | "serviceTag2" | "serviceTag3" | "status" | "image" | "createdAt" | "updatedAt" | "deletedAt" | "userId", ExtArgs["result"]["services"]>
+  export type ServicesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "price" | "minServicePrice" | "maxServicePrice" | "smallDescription" | "description" | "serviceTag" | "serviceTag2" | "serviceTag3" | "status" | "image" | "createdAt" | "updatedAt" | "deletedAt" | "userId", ExtArgs["result"]["services"]>
   export type ServicesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     reviews?: boolean | Services$reviewsArgs<ExtArgs>
     user?: boolean | ServiceProviderUserDefaultArgs<ExtArgs>
@@ -4459,6 +4496,7 @@ export namespace Prisma {
       price: number | null
       minServicePrice: number | null
       maxServicePrice: number | null
+      smallDescription: string | null
       description: string | null
       serviceTag: string | null
       serviceTag2: string | null
@@ -4900,6 +4938,7 @@ export namespace Prisma {
     readonly price: FieldRef<"Services", 'Float'>
     readonly minServicePrice: FieldRef<"Services", 'Float'>
     readonly maxServicePrice: FieldRef<"Services", 'Float'>
+    readonly smallDescription: FieldRef<"Services", 'String'>
     readonly description: FieldRef<"Services", 'String'>
     readonly serviceTag: FieldRef<"Services", 'String'>
     readonly serviceTag2: FieldRef<"Services", 'String'>
@@ -10822,6 +10861,8 @@ export namespace Prisma {
     name: 'name',
     lastName: 'lastName',
     lastName2: 'lastName2',
+    about: 'about',
+    description: 'description',
     rut: 'rut',
     email: 'email',
     emailVerified: 'emailVerified',
@@ -10842,6 +10883,7 @@ export namespace Prisma {
     price: 'price',
     minServicePrice: 'minServicePrice',
     maxServicePrice: 'maxServicePrice',
+    smallDescription: 'smallDescription',
     description: 'description',
     serviceTag: 'serviceTag',
     serviceTag2: 'serviceTag2',
@@ -11135,6 +11177,8 @@ export namespace Prisma {
     name?: StringNullableFilter<"ServiceProviderUser"> | string | null
     lastName?: StringNullableFilter<"ServiceProviderUser"> | string | null
     lastName2?: StringNullableFilter<"ServiceProviderUser"> | string | null
+    about?: StringNullableFilter<"ServiceProviderUser"> | string | null
+    description?: StringNullableFilter<"ServiceProviderUser"> | string | null
     rut?: StringFilter<"ServiceProviderUser"> | string
     email?: StringFilter<"ServiceProviderUser"> | string
     emailVerified?: DateTimeNullableFilter<"ServiceProviderUser"> | Date | string | null
@@ -11153,6 +11197,8 @@ export namespace Prisma {
     name?: SortOrderInput | SortOrder
     lastName?: SortOrderInput | SortOrder
     lastName2?: SortOrderInput | SortOrder
+    about?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
     rut?: SortOrder
     email?: SortOrder
     emailVerified?: SortOrderInput | SortOrder
@@ -11176,6 +11222,8 @@ export namespace Prisma {
     name?: StringNullableFilter<"ServiceProviderUser"> | string | null
     lastName?: StringNullableFilter<"ServiceProviderUser"> | string | null
     lastName2?: StringNullableFilter<"ServiceProviderUser"> | string | null
+    about?: StringNullableFilter<"ServiceProviderUser"> | string | null
+    description?: StringNullableFilter<"ServiceProviderUser"> | string | null
     emailVerified?: DateTimeNullableFilter<"ServiceProviderUser"> | Date | string | null
     image?: StringNullableFilter<"ServiceProviderUser"> | string | null
     hashedPassword?: StringFilter<"ServiceProviderUser"> | string
@@ -11192,6 +11240,8 @@ export namespace Prisma {
     name?: SortOrderInput | SortOrder
     lastName?: SortOrderInput | SortOrder
     lastName2?: SortOrderInput | SortOrder
+    about?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
     rut?: SortOrder
     email?: SortOrder
     emailVerified?: SortOrderInput | SortOrder
@@ -11214,6 +11264,8 @@ export namespace Prisma {
     name?: StringNullableWithAggregatesFilter<"ServiceProviderUser"> | string | null
     lastName?: StringNullableWithAggregatesFilter<"ServiceProviderUser"> | string | null
     lastName2?: StringNullableWithAggregatesFilter<"ServiceProviderUser"> | string | null
+    about?: StringNullableWithAggregatesFilter<"ServiceProviderUser"> | string | null
+    description?: StringNullableWithAggregatesFilter<"ServiceProviderUser"> | string | null
     rut?: StringWithAggregatesFilter<"ServiceProviderUser"> | string
     email?: StringWithAggregatesFilter<"ServiceProviderUser"> | string
     emailVerified?: DateTimeNullableWithAggregatesFilter<"ServiceProviderUser"> | Date | string | null
@@ -11234,6 +11286,7 @@ export namespace Prisma {
     price?: FloatNullableFilter<"Services"> | number | null
     minServicePrice?: FloatNullableFilter<"Services"> | number | null
     maxServicePrice?: FloatNullableFilter<"Services"> | number | null
+    smallDescription?: StringNullableFilter<"Services"> | string | null
     description?: StringNullableFilter<"Services"> | string | null
     serviceTag?: StringNullableFilter<"Services"> | string | null
     serviceTag2?: StringNullableFilter<"Services"> | string | null
@@ -11255,6 +11308,7 @@ export namespace Prisma {
     price?: SortOrderInput | SortOrder
     minServicePrice?: SortOrderInput | SortOrder
     maxServicePrice?: SortOrderInput | SortOrder
+    smallDescription?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
     serviceTag?: SortOrderInput | SortOrder
     serviceTag2?: SortOrderInput | SortOrder
@@ -11279,6 +11333,7 @@ export namespace Prisma {
     price?: FloatNullableFilter<"Services"> | number | null
     minServicePrice?: FloatNullableFilter<"Services"> | number | null
     maxServicePrice?: FloatNullableFilter<"Services"> | number | null
+    smallDescription?: StringNullableFilter<"Services"> | string | null
     description?: StringNullableFilter<"Services"> | string | null
     serviceTag?: StringNullableFilter<"Services"> | string | null
     serviceTag2?: StringNullableFilter<"Services"> | string | null
@@ -11300,6 +11355,7 @@ export namespace Prisma {
     price?: SortOrderInput | SortOrder
     minServicePrice?: SortOrderInput | SortOrder
     maxServicePrice?: SortOrderInput | SortOrder
+    smallDescription?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
     serviceTag?: SortOrderInput | SortOrder
     serviceTag2?: SortOrderInput | SortOrder
@@ -11326,6 +11382,7 @@ export namespace Prisma {
     price?: FloatNullableWithAggregatesFilter<"Services"> | number | null
     minServicePrice?: FloatNullableWithAggregatesFilter<"Services"> | number | null
     maxServicePrice?: FloatNullableWithAggregatesFilter<"Services"> | number | null
+    smallDescription?: StringNullableWithAggregatesFilter<"Services"> | string | null
     description?: StringNullableWithAggregatesFilter<"Services"> | string | null
     serviceTag?: StringNullableWithAggregatesFilter<"Services"> | string | null
     serviceTag2?: StringNullableWithAggregatesFilter<"Services"> | string | null
@@ -11811,6 +11868,8 @@ export namespace Prisma {
     name?: string | null
     lastName?: string | null
     lastName2?: string | null
+    about?: string | null
+    description?: string | null
     rut: string
     email: string
     emailVerified?: Date | string | null
@@ -11829,6 +11888,8 @@ export namespace Prisma {
     name?: string | null
     lastName?: string | null
     lastName2?: string | null
+    about?: string | null
+    description?: string | null
     rut: string
     email: string
     emailVerified?: Date | string | null
@@ -11847,6 +11908,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName2?: NullableStringFieldUpdateOperationsInput | string | null
+    about?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11865,6 +11928,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName2?: NullableStringFieldUpdateOperationsInput | string | null
+    about?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11883,6 +11948,8 @@ export namespace Prisma {
     name?: string | null
     lastName?: string | null
     lastName2?: string | null
+    about?: string | null
+    description?: string | null
     rut: string
     email: string
     emailVerified?: Date | string | null
@@ -11899,6 +11966,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName2?: NullableStringFieldUpdateOperationsInput | string | null
+    about?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11915,6 +11984,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName2?: NullableStringFieldUpdateOperationsInput | string | null
+    about?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11932,6 +12003,7 @@ export namespace Prisma {
     price?: number | null
     minServicePrice?: number | null
     maxServicePrice?: number | null
+    smallDescription?: string | null
     description?: string | null
     serviceTag?: string | null
     serviceTag2?: string | null
@@ -11952,6 +12024,7 @@ export namespace Prisma {
     price?: number | null
     minServicePrice?: number | null
     maxServicePrice?: number | null
+    smallDescription?: string | null
     description?: string | null
     serviceTag?: string | null
     serviceTag2?: string | null
@@ -11972,6 +12045,7 @@ export namespace Prisma {
     price?: NullableFloatFieldUpdateOperationsInput | number | null
     minServicePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     maxServicePrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    smallDescription?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     serviceTag?: NullableStringFieldUpdateOperationsInput | string | null
     serviceTag2?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11992,6 +12066,7 @@ export namespace Prisma {
     price?: NullableFloatFieldUpdateOperationsInput | number | null
     minServicePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     maxServicePrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    smallDescription?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     serviceTag?: NullableStringFieldUpdateOperationsInput | string | null
     serviceTag2?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12012,6 +12087,7 @@ export namespace Prisma {
     price?: number | null
     minServicePrice?: number | null
     maxServicePrice?: number | null
+    smallDescription?: string | null
     description?: string | null
     serviceTag?: string | null
     serviceTag2?: string | null
@@ -12030,6 +12106,7 @@ export namespace Prisma {
     price?: NullableFloatFieldUpdateOperationsInput | number | null
     minServicePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     maxServicePrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    smallDescription?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     serviceTag?: NullableStringFieldUpdateOperationsInput | string | null
     serviceTag2?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12047,6 +12124,7 @@ export namespace Prisma {
     price?: NullableFloatFieldUpdateOperationsInput | number | null
     minServicePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     maxServicePrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    smallDescription?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     serviceTag?: NullableStringFieldUpdateOperationsInput | string | null
     serviceTag2?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12648,6 +12726,8 @@ export namespace Prisma {
     name?: SortOrder
     lastName?: SortOrder
     lastName2?: SortOrder
+    about?: SortOrder
+    description?: SortOrder
     rut?: SortOrder
     email?: SortOrder
     emailVerified?: SortOrder
@@ -12664,6 +12744,8 @@ export namespace Prisma {
     name?: SortOrder
     lastName?: SortOrder
     lastName2?: SortOrder
+    about?: SortOrder
+    description?: SortOrder
     rut?: SortOrder
     email?: SortOrder
     emailVerified?: SortOrder
@@ -12680,6 +12762,8 @@ export namespace Prisma {
     name?: SortOrder
     lastName?: SortOrder
     lastName2?: SortOrder
+    about?: SortOrder
+    description?: SortOrder
     rut?: SortOrder
     email?: SortOrder
     emailVerified?: SortOrder
@@ -12713,6 +12797,7 @@ export namespace Prisma {
     price?: SortOrder
     minServicePrice?: SortOrder
     maxServicePrice?: SortOrder
+    smallDescription?: SortOrder
     description?: SortOrder
     serviceTag?: SortOrder
     serviceTag2?: SortOrder
@@ -12737,6 +12822,7 @@ export namespace Prisma {
     price?: SortOrder
     minServicePrice?: SortOrder
     maxServicePrice?: SortOrder
+    smallDescription?: SortOrder
     description?: SortOrder
     serviceTag?: SortOrder
     serviceTag2?: SortOrder
@@ -12755,6 +12841,7 @@ export namespace Prisma {
     price?: SortOrder
     minServicePrice?: SortOrder
     maxServicePrice?: SortOrder
+    smallDescription?: SortOrder
     description?: SortOrder
     serviceTag?: SortOrder
     serviceTag2?: SortOrder
@@ -13893,6 +13980,7 @@ export namespace Prisma {
     price?: number | null
     minServicePrice?: number | null
     maxServicePrice?: number | null
+    smallDescription?: string | null
     description?: string | null
     serviceTag?: string | null
     serviceTag2?: string | null
@@ -13912,6 +14000,7 @@ export namespace Prisma {
     price?: number | null
     minServicePrice?: number | null
     maxServicePrice?: number | null
+    smallDescription?: string | null
     description?: string | null
     serviceTag?: string | null
     serviceTag2?: string | null
@@ -13992,6 +14081,7 @@ export namespace Prisma {
     price?: FloatNullableFilter<"Services"> | number | null
     minServicePrice?: FloatNullableFilter<"Services"> | number | null
     maxServicePrice?: FloatNullableFilter<"Services"> | number | null
+    smallDescription?: StringNullableFilter<"Services"> | string | null
     description?: StringNullableFilter<"Services"> | string | null
     serviceTag?: StringNullableFilter<"Services"> | string | null
     serviceTag2?: StringNullableFilter<"Services"> | string | null
@@ -14055,6 +14145,8 @@ export namespace Prisma {
     name?: string | null
     lastName?: string | null
     lastName2?: string | null
+    about?: string | null
+    description?: string | null
     rut: string
     email: string
     emailVerified?: Date | string | null
@@ -14072,6 +14164,8 @@ export namespace Prisma {
     name?: string | null
     lastName?: string | null
     lastName2?: string | null
+    about?: string | null
+    description?: string | null
     rut: string
     email: string
     emailVerified?: Date | string | null
@@ -14153,6 +14247,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName2?: NullableStringFieldUpdateOperationsInput | string | null
+    about?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14170,6 +14266,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName2?: NullableStringFieldUpdateOperationsInput | string | null
+    about?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14204,6 +14302,7 @@ export namespace Prisma {
     price?: number | null
     minServicePrice?: number | null
     maxServicePrice?: number | null
+    smallDescription?: string | null
     description?: string | null
     serviceTag?: string | null
     serviceTag2?: string | null
@@ -14223,6 +14322,7 @@ export namespace Prisma {
     price?: number | null
     minServicePrice?: number | null
     maxServicePrice?: number | null
+    smallDescription?: string | null
     description?: string | null
     serviceTag?: string | null
     serviceTag2?: string | null
@@ -14299,6 +14399,7 @@ export namespace Prisma {
     price?: NullableFloatFieldUpdateOperationsInput | number | null
     minServicePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     maxServicePrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    smallDescription?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     serviceTag?: NullableStringFieldUpdateOperationsInput | string | null
     serviceTag2?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14318,6 +14419,7 @@ export namespace Prisma {
     price?: NullableFloatFieldUpdateOperationsInput | number | null
     minServicePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     maxServicePrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    smallDescription?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     serviceTag?: NullableStringFieldUpdateOperationsInput | string | null
     serviceTag2?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14384,6 +14486,7 @@ export namespace Prisma {
     price?: number | null
     minServicePrice?: number | null
     maxServicePrice?: number | null
+    smallDescription?: string | null
     description?: string | null
     serviceTag?: string | null
     serviceTag2?: string | null
@@ -14403,6 +14506,7 @@ export namespace Prisma {
     price?: number | null
     minServicePrice?: number | null
     maxServicePrice?: number | null
+    smallDescription?: string | null
     description?: string | null
     serviceTag?: string | null
     serviceTag2?: string | null
@@ -14467,6 +14571,8 @@ export namespace Prisma {
     name?: string | null
     lastName?: string | null
     lastName2?: string | null
+    about?: string | null
+    description?: string | null
     rut: string
     email: string
     emailVerified?: Date | string | null
@@ -14484,6 +14590,8 @@ export namespace Prisma {
     name?: string | null
     lastName?: string | null
     lastName2?: string | null
+    about?: string | null
+    description?: string | null
     rut: string
     email: string
     emailVerified?: Date | string | null
@@ -14518,6 +14626,7 @@ export namespace Prisma {
     price?: NullableFloatFieldUpdateOperationsInput | number | null
     minServicePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     maxServicePrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    smallDescription?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     serviceTag?: NullableStringFieldUpdateOperationsInput | string | null
     serviceTag2?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14537,6 +14646,7 @@ export namespace Prisma {
     price?: NullableFloatFieldUpdateOperationsInput | number | null
     minServicePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     maxServicePrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    smallDescription?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     serviceTag?: NullableStringFieldUpdateOperationsInput | string | null
     serviceTag2?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14613,6 +14723,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName2?: NullableStringFieldUpdateOperationsInput | string | null
+    about?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14630,6 +14742,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName2?: NullableStringFieldUpdateOperationsInput | string | null
+    about?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14876,6 +14990,7 @@ export namespace Prisma {
     price?: number | null
     minServicePrice?: number | null
     maxServicePrice?: number | null
+    smallDescription?: string | null
     description?: string | null
     serviceTag?: string | null
     serviceTag2?: string | null
@@ -14904,6 +15019,7 @@ export namespace Prisma {
     price?: NullableFloatFieldUpdateOperationsInput | number | null
     minServicePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     maxServicePrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    smallDescription?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     serviceTag?: NullableStringFieldUpdateOperationsInput | string | null
     serviceTag2?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14923,6 +15039,7 @@ export namespace Prisma {
     price?: NullableFloatFieldUpdateOperationsInput | number | null
     minServicePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     maxServicePrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    smallDescription?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     serviceTag?: NullableStringFieldUpdateOperationsInput | string | null
     serviceTag2?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14942,6 +15059,7 @@ export namespace Prisma {
     price?: NullableFloatFieldUpdateOperationsInput | number | null
     minServicePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     maxServicePrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    smallDescription?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     serviceTag?: NullableStringFieldUpdateOperationsInput | string | null
     serviceTag2?: NullableStringFieldUpdateOperationsInput | string | null
