@@ -28,6 +28,7 @@ export interface service {
     image: string?;
     userId: string
     user: user;
+    reviews: review[];
 }
 
 export interface user {
@@ -41,3 +42,27 @@ export interface user {
     image: string;
 }
 
+export interface review{
+    id: string;
+    comment: string;
+    rating: number;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string;
+    serviceId: string;
+    userId: string;
+    user: user;
+}
+
+
+export interface serviceProvider {
+    id: string;
+    name: string;
+    lastName: string;
+    lastName2: string;
+    rut: string;
+    email: string;
+    emailVerified: boolean;
+    image: string;
+    services: service[];
+}
