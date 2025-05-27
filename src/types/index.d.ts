@@ -1,5 +1,3 @@
-
-
 export interface serviceRequest {
     id: string;
     message: string;
@@ -40,6 +38,8 @@ export interface user {
     email: string;
     emailVerified: boolean;
     image: string;
+    locationId?: string;
+    location?: location; // Relación con location
 }
 
 export interface review{
@@ -54,15 +54,32 @@ export interface review{
     user: user;
 }
 
+export interface location {
+  id: string;
+  country: string;
+  region: string;
+  city: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string;
+}
 
+// Actualización de la interfaz serviceProvider para incluir la location
 export interface serviceProvider {
-    id: string;
-    name: string;
-    lastName: string;
-    lastName2: string;
-    rut: string;
-    email: string;
-    emailVerified: boolean;
-    image: string;
-    services: service[];
+  id: string;
+  name: string;
+  lastName: string;
+  lastName2: string;
+  about?: string;
+  description?: string;
+  rut: string;
+  email: string;
+  emailVerified: boolean;
+  image: string;
+  locationId?: string;
+  location?: location; // Relación con location
+  services: service[];
 }

@@ -9,7 +9,7 @@ import ProviderProfileHeader from '@/components/layout/consumer-components/provi
 import ProviderServices from '@/components/layout/consumer-components/provider-profile/provider-profile-services'
 import ProviderReviews from '@/components/layout/consumer-components/provider-profile/provider-profile-reviews'
 import ProviderProfileAbout from '@/components/layout/consumer-components/provider-profile/provider-profile-about'
-
+import { useSession } from 'next-auth/react'
 type ProviderProfileParams = {
   params: Promise<{ id: string }>
 }
@@ -17,6 +17,7 @@ type ProviderProfileParams = {
 function ProviderProfile({ params }: ProviderProfileParams) {
   const [provider, setProvider] = useState<serviceProvider | null>(null)
   const [loading, setLoading] = useState(true)
+  const { status, data: session } = useSession();
   const { id } = use(params)
 
   const fetchProvider = async (id: string) => {
@@ -88,7 +89,7 @@ function ProviderProfile({ params }: ProviderProfileParams) {
   const averageRating = allReviews.length > 0
     ? allReviews.reduce((acc, review) => acc + review.rating, 0) / allReviews.length
     : 0
-
+  console.log(allReviews)
   // Para los ratings detallados
   const ratingBreakdown = {
     5: allReviews.filter(r => r.rating === 5).length,
@@ -129,6 +130,7 @@ function ProviderProfile({ params }: ProviderProfileParams) {
           reviewCount={allReviews.length}
           location="Talca, Chile"
           isVerified={true}
+          role={session?.user.role || ''}
         />
         <ProviderProfileAbout
           description={provider.description || 'texto de ejemplo para la descripción del proveedor.'}

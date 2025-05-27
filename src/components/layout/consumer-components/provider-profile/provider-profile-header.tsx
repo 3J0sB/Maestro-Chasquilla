@@ -10,8 +10,8 @@ interface ProviderProfileHeaderProps {
   rating: number;
   reviewCount: number;
   location?: string;
-
   isVerified?: boolean;
+  role: string | undefined;
 }
 
 const ProviderProfileHeader: React.FC<ProviderProfileHeaderProps> = ({
@@ -23,11 +23,11 @@ const ProviderProfileHeader: React.FC<ProviderProfileHeaderProps> = ({
   rating,
   reviewCount,
   location,
-
+  role,
   isVerified = false
 }) => {
   const fullName = [name, lastName, lastName2].filter(Boolean).join(' ');
-  
+
   return (
     <div className="bg-white rounded-lg shadow-md p-6 mb-6">
       <div className="flex flex-col md:flex-row items-center md:items-start">
@@ -41,17 +41,17 @@ const ProviderProfileHeader: React.FC<ProviderProfileHeaderProps> = ({
             className="object-cover w-full h-full"
           />
         </div>
-        
+
         {/* Información principal */}
         <div className="text-center md:text-left flex-grow">
           <h1 className="text-3xl font-bold text-gray-800">{fullName}</h1>
           <p className="text-gray-600 mb-2">{profession}</p>
-          
+
           {/* Rating */}
           <div className="flex items-center justify-center md:justify-start mb-2">
             <div className="flex mr-2">
               {[1, 2, 3, 4, 5].map((star) => (
-                <svg 
+                <svg
                   key={star}
                   className={`w-5 h-5 ${star <= Math.round(rating) ? "text-yellow-400" : "text-gray-300"}`}
                   fill="currentColor"
@@ -63,7 +63,7 @@ const ProviderProfileHeader: React.FC<ProviderProfileHeaderProps> = ({
             </div>
             <span className="text-gray-700 font-medium">{rating.toFixed(1)}</span>
             <span className="text-gray-500 ml-1">({reviewCount} reseñas)</span>
-            
+
             {isVerified && (
               <span className="ml-2 px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full flex items-center">
                 <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -73,7 +73,7 @@ const ProviderProfileHeader: React.FC<ProviderProfileHeaderProps> = ({
               </span>
             )}
           </div>
-          
+
           {/* Ubicación y tiempo de respuesta */}
           <div className="flex flex-wrap justify-center md:justify-start text-sm text-gray-500">
             {location && (
@@ -89,23 +89,22 @@ const ProviderProfileHeader: React.FC<ProviderProfileHeaderProps> = ({
 
           </div>
         </div>
-        
+
         {/* Botones de acción */}
-        <div className="mt-4 md:mt-0 flex flex-col gap-2">
-          <button className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium rounded-lg px-4 py-2 flex items-center justify-center transition-colors">
-            <svg className="w-5 h-5 mr-1" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
-              <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            </svg>
-            Mensaje
-          </button>
-          
-          <button className="bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-lg px-4 py-2 flex items-center justify-center transition-colors">
-            <svg className="w-5 h-5 mr-1" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
-              <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            Reservar ahora
-          </button>
-        </div>
+        {
+          role === 'USER' && (
+            <div className="mt-4 md:mt-0 flex flex-col gap-2">
+              <button className="bg-white border cursor-pointer border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-orange-500 hover:text-orange-500 font-medium rounded-lg px-4 py-2 flex items-center justify-center transition-colors">
+                <svg className="w-5 h-5 mr-1" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+                  <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+                Mensaje
+              </button>
+            </div>
+
+          )
+        }
+
       </div>
     </div>
   );

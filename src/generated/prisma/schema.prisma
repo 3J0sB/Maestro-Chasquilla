@@ -34,10 +34,12 @@ model User {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   deletedAt      DateTime? @map("deleted_at")
+  locationId     String?   @unique @map("location_id") // También hacemos esto @unique para garantizar relación 1:1
 
   reviews        reviews[]
   accounts       Account[]
   serviceRequest ServiceRequest[]
+  location       Location?        @relation(fields: [locationId], references: [id])
 
   @@map("users")
 }
@@ -58,11 +60,31 @@ model ServiceProviderUser {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   deletedAt      DateTime? @map("deleted_at")
+  locationId     String?   @unique @map("location_id") // Hacemos esto @unique para garantizar relación 1:1
 
   services Services[]
   requests ServiceRequest[]
+  location Location?        @relation(fields: [locationId], references: [id])
 
   @@map("service_provider_users")
+}
+
+model Location {
+  id        String    @id @default(cuid())
+  country   String
+  region    String
+  city      String
+  address   String
+  latitude  Float
+  longitude Float
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? @map("deleted_at")
+
+  serviceProvider ServiceProviderUser?
+  user            User?
+
+  @@map("locations")
 }
 
 model Services {

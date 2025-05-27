@@ -17,6 +17,22 @@ async function main() {
 
   console.log(`[SEED] ---> Created SERVICE PROVIDER user with id: ${ServiceProviderUser.id}`)
 
+  const ServiceProviderUserLocation = await prisma.location.create({
+    data: {
+      address: '123 Main St',
+      city: 'Talca',
+      region: 'Maule',
+      country: 'Chile',
+      latitude: -33.4489, 
+      longitude: -70.6693,
+      serviceProvider: {
+        connect: { id: ServiceProviderUser.id }
+      },
+    },
+  })
+
+  console.log(`[SEED] ---> Created location for SERVICE PROVIDER with id: ${ServiceProviderUserLocation.id}`)
+
   const ConsumerUser = await prisma.user.create({
     data: {
       email: 'consumer@test.com',
@@ -97,7 +113,7 @@ async function main() {
   })
 
   console.log(`[SEED] ---> Created Review with id: ${review2.id}`)
-  
+
   const serviceTest2 = await prisma.services.create({
     data: {
       title: 'Test Service2',
