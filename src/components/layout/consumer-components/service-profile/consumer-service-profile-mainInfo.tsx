@@ -14,7 +14,7 @@ interface ServiceMainInfoProps {
 
 export default function ServiceMainInfo({ title,  servicePrice, serviceDescription, serviceTag1, serviceTag2, serviceTag3, userImage }: ServiceMainInfoProps) {
   return (
-    <div className="bg-white rounded-xl shadow p-6 mb-6">
+    <div className="">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-800 mb-2">{title}</h1>

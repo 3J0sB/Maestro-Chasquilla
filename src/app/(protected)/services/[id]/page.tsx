@@ -6,8 +6,10 @@ import ConsumerHeader from '@/components/layout/consumer-components/consumer-hea
 import ServiceProfileHeader from '@/components/layout/consumer-components/service-profile/consumer-service-profile-header'
 import ServiceMainInfo from '@/components/layout/consumer-components/service-profile/consumer-service-profile-mainInfo'
 import ServiceDetailDescription from '@/components/layout/consumer-components/service-profile/consumer-service-profile-description'
+import RequestModal from '@/components/layout/consumer-components/request-modal/request-modal'
 import Link from 'next/link'
-
+import { useSession } from 'next-auth/react'
+import { toast } from 'react-hot-toast'
 
 type ServiceProfileParams = {
     params: Promise<{ id: string }>
@@ -17,7 +19,9 @@ function ServiceProfile({ params }: ServiceProfileParams) {
     const [service, setService] = useState<service | null>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
+    const [isModalOpen, setIsModalOpen] = useState(false)
     const { id } = React.use(params)
+    const { data: session, status } = useSession()
 
     useEffect(() => {
         async function fetchServiceDetails() {
@@ -48,6 +52,17 @@ function ServiceProfile({ params }: ServiceProfileParams) {
             fetchServiceDetails()
         }
     }, [id])
+
+    const handleRequestClick = () => {
+        if (status === 'unauthenticated') {
+            toast.error('Debes iniciar sesión para solicitar servicios')
+            // Opcional: Redirigir a la página de inicio de sesión
+            // router.push('/login')
+            return
+        }
+        
+        setIsModalOpen(true)
+    }
 
     if (loading) {
         return (
@@ -100,23 +115,40 @@ function ServiceProfile({ params }: ServiceProfileParams) {
                         </li>
                     </ol>
                 </nav>
-                <ServiceProfileHeader  
+                <ServiceProfileHeader
                     providerId={service.user.id}
-                    providerName = {service.user.name}
-                    providerLastName = {service.user.lastName}
-                    providerLastName2 = {service.user.lastName2}
+                    providerName={service.user.name}
+                    providerLastName={service.user.lastName}
+                    providerLastName2={service.user.lastName2}
+                />
+                <div className='bg-white rounded-xl shadow p-6 mb-6 flex justify-between items-start'>
+                    <ServiceMainInfo
+                        title={service.title}
+                        serviceDescription={service.description}
+                        servicePrice={service.price}
+                        serviceTag1={service.serviceTag}
+                        serviceTag2={service.serviceTag2}
+                        serviceTag3={service.serviceTag3}
+                        userImage={service.user.image}
+                    />
+                    <button 
+                        onClick={handleRequestClick}
+                        className="mt-4 bg-orange-500 cursor-pointer hover:bg-orange-600 text-white font-medium py-2 px-4 rounded transition-colors"
+                    >
+                        Solicitar servicio
+                    </button>
+                </div>
 
-                />
-                <ServiceMainInfo 
-                    title={service.title}
-                    serviceDescription={service.description}
-                    servicePrice={service.price}
-                    serviceTag1={service.serviceTag}
-                    serviceTag2={service.serviceTag2}
-                    serviceTag3={service.serviceTag3}
-                    userImage={service.user.image}
-                />
                 <ServiceDetailDescription />
+                
+                {/* Modal de solicitud */}
+                <RequestModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    serviceId={service.id}
+                    providerId={service.user.id}
+                    serviceTitle={service.title}
+                />
             </div>
         </div>
     )

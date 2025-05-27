@@ -6,6 +6,7 @@ import { on } from 'events';
 
 type RequestCardProps = {
   requestId: string;
+  status: string;
   clientId: string;
   clientName: string;
   serviceType: string;
@@ -21,6 +22,7 @@ type RequestCardProps = {
 
 function RequestCard({
   requestId,
+  status,
   clientId,
   clientName,
   serviceType,
@@ -94,6 +96,28 @@ function RequestCard({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
           Recibido: {formatDate(requestDate)}
+          {
+            status === 'PENDING' && (
+              <span className="ml-2 px-2 text-yellow-500 rounded-full bg-yellow-100 font-medium">
+                Pendiente
+              </span>
+            )
+          }
+          {
+            status === 'ACCEPTED' && (
+              <span className="ml-2 px-2 text-green-500 rounded-full bg-green-100 font-medium">
+                Aceptado
+              </span>
+            )
+          }
+          {
+            status === 'DECLINED' && (
+              <span className="ml-2 px-2 text-red-500 rounded-full bg-red-100 font-medium">
+                Rechazado
+              </span>
+            )
+          }
+          
         </div>
 
         <div className="flex gap-2 w-full sm:w-auto">

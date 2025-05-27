@@ -19,12 +19,12 @@ function Home() {
   const [showAcceptModal, setShowAcceptModal] = useState(false);
   const [showDeclineModal, setShowDeclineModal] = useState(false);
   const [currentRequest, setCurrentRequest] = useState<serviceRequest | null>(null);
-
+  const providerId = session?.user.id || '';
   console.log(session)
 
   const fetchServiceRequests = async () => {
     try {
-      const response = await fetch('/api/service-provider/service-requests', {
+      const response = await fetch(`/api/service-provider/service-requests/${providerId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -67,10 +67,8 @@ function Home() {
       // Filtro por búsqueda
       if (!searchInRequest(request, searchQuery)) return false;
 
-      // Filtro por estado
-      if (statusFilter === 'new' && request.status !== 'PENDING') return false;
-      if (statusFilter === 'priority' && request.status !== 'URGENT') return false;
-      if (statusFilter === 'regular' && (request.status === 'PENDING' || request.status === 'URGENT')) return false;
+      // Filtro por estado - CORREGIDO
+      if (statusFilter !== 'all' && request.status !== statusFilter) return false;
 
       // Filtro por tipo de servicio
       if (serviceTypeFilter !== 'all' && request.service.title !== serviceTypeFilter) return false;
@@ -168,7 +166,7 @@ function Home() {
               <div className='flex justify-between items-center mb-4'>
                 <h2 className="text-xl font-semibold mb-4">Solicitudes Recientes</h2>
                 <div className="flex flex-col md:flex-row md:justify-end gap-3">
-                  {/* Filtro de estado */}
+                  {/* Filtro de estado - CORREGIDO */}
                   <div className="relative">
                     <select
                       value={statusFilter}
@@ -176,9 +174,9 @@ function Home() {
                       className="appearance-none bg-gray-50 border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     >
                       <option value="all">Todos los estados</option>
-                      <option value="new">Nuevas</option>
-                      <option value="priority">Prioridad alta</option>
-                      <option value="regular">Regulares</option>
+                      <option value="PENDING">Pendientes</option>
+                      <option value="ACCEPTED">Aceptadas</option>
+                      <option value="DECLINED">Rechazadas</option>
                     </select>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                       <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -240,6 +238,7 @@ function Home() {
                 filteredRequests.map((request, index) => (
                   <RequestCard
                     key={index}
+                    status={request.status}
                     requestId={request.id}
                     onAccept={() => onAccept(request)}
                     onDecline={() => onDecline(request)}
