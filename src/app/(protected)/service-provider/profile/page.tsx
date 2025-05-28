@@ -5,9 +5,27 @@ import { useSession } from 'next-auth/react'
 import ServiceProviderSidebar from '@/components/layout/Service-provider-components/Service-provider-sidebar/service-provider-sidebar';
 import { serviceProvider } from '@/types';
 import ProviderProfileHeader from '@/components/layout/consumer-components/provider-profile/provider-profile-header';
+import ProviderAbout from '@/components/layout/consumer-components/provider-profile/provider-profile-about';
+import ProviderServices from '@/components/layout/consumer-components/provider-profile/provider-profile-services';
+import ProviderReviews from '@/components/layout/consumer-components/provider-profile/provider-profile-reviews';
+
+type ProviderReviewsResponse = {
+    providerId: string;
+    totalReviews: number;
+    averageRating: number;
+    ratingDistribution: {
+        5: number;
+        4: number;
+        3: number;
+        2: number;
+        1: number;
+    };
+    reviews: any[];
+}
 
 function ServiceProviderProfile() {
     const { status, data: session } = useSession();
+    const [reviewsData, setReviewsData] = useState<ProviderReviewsResponse | null>(null)
     const [provider, setProvider] = useState<serviceProvider>();
     const [loading, setLoading] = useState(true);
     const id = session?.user.id || '';
@@ -35,26 +53,33 @@ function ServiceProviderProfile() {
             setLoading(false);
         }
     }
+    const fetchProviderReviews = async () => {
+        try {
+            const response = await fetch(`/api/consumer/provider-reviews/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            if (!response.ok) {
+                throw new Error('Error al obtener las reseñas del proveedor')
+            }
+            const data = await response.json()
+            console.log('Datos de las reseñas del proveedor:', data)
+            setReviewsData(data)
+        } catch (error) {
+            console.error('Error fetching provider reviews:', error)
+
+        }
+    }
 
     useEffect(() => {
         if (status === 'authenticated') {
             fetchProvider();
+            fetchProviderReviews();
         }
     }, [status]);
 
-    const allReviews = provider?.services?.flatMap(service => service.reviews || []) || []
-    const averageRating = allReviews.length > 0
-        ? allReviews.reduce((acc, review) => acc + review.rating, 0) / allReviews.length
-        : 0
-    console.log(allReviews)
-    // Para los ratings detallados
-    const ratingBreakdown = {
-        5: allReviews.filter(r => r.rating === 5).length,
-        4: allReviews.filter(r => r.rating === 4).length,
-        3: allReviews.filter(r => r.rating === 3).length,
-        2: allReviews.filter(r => r.rating === 2).length,
-        1: allReviews.filter(r => r.rating === 1).length,
-    }
 
 
     return (
@@ -71,18 +96,35 @@ function ServiceProviderProfile() {
                             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
                         </div>
                     ) : (
-                        <ProviderProfileHeader
-                            name={provider?.name || ''}
-                            lastName={provider?.lastName || ''}
-                            lastName2={provider?.lastName2 || ''}
-                            image={provider?.image || '/img/miau.jpg'}
-                            profession={'Proveedor de servicios'}
-                            rating={averageRating}
-                            reviewCount={allReviews.length}
-                            location={provider?.location?.city || ''}
-                            isVerified={provider?.emailVerified || false}
-                            role={session?.user.role || ''} // Assuming role is part of session.user
-                        />
+                        <div>
+                            <ProviderProfileHeader
+                                name={provider?.name || ''}
+                                lastName={provider?.lastName || ''}
+                                lastName2={provider?.lastName2 || ''}
+                                image={provider?.image || '/img/miau.jpg'}
+                                profession={'Proveedor de servicios'}
+                                rating={reviewsData?.averageRating || 0}
+                                reviewCount={reviewsData?.totalReviews || 0}
+                                location={provider?.location?.city || ''}
+                                isVerified={provider?.emailVerified || false}
+                                role={session?.user.role || ''} // Assuming role is part of session.user
+                            />
+                            <ProviderAbout
+                                description={provider?.description || ''}
+                                providerName = {provider?.name || ''}
+                            />
+                            <ProviderServices
+                                services={provider?.services || []}
+ 
+                            />
+                            <ProviderReviews
+                                reviews={reviewsData?.reviews || []}
+                                totalReviews={reviewsData?.totalReviews || 0}
+                                averageRating={reviewsData?.averageRating || 0}
+                                ratingBreakdown={reviewsData?.ratingDistribution || { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 }}
+                            />
+                        </div>
+
                     )}
                 </div>
             </div>

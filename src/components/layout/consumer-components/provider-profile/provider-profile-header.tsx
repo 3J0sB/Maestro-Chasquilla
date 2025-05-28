@@ -7,7 +7,7 @@ interface ProviderProfileHeaderProps {
   lastName2?: string;
   image?: string;
   profession: string;
-  rating: number;
+  rating: number ;
   reviewCount: number;
   location?: string;
   isVerified?: boolean;

@@ -11,47 +11,105 @@ import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { toast } from 'react-hot-toast'
 
+
+type ProviderReviewsResponse = {
+  providerId: string;
+  totalReviews: number;
+  averageRating: number;
+  ratingDistribution: {
+    5: number;
+    4: number;
+    3: number;
+    2: number;
+    1: number;
+  };
+  reviews: any[];
+}
+
+
 type ServiceProfileParams = {
     params: Promise<{ id: string }>
 }
 
 function ServiceProfile({ params }: ServiceProfileParams) {
     const [service, setService] = useState<service | null>(null)
+    const [reviewsData, setReviewsData] = useState<ProviderReviewsResponse | null>(null)
+    const [providerId, setProviderId] = useState<string | null>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [isModalOpen, setIsModalOpen] = useState(false)
     const { id } = React.use(params)
     const { data: session, status } = useSession()
 
-    useEffect(() => {
-        async function fetchServiceDetails() {
-            try {
-                setLoading(true)
-                const response = await fetch(`/api/consumer/single-service?id=${id}`)
+    // Función declarada fuera del useEffect
+    const fetchServiceDetails = async () => {
+        try {
+            setLoading(true)
+            const response = await fetch(`/api/consumer/single-service?id=${id}`)
 
-                if (!response.ok) {
-                    throw new Error('No se pudo obtener la información del servicio')
-                }
-
-                const data = await response.json()
-                const serviceData = Array.isArray(data) ? data[0] : data
-
-                if (!serviceData) {
-                    throw new Error('Servicio no encontrado')
-                }
-
-                setService(serviceData)
-            } catch (error) {
-                setError(error instanceof Error ? error.message : 'Error desconocido')
-            } finally {
-                setLoading(false)
+            if (!response.ok) {
+                throw new Error('No se pudo obtener la información del servicio')
             }
-        }
 
+            const data = await response.json()
+            const serviceData = Array.isArray(data) ? data[0] : data
+
+            if (!serviceData) {
+                throw new Error('Servicio no encontrado')
+            }
+            
+            console.log('Datos del servicio:', serviceData)
+            setService(serviceData)
+            
+            // Establecer el providerId si existe
+            if (serviceData && serviceData.user && serviceData.user.id) {
+                setProviderId(serviceData.user.id)
+            }
+        } catch (error) {
+            setError(error instanceof Error ? error.message : 'Error desconocido')
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const fetchServiceReviews = async (pid: string) => {
+        if (!pid) return; // No hacer la llamada si no hay ID
+        
+        try {
+            const response = await fetch(`/api/consumer/provider-reviews/${pid}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+
+            if (!response.ok) {
+                throw new Error('No se pudieron obtener las reseñas del servicio')
+            }
+
+            const reviews = await response.json()
+            // Aquí podrías hacer algo con las reseñas, como guardarlas en el estado
+            setReviewsData(reviews)
+            console.log('Reseñas del servicio:', reviews)
+
+        } catch (error) {
+            console.error('Error al obtener reseñas:', error)
+        }
+    }
+
+    // useEffect para cargar los detalles del servicio
+    useEffect(() => {
         if (id) {
             fetchServiceDetails()
         }
     }, [id])
+
+    // useEffect separado para las reseñas, que depende del providerId
+    useEffect(() => {
+        if (providerId) {
+            fetchServiceReviews(providerId)
+        }
+    }, [providerId])
 
     const handleRequestClick = () => {
         if (status === 'unauthenticated') {
@@ -60,7 +118,7 @@ function ServiceProfile({ params }: ServiceProfileParams) {
             // router.push('/login')
             return
         }
-        
+
         setIsModalOpen(true)
     }
 
@@ -120,6 +178,8 @@ function ServiceProfile({ params }: ServiceProfileParams) {
                     providerName={service.user.name}
                     providerLastName={service.user.lastName}
                     providerLastName2={service.user.lastName2}
+                    providerRating = {reviewsData?.averageRating || 0}
+                    providerRatingCount = {reviewsData?.totalReviews || 0}
                 />
                 <div className='bg-white rounded-xl shadow p-6 mb-6 flex justify-between items-start'>
                     <ServiceMainInfo
@@ -131,7 +191,7 @@ function ServiceProfile({ params }: ServiceProfileParams) {
                         serviceTag3={service.serviceTag3}
                         userImage={service.user.image}
                     />
-                    <button 
+                    <button
                         onClick={handleRequestClick}
                         className="mt-4 bg-orange-500 cursor-pointer hover:bg-orange-600 text-white font-medium py-2 px-4 rounded transition-colors"
                     >
@@ -140,7 +200,7 @@ function ServiceProfile({ params }: ServiceProfileParams) {
                 </div>
 
                 <ServiceDetailDescription />
-                
+
                 {/* Modal de solicitud */}
                 <RequestModal
                     isOpen={isModalOpen}

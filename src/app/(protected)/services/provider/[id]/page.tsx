@@ -120,19 +120,19 @@ function ProviderProfile({ params }: ProviderProfileParams) {
   }
 
   // Calcular promedio de ratings de todos los servicios
-  const allReviews = provider.services?.flatMap(service => service.reviews || []) || []
-  const averageRating = allReviews.length > 0
-    ? allReviews.reduce((acc, review) => acc + review.rating, 0) / allReviews.length
-    : 0
-  console.log(allReviews)
-  // Para los ratings detallados
-  const ratingBreakdown = {
-    5: allReviews.filter(r => r.rating === 5).length,
-    4: allReviews.filter(r => r.rating === 4).length,
-    3: allReviews.filter(r => r.rating === 3).length,
-    2: allReviews.filter(r => r.rating === 2).length,
-    1: allReviews.filter(r => r.rating === 1).length,
-  }
+  // const allReviews = provider.services?.flatMap(service => service.reviews || []) || []
+  // const averageRating = allReviews.length > 0
+  //   ? allReviews.reduce((acc, review) => acc + review.rating, 0) / allReviews.length
+  //   : 0
+  // console.log(allReviews)
+  // // Para los ratings detallados
+  // const ratingBreakdown = {
+  //   5: allReviews.filter(r => r.rating === 5).length,
+  //   4: allReviews.filter(r => r.rating === 4).length,
+  //   3: allReviews.filter(r => r.rating === 3).length,
+  //   2: allReviews.filter(r => r.rating === 2).length,
+  //   1: allReviews.filter(r => r.rating === 1).length,
+  // }
 
   return (
     <div className='bg-gray-50 min-h-screen'>
@@ -161,8 +161,8 @@ function ProviderProfile({ params }: ProviderProfileParams) {
           lastName2={provider.lastName2}
           image={provider.image}
           profession="Profesional de servicios"
-          rating={averageRating}
-          reviewCount={allReviews.length}
+          rating={reviewsData?.averageRating || 0}
+          reviewCount={reviewsData?.totalReviews || 0}
           location={provider.location?.city || 'Ciudad no especificada'}
           isVerified={true}
           role={session?.user.role || ''}

@@ -8,9 +8,11 @@ interface ProviderInfo {
     providerLastName: string;
     providerLastName2: string;
     providerId: string;
+    providerRating?: number;
+    providerRatingCount?: number;
 }
 
-export default function ServiceProfileHeader({ providerId ,providerName, providerLastName, providerLastName2}: ProviderInfo) {
+export default function ServiceProfileHeader({ providerId,providerRating, providerRatingCount,providerName, providerLastName, providerLastName2}: ProviderInfo) {
     return (
         <div className="bg-white rounded-xl shadow p-6 flex flex-col md:flex-row items-center justify-between mb-6">
             <div className="flex items-center gap-4">
@@ -65,8 +67,8 @@ export default function ServiceProfileHeader({ providerId ,providerName, provide
                     <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
                         <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" fill="#FBBF24" />
                     </svg>
-                    <span className="font-semibold text-yellow-500 text-lg">4.8</span>
-                    <span className="text-gray-500 text-sm ml-1">(127 opiniones)</span>
+                    <span className="font-semibold text-yellow-500 text-lg">{providerRating}</span>
+                    <span className="text-gray-500 text-sm ml-1">({providerRatingCount} opiniones)</span>
                 </div>
             </div>
         </div>
