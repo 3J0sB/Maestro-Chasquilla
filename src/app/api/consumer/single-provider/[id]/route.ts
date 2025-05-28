@@ -23,6 +23,7 @@ export async function GET(
                         reviews: true,
                     },
                 },
+                location: true, // Incluye la ubicación del proveedor
 
             }
         })

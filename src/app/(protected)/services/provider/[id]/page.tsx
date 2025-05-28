@@ -14,9 +14,24 @@ type ProviderProfileParams = {
   params: Promise<{ id: string }>
 }
 
+type ProviderReviewsResponse = {
+  providerId: string;
+  totalReviews: number;
+  averageRating: number;
+  ratingDistribution: {
+    5: number;
+    4: number;
+    3: number;
+    2: number;
+    1: number;
+  };
+  reviews: any[];
+}
+
 function ProviderProfile({ params }: ProviderProfileParams) {
   const [provider, setProvider] = useState<serviceProvider | null>(null)
   const [loading, setLoading] = useState(true)
+  const [reviewsData, setReviewsData] = useState<ProviderReviewsResponse | null>(null)
   const { status, data: session } = useSession();
   const { id } = use(params)
 
@@ -44,9 +59,29 @@ function ProviderProfile({ params }: ProviderProfileParams) {
     }
   }
 
+  const fetchProviderReviews = async (id: string) => {
+    try {
+      const response = await fetch(`/api/consumer/provider-reviews/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
+      if (!response.ok) {
+        throw new Error('Error al obtener las reseñas del proveedor')
+      }
+      const data = await response.json()
+      console.log('Datos de las reseñas del proveedor:', data)
+      setReviewsData(data)
+    } catch (error) {
+      console.error('Error fetching provider reviews:', error)
+
+    }
+  }
   useEffect(() => {
     if (id) {
       fetchProvider(id)
+      fetchProviderReviews(id)
     }
   }, [id])
 
@@ -128,30 +163,25 @@ function ProviderProfile({ params }: ProviderProfileParams) {
           profession="Profesional de servicios"
           rating={averageRating}
           reviewCount={allReviews.length}
-          location="Talca, Chile"
+          location={provider.location?.city || 'Ciudad no especificada'}
           isVerified={true}
           role={session?.user.role || ''}
         />
         <ProviderProfileAbout
           description={provider.description || 'texto de ejemplo para la descripción del proveedor.'}
-          tags={provider.tags || ['Servicio de calidad', 'Atención al cliente', 'Rápido y confiable']}
         />
 
         <ProviderServices services={provider.services || []} />
 
         <ProviderReviews
-          totalReviews={allReviews.length}
-          averageRating={averageRating}
-          ratingBreakdown={ratingBreakdown}
-          categoryRatings={{
-            quality: 4.9,
-            timeliness: 4.7,
-            communication: 4.8,
-            value: 4.6
-          }}
-          reviews={allReviews.map(review => ({
+          totalReviews={reviewsData?.totalReviews || 0}
+          averageRating={reviewsData?.averageRating || 0}
+          ratingBreakdown={reviewsData?.ratingDistribution || {5: 0,4: 0,3: 0,2: 0,1: 0}}
+        
+          reviews={reviewsData?.reviews.map(review => ({
             ...review,
-            reviewer: { name: "Cliente" }
+            reviewer: { name: review.user.name, image: review.user.image || '/img/miau.jpg' },
+            date: review.createdAt ? new Date(review.createdAt).toLocaleDateString('es-ES') : 'Fecha no disponible',
           }))}
         />
       </div>

@@ -79,7 +79,7 @@ function ServiceProviderProfile() {
                             profession={'Proveedor de servicios'}
                             rating={averageRating}
                             reviewCount={allReviews.length}
-                            location="Talca, Chile"
+                            location={provider?.location?.city || ''}
                             isVerified={provider?.emailVerified || false}
                             role={session?.user.role || ''} // Assuming role is part of session.user
                         />
