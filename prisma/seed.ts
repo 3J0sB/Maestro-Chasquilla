@@ -51,9 +51,9 @@ async function main() {
       email: 'consumer2@test.com',
       rut: '22222221-9',
       hashedPassword: await bcrypt.hash('1234', 10),
-      name: 'Consumer User',
-      lastName: 'Consumer User',
-      lastName2: 'Consumer User ',
+      name: 'Consumer User2',
+      lastName: 'Consumer User2',
+      lastName2: 'Consumer User2 ',
       role: 'USER',
     },
   })

@@ -46,6 +46,12 @@ const ConsumerHeader: React.FC<ConsumerHeaderProps> = ({ userName }) => {
                         <Link href="/consumer/contact" className="text-gray-500 hover:text-orange-500 px-3 py-2 text-sm font-medium">
                             Contacto
                         </Link>
+                        <Link href="/services/conversations" className="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded-md">
+                            <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                            </svg>
+                            <span>Mensajes</span>
+                        </Link>
                     </nav>
 
                     {/* Right icons */}
@@ -73,7 +79,7 @@ const ConsumerHeader: React.FC<ConsumerHeaderProps> = ({ userName }) => {
                         {/* User menu */}
                         <div className="ml-4 relative flex items-center">
                             <div className="relative">
-                                <Link href="/consumer/profile" className="flex items-center space-x-2 text-gray-500 hover:text-gray-700">
+                                <Link href="/services/consumer-profile" className="flex items-center space-x-2 text-gray-500 hover:text-gray-700">
                                     {/* User SVG icon */}
                                     <div className="h-8 w-8 p-1 rounded-full bg-gray-100 flex items-center justify-center">
                                         <svg
@@ -96,7 +102,7 @@ const ConsumerHeader: React.FC<ConsumerHeaderProps> = ({ userName }) => {
                                     )}
                                 </Link>
                             </div>
-                            <LogoutButton/>
+                            <LogoutButton />
                         </div>
                     </div>
                 </div>
