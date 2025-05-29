@@ -216,6 +216,29 @@ exports.Prisma.CategoriesScalarFieldEnum = {
   deletedAt: 'deletedAt'
 };
 
+exports.Prisma.ConversationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  providerId: 'providerId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.MessagesScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  senderId: 'senderId',
+  senderType: 'senderType',
+  content: 'content',
+  isRead: 'isRead',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
+  providerId: 'providerId',
+  userId: 'userId'
+};
+
 exports.Prisma.AccountScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -265,6 +288,8 @@ exports.Prisma.ModelName = {
   reviews: 'reviews',
   ServiceRequest: 'ServiceRequest',
   Categories: 'Categories',
+  Conversation: 'Conversation',
+  Messages: 'Messages',
   Account: 'Account',
   VerificationToken: 'VerificationToken'
 };

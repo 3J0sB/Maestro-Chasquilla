@@ -23,7 +23,7 @@ async function main() {
       city: 'Talca',
       region: 'Maule',
       country: 'Chile',
-      latitude: -33.4489, 
+      latitude: -33.4489,
       longitude: -70.6693,
       serviceProvider: {
         connect: { id: ServiceProviderUser.id }
@@ -59,6 +59,7 @@ async function main() {
   })
 
   console.log(`[SEED] ---> Created CONSUMER user with id: ${ConsumerUser2.id}`)
+
 
 
   const AdminUser = await prisma.user.create({
@@ -195,6 +196,103 @@ async function main() {
   })
 
   console.log(`[SEED] ---> Created: ${category.count} categories`)
+
+
+
+  const conversation = await prisma.conversation.create({
+    data: {
+      userId: ConsumerUser.id,
+      providerId: ServiceProviderUser.id,
+    },
+  });
+  console.log(`[SEED] ---> Created Conversation with id: ${conversation.id}`);
+
+
+  const message1 = await prisma.messages.create({
+    data: {
+      conversationId: conversation.id,
+      senderId: ConsumerUser.id,
+      senderType: "USER",
+      content: "Hola, me gustaría saber más detalles sobre el servicio que ofreces para reparación de cañerías.",
+      isRead: true,
+      userId: ConsumerUser.id,
+    },
+  });
+  console.log(`[SEED] ---> Created Message from Consumer with id: ${message1.id}`);
+
+
+  const message2 = await prisma.messages.create({
+    data: {
+      conversationId: conversation.id,
+      senderId: ServiceProviderUser.id,
+      senderType: "SERVICE_PROVIDER",
+      content: "¡Hola! Claro, ofrezco servicios de reparación de cañerías con garantía de 6 meses. ¿Qué problema específico tienes?",
+      isRead: true,
+      providerId: ServiceProviderUser.id,
+    },
+  });
+  console.log(`[SEED] ---> Created Message from Provider with id: ${message2.id}`);
+
+
+  const message3 = await prisma.messages.create({
+    data: {
+      conversationId: conversation.id,
+      senderId: ConsumerUser.id,
+      senderType: "USER",
+      content: "Tengo una filtración debajo del lavaplatos. ¿Podrías venir mañana a revisarla?",
+      isRead: true,
+      userId: ConsumerUser.id,
+    },
+  });
+  console.log(`[SEED] ---> Created Message from Consumer with id: ${message3.id}`);
+
+
+  const message4 = await prisma.messages.create({
+    data: {
+      conversationId: conversation.id,
+      senderId: ServiceProviderUser.id,
+      senderType: "SERVICE_PROVIDER",
+      content: "Puedo ir mañana por la tarde, entre 15:00 y 17:00. ¿Te parece bien? Necesitaría la dirección exacta.",
+      isRead: false, // No leído aún
+      providerId: ServiceProviderUser.id,
+    },
+  });
+  console.log(`[SEED] ---> Created Message from Provider with id: ${message4.id}`);
+
+
+  const conversation2 = await prisma.conversation.create({
+    data: {
+      userId: ConsumerUser2.id,
+      providerId: ServiceProviderUser.id,
+    },
+  });
+  console.log(`[SEED] ---> Created Conversation with id: ${conversation2.id}`);
+
+
+  const message5 = await prisma.messages.create({
+    data: {
+      conversationId: conversation2.id,
+      senderId: ConsumerUser2.id,
+      senderType: "USER",
+      content: "Hola, estoy interesado en el servicio de instalación eléctrica para mi nueva casa.",
+      isRead: true,
+      userId: ConsumerUser2.id,
+    },
+  });
+  console.log(`[SEED] ---> Created Message from Consumer2 with id: ${message5.id}`);
+
+
+  const message6 = await prisma.messages.create({
+    data: {
+      conversationId: conversation2.id,
+      senderId: ServiceProviderUser.id,
+      senderType: "SERVICE_PROVIDER",
+      content: "Buenas tardes, gracias por contactarme. Ofrezco instalaciones eléctricas completas y certificadas. ¿Cuántos metros cuadrados tiene tu casa?",
+      isRead: false,
+      providerId: ServiceProviderUser.id,
+    },
+  });
+  console.log(`[SEED] ---> Created Message from Provider with id: ${message6.id}`);
 }
 main()
   .then(async () => {

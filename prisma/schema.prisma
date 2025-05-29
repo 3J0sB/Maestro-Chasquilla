@@ -34,12 +34,14 @@ model User {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   deletedAt      DateTime? @map("deleted_at")
-  locationId     String?   @unique @map("location_id")  // También hacemos esto @unique para garantizar relación 1:1
+  locationId     String?   @unique @map("location_id") // También hacemos esto @unique para garantizar relación 1:1
 
+  conversations  Conversation[]
   reviews        reviews[]
   accounts       Account[]
   serviceRequest ServiceRequest[]
-  location       Location? @relation(fields: [locationId], references: [id])
+  location       Location?        @relation(fields: [locationId], references: [id])
+  Messages       Messages[] @relation("UserMessages")
 
   @@map("users")
 }
@@ -60,11 +62,13 @@ model ServiceProviderUser {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   deletedAt      DateTime? @map("deleted_at")
-  locationId     String?   @unique @map("location_id")  // Hacemos esto @unique para garantizar relación 1:1
+  locationId     String?   @unique @map("location_id") // Hacemos esto @unique para garantizar relación 1:1
 
-  services Services[]
-  requests ServiceRequest[]
-  location Location?        @relation(fields: [locationId], references: [id])
+  conversations Conversation[]
+  services      Services[]
+  requests      ServiceRequest[]
+  location      Location?        @relation(fields: [locationId], references: [id])
+  Messages      Messages[]       @relation("ProviderMessages")
 
   @@map("service_provider_users")
 }
@@ -81,7 +85,6 @@ model Location {
   updatedAt DateTime  @updatedAt
   deletedAt DateTime? @map("deleted_at")
 
-  
   serviceProvider ServiceProviderUser?
   user            User?
 
@@ -155,6 +158,41 @@ model Categories {
   deletedAt DateTime? @map("deleted_at")
 
   @@map("category")
+}
+
+model Conversation {
+  id         String    @id @default(cuid())
+  userId     String    @map("user_id")
+  providerId String    @map("provider_id")
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime? @map("deleted_at")
+
+  messages Messages[]
+  user     User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider ServiceProviderUser @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@map("conversations")
+}
+
+model Messages {
+  id             String    @id @default(cuid())
+  conversationId String    @map("conversation_id")
+  senderId       String    @map("sender_id")
+  senderType     String    @map("sender_type") 
+  content        String
+  isRead         Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime? @map("deleted_at")
+  providerId     String?   @map("provider_id")
+  userId         String?   @map("user_id")
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  provider      ServiceProviderUser? @relation("ProviderMessages", fields: [providerId], references: [id])
+  user          User? @relation("UserMessages", fields: [userId], references: [id])
+
+  @@map("messages")
 }
 
 model Account {
