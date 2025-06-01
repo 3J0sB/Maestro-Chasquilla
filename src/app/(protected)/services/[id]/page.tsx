@@ -10,6 +10,7 @@ import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { toast } from 'react-hot-toast'
 import ProviderReviews from '@/components/layout/consumer-components/provider-profile/provider-profile-reviews'
+import AddReviewModal from '@/components/layout/consumer-components/service-profile/consumer-service-profile-add-review'
 
 
 type ProviderReviewsResponse = {
@@ -55,6 +56,8 @@ function ServiceProfile({ params }: ServiceProfileParams) {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+    const [hasAlreadyRequested, setHasAlreadyRequested] = useState(false);
     const { id } = React.use(params)
     const { data: session, status } = useSession()
 
@@ -154,6 +157,26 @@ function ServiceProfile({ params }: ServiceProfileParams) {
         }
     }, [providerId])
 
+    // Añadir esta función para comprobar si el usuario ya ha solicitado este servicio
+    const checkIfUserHasRequested = async () => {
+        if (!session?.user?.id || !id) return;
+        
+        try {
+            const response = await fetch(`/api/consumer/request/hasRequested/${id}?userId=${session.user.id}`);
+            const data = await response.json();
+            setHasAlreadyRequested(data.hasRequested);
+        } catch (error) {
+            console.error('Error al verificar solicitud:', error);
+        }
+    };
+
+    // Añadir este useEffect para verificar si el usuario ha solicitado el servicio
+    useEffect(() => {
+        if (session?.user?.id && id) {
+            checkIfUserHasRequested();
+        }
+    }, [session, id]);
+
     const handleRequestClick = () => {
         if (status === 'unauthenticated') {
             toast.error('Debes iniciar sesión para solicitar servicios')
@@ -232,12 +255,23 @@ function ServiceProfile({ params }: ServiceProfileParams) {
                         serviceTag3={service.serviceTag3}
                         userImage={service.user.image}
                     />
-                    <button
-                        onClick={handleRequestClick}
-                        className="mt-4 bg-orange-500 cursor-pointer hover:bg-orange-600 text-white font-medium py-2 px-4 rounded transition-colors"
-                    >
-                        Solicitar servicio
-                    </button>
+                    <div className="flex flex-col gap-2">
+                        <button
+                            onClick={handleRequestClick}
+                            className="mt-4 bg-orange-500 cursor-pointer hover:bg-orange-600 text-white font-medium py-2 px-4 rounded transition-colors"
+                        >
+                            Solicitar servicio
+                        </button>
+                        
+                        {hasAlreadyRequested && (
+                          <button
+                            onClick={() => setIsReviewModalOpen(true)}
+                            className="bg-white border border-orange-500 text-orange-500 hover:bg-orange-50 font-medium py-2 px-4 rounded transition-colors"
+                          >
+                            Dejar reseña
+                          </button>
+                        )}
+                    </div>
                 </div>
 
                 <ServiceDetailDescription />
@@ -257,6 +291,18 @@ function ServiceProfile({ params }: ServiceProfileParams) {
                     averageRating={serviceReviewsData?.averageRating || 0}
                     totalReviews={serviceReviewsData?.totalReviews || 0}
                     ratingBreakdown={serviceReviewsData?.ratingDistribution || {5: 0, 4: 0, 3: 0, 2: 0, 1: 0}}
+                />
+
+                {/* Al final del componente, añadir el modal de reseña */}
+                <AddReviewModal
+                  isOpen={isReviewModalOpen}
+                  onClose={() => setIsReviewModalOpen(false)}
+                  serviceId={service.id}
+                  serviceName={service.title}
+                  onReviewAdded={() => {
+                    // Recargar las reseñas después de añadir una nueva
+                    fetchServiceSpecificReviews(id);
+                  }}
                 />
             </div>
         </div>
