@@ -237,6 +237,7 @@ function Home() {
               {filteredRequests.length > 0 ? (
                 filteredRequests.map((request, index) => (
                   <RequestCard
+                    providerId={session?.user.id || ''}
                     key={index}
                     status={request.status}
                     requestId={request.id}

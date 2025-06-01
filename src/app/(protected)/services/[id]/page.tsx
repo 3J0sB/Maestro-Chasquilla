@@ -1,5 +1,4 @@
-"use client"
-
+'use client'
 import React, { useState, useEffect } from 'react'
 import { service } from '@/types'
 import ConsumerHeader from '@/components/layout/consumer-components/consumer-header'
@@ -10,22 +9,39 @@ import RequestModal from '@/components/layout/consumer-components/request-modal/
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { toast } from 'react-hot-toast'
+import ProviderReviews from '@/components/layout/consumer-components/provider-profile/provider-profile-reviews'
 
 
 type ProviderReviewsResponse = {
-  providerId: string;
-  totalReviews: number;
-  averageRating: number;
-  ratingDistribution: {
-    5: number;
-    4: number;
-    3: number;
-    2: number;
-    1: number;
-  };
-  reviews: any[];
+    providerId: string;
+    totalReviews: number;
+    averageRating: number;
+    ratingDistribution: {
+        5: number;
+        4: number;
+        3: number;
+        2: number;
+        1: number;
+    };
+    reviews: any[];
 }
 
+type ServiceReviewsResponse = {
+    serviceId: string;
+    serviceName: string;
+    providerId: string;
+    providerName: string;
+    totalReviews: number;
+    averageRating: number;
+    ratingDistribution: {
+        5: number;
+        4: number;
+        3: number;
+        2: number;
+        1: number;
+    };
+    reviews: any[];
+}
 
 type ServiceProfileParams = {
     params: Promise<{ id: string }>
@@ -34,6 +50,7 @@ type ServiceProfileParams = {
 function ServiceProfile({ params }: ServiceProfileParams) {
     const [service, setService] = useState<service | null>(null)
     const [reviewsData, setReviewsData] = useState<ProviderReviewsResponse | null>(null)
+    const [serviceReviewsData, setServiceReviewsData] = useState<ServiceReviewsResponse | null>(null)
     const [providerId, setProviderId] = useState<string | null>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -57,10 +74,10 @@ function ServiceProfile({ params }: ServiceProfileParams) {
             if (!serviceData) {
                 throw new Error('Servicio no encontrado')
             }
-            
+
             console.log('Datos del servicio:', serviceData)
             setService(serviceData)
-            
+
             // Establecer el providerId si existe
             if (serviceData && serviceData.user && serviceData.user.id) {
                 setProviderId(serviceData.user.id)
@@ -72,9 +89,10 @@ function ServiceProfile({ params }: ServiceProfileParams) {
         }
     }
 
+    // Función para obtener todas las reseñas del proveedor
     const fetchServiceReviews = async (pid: string) => {
         if (!pid) return; // No hacer la llamada si no hay ID
-        
+
         try {
             const response = await fetch(`/api/consumer/provider-reviews/${pid}`, {
                 method: 'GET',
@@ -84,16 +102,40 @@ function ServiceProfile({ params }: ServiceProfileParams) {
             })
 
             if (!response.ok) {
-                throw new Error('No se pudieron obtener las reseñas del servicio')
+                throw new Error('No se pudieron obtener las reseñas del proveedor')
             }
 
             const reviews = await response.json()
-            // Aquí podrías hacer algo con las reseñas, como guardarlas en el estado
             setReviewsData(reviews)
-            console.log('Reseñas del servicio:', reviews)
+            console.log('Reseñas del proveedor:', reviews)
 
         } catch (error) {
-            console.error('Error al obtener reseñas:', error)
+            console.error('Error al obtener reseñas del proveedor:', error)
+        }
+    }
+
+    // Nueva función para obtener las reseñas específicas del servicio actual
+    const fetchServiceSpecificReviews = async (serviceId: string) => {
+        if (!serviceId) return;
+
+        try {
+            const response = await fetch(`/api/consumer/provider-reviews/service/${serviceId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('No se pudieron obtener las reseñas específicas del servicio');
+            }
+
+            const serviceReviews = await response.json();
+            setServiceReviewsData(serviceReviews);
+            console.log('Reseñas específicas del servicio:', serviceReviews);
+
+        } catch (error) {
+            console.error('Error al obtener reseñas específicas del servicio:', error);
         }
     }
 
@@ -101,10 +143,11 @@ function ServiceProfile({ params }: ServiceProfileParams) {
     useEffect(() => {
         if (id) {
             fetchServiceDetails()
+            fetchServiceSpecificReviews(id) // Obtener reseñas específicas del servicio
         }
     }, [id])
 
-    // useEffect separado para las reseñas, que depende del providerId
+    // useEffect separado para las reseñas del proveedor, que depende del providerId
     useEffect(() => {
         if (providerId) {
             fetchServiceReviews(providerId)
@@ -114,8 +157,6 @@ function ServiceProfile({ params }: ServiceProfileParams) {
     const handleRequestClick = () => {
         if (status === 'unauthenticated') {
             toast.error('Debes iniciar sesión para solicitar servicios')
-            // Opcional: Redirigir a la página de inicio de sesión
-            // router.push('/login')
             return
         }
 
@@ -178,8 +219,8 @@ function ServiceProfile({ params }: ServiceProfileParams) {
                     providerName={service.user.name}
                     providerLastName={service.user.lastName}
                     providerLastName2={service.user.lastName2}
-                    providerRating = {reviewsData?.averageRating || 0}
-                    providerRatingCount = {reviewsData?.totalReviews || 0}
+                    providerRating={reviewsData?.averageRating || 0}
+                    providerRatingCount={reviewsData?.totalReviews || 0}
                 />
                 <div className='bg-white rounded-xl shadow p-6 mb-6 flex justify-between items-start'>
                     <ServiceMainInfo
@@ -208,6 +249,14 @@ function ServiceProfile({ params }: ServiceProfileParams) {
                     serviceId={service.id}
                     providerId={service.user.id}
                     serviceTitle={service.title}
+                />
+
+                <ProviderReviews
+ 
+                    reviews={serviceReviewsData?.reviews || []}
+                    averageRating={serviceReviewsData?.averageRating || 0}
+                    totalReviews={serviceReviewsData?.totalReviews || 0}
+                    ratingBreakdown={serviceReviewsData?.ratingDistribution || {5: 0, 4: 0, 3: 0, 2: 0, 1: 0}}
                 />
             </div>
         </div>

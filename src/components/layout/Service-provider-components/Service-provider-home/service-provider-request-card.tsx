@@ -1,8 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
-import { format } from 'path';
 import { formatDate } from '../../../../../utils';
-import { on } from 'events';
+import MessageModal from '@/components/layout/Service-provider-components/Service-provider-home/message-modal-privder';
 
 type RequestCardProps = {
   requestId: string;
@@ -17,7 +16,7 @@ type RequestCardProps = {
   clientAvatar?: string;
   onAccept: (requestId: string) => void;
   onDecline: (requestId: string) => void;
-
+  providerId: string; // Añadir ID del proveedor
 }
 
 function RequestCard({
@@ -33,9 +32,9 @@ function RequestCard({
   clientAvatar,
   onAccept,
   onDecline,
-
-
+  providerId,
 }: RequestCardProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleAccept = () => {
     try {
@@ -52,6 +51,11 @@ function RequestCard({
       console.error("Error declining request:", error);
     }
   }
+
+  const handleMessageClick = () => {
+    setIsModalOpen(true);
+  }
+
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-3 sm:p-4 hover:shadow-md transition-shadow">
       {/* Header: Client info and status tags */}
@@ -65,7 +69,7 @@ function RequestCard({
             )}
           </div>
           <div>
-            <h3 className="font-medium text-gray-800 text-sm sm:text-base">{clientName} {requestId}</h3>
+            <h3 className="font-medium text-gray-800 text-sm sm:text-base">{clientName}</h3>
             <p className="text-xs sm:text-sm text-gray-500">{serviceType}</p>
           </div>
         </div>
@@ -123,18 +127,28 @@ function RequestCard({
         <div className="flex gap-2 w-full sm:w-auto">
           <button
             onClick={() => handleDecline()}
-            className="px-3 sm:px-4 py-1.5 text-xs sm:text-sm cursor-pointer border border-gray-200 rounded-md hover:bg-gray-50 transition-colors flex-1 sm:flex-none"
+            disabled={status !== 'PENDING'}
+            className={`px-3 sm:px-4 py-1.5 text-xs sm:text-sm cursor-pointer border border-gray-200 rounded-md ${
+              status === 'PENDING' 
+                ? 'hover:bg-gray-50' 
+                : 'opacity-50 cursor-not-allowed'
+            } transition-colors flex-1 sm:flex-none`}
           >
             Rechazar
           </button>
           <button
             onClick={() => handleAccept()}
-            className="px-3 sm:px-4 py-1.5 text-xs sm:text-sm cursor-pointer bg-orange-500 hover:bg-orange-600 text-white rounded-md transition-colors flex-1 sm:flex-none"
+            disabled={status !== 'PENDING'}
+            className={`px-3 sm:px-4 py-1.5 text-xs sm:text-sm cursor-pointer ${
+              status === 'PENDING' 
+                ? 'bg-orange-500 hover:bg-orange-600' 
+                : 'bg-gray-400 opacity-50 cursor-not-allowed'
+            } text-white rounded-md transition-colors flex-1 sm:flex-none`}
           >
             Aceptar
           </button>
           <button
-
+            onClick={handleMessageClick}
             className="p-1.5 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
             aria-label="Enviar mensaje al cliente"
           >
@@ -144,6 +158,18 @@ function RequestCard({
           </button>
         </div>
       </div>
+
+      {/* Modal de mensaje */}
+      <MessageModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)}
+        providerId={providerId}
+        userId={clientId}
+        userName={clientName}
+        userImage={clientAvatar}
+        serviceType={serviceType}
+        requestId={requestId}
+      />
     </div>
   )
 }

@@ -43,14 +43,14 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
       try {
         setLoading(true);
         const response = await fetch(`/api/service-provider/conversations/${providerId}`);
-        
+
         if (!response.ok) {
           throw new Error('No se pudieron cargar las conversaciones');
         }
-        
+
         const data = await response.json();
         setConversations(data);
-        
+
         // Seleccionar la primera conversación por defecto
         if (data.length > 0 && !selectedConversation) {
           setSelectedConversation(data[0].id);
@@ -102,7 +102,7 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
       const data = await response.json();
 
       // Actualizar la conversación local con el nuevo mensaje
-      setConversations(prevConversations => 
+      setConversations(prevConversations =>
         prevConversations.map(conv => {
           if (conv.id === selectedConversation) {
             return {
@@ -126,7 +126,7 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
 
       // Limpiar el campo de mensaje
       setNewMessage('');
-      
+
       // Opcionalmente, puedes mostrar una notificación de éxito
       toast.success('Mensaje enviado');
     } catch (err) {
@@ -138,20 +138,30 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
   };
 
   // Formatear la fecha
-  const formatDateType = (dateString: string) => {
+  // Formatear la fecha de manera más corta y contextual
+  const formatMessageDate = (dateString: string) => {
     if (!dateString) return '';
-    
+
     const date = new Date(dateString);
     const today = new Date();
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
-    
+
+    // Si es hoy, mostrar solo la hora
     if (date.toDateString() === today.toDateString()) {
-      return formatDate(dateString);
-    } else if (date.toDateString() === yesterday.toDateString()) {
-      return formatDate(dateString);
-    } else {
-      return formatDate(dateString);
+      return `Hoy, ${date.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' })}`;
+    }
+    // Si es ayer, mostrar "Ayer" y la hora
+    else if (date.toDateString() === yesterday.toDateString()) {
+      return `Ayer, ${date.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' })}`;
+    }
+    // Si es este año pero no hoy ni ayer, mostrar día y mes y hora
+    else if (date.getFullYear() === today.getFullYear()) {
+      return date.toLocaleDateString('es', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+    }
+    // Si es otro año, mostrar día/mes/año
+    else {
+      return date.toLocaleDateString('es', { day: '2-digit', month: '2-digit', year: '2-digit' });
     }
   };
 
@@ -170,7 +180,7 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
 
   // Contar mensajes no leídos
   const getUnreadCount = (conversation: Conversation) => {
-    return conversation.messages.filter(msg => 
+    return conversation.messages.filter(msg =>
       !msg.isRead && msg.senderType === 'USER'
     ).length;
   };
@@ -180,7 +190,7 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
     if (conversation.messages.length === 0) {
       return '';
     }
-    return formatDateType(conversation.messages[conversation.messages.length - 1].createdAt);
+    return formatMessageDate(conversation.messages[conversation.messages.length - 1].createdAt);
   };
 
   // Marcar mensajes como leídos cuando se selecciona una conversación
@@ -206,12 +216,12 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
         }
 
         // Actualizar el estado local para reflejar que los mensajes han sido leídos
-        setConversations(prevConversations => 
+        setConversations(prevConversations =>
           prevConversations.map(conv => {
             if (conv.id === selectedConversation) {
               return {
                 ...conv,
-                messages: conv.messages.map(msg => 
+                messages: conv.messages.map(msg =>
                   msg.senderType === 'USER' ? { ...msg, isRead: true } : msg
                 ),
               };
@@ -252,9 +262,8 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
             <div
               key={conversation.id}
               onClick={() => setSelectedConversation(conversation.id)}
-              className={`p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer ${
-                selectedConversation === conversation.id ? 'bg-orange-50' : ''
-              }`}
+              className={`p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer ${selectedConversation === conversation.id ? 'bg-orange-50' : ''
+                }`}
             >
               <div className="flex items-center">
                 <div className="relative">
@@ -302,10 +311,10 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
                 <>
                   <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden mr-3">
                     {conversations.find(c => c.id === selectedConversation)?.user.image ? (
-                      <img 
-                        src={conversations.find(c => c.id === selectedConversation)?.user.image} 
-                        alt={conversations.find(c => c.id === selectedConversation)?.user.name} 
-                        className="w-full h-full object-cover" 
+                      <img
+                        src={conversations.find(c => c.id === selectedConversation)?.user.image}
+                        alt={conversations.find(c => c.id === selectedConversation)?.user.name}
+                        className="w-full h-full object-cover"
                       />
                     ) : (
                       <div className="text-gray-500 font-medium">
@@ -336,18 +345,17 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
                       className={`flex ${message.senderType === 'SERVICE_PROVIDER' ? 'justify-end' : 'justify-start'}`}
                     >
                       <div
-                        className={`max-w-[70%] rounded-lg p-3 ${
-                          message.senderType === 'SERVICE_PROVIDER'
+                        className={`max-w-[70%] rounded-lg p-3 ${message.senderType === 'SERVICE_PROVIDER'
                             ? 'bg-orange-100 text-gray-800'
                             : 'bg-white border border-gray-200 text-gray-800'
-                        }`}
+                          }`}
                       >
                         <div className="flex justify-between items-center mb-1">
                           <span className="text-xs font-medium">
                             {message.senderType === 'SERVICE_PROVIDER' ? 'Tú' : getUserName(conversations.find(c => c.id === selectedConversation)!)}
                           </span>
                           <span className="text-xs text-gray-500 ml-2">
-                            {formatDate(message.createdAt)}
+                            {formatMessageDate(message.createdAt)}
                           </span>
                         </div>
                         <p className="text-sm whitespace-pre-wrap">{message.content}</p>
@@ -372,9 +380,8 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
                 />
                 <button
                   type="submit"
-                  className={`bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-r-lg transition-colors ${
-                    sendingMessage ? 'opacity-70 cursor-not-allowed' : ''
-                  }`}
+                  className={`bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-r-lg transition-colors ${sendingMessage ? 'opacity-70 cursor-not-allowed' : ''
+                    }`}
                   disabled={sendingMessage || !newMessage.trim()}
                 >
                   {sendingMessage ? (

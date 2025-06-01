@@ -98,6 +98,7 @@ function ServiceProviderProfile() {
                     ) : (
                         <div>
                             <ProviderProfileHeader
+                                providerId={provider?.id || ''}
                                 name={provider?.name || ''}
                                 lastName={provider?.lastName || ''}
                                 lastName2={provider?.lastName2 || ''}

@@ -5,7 +5,7 @@ export async function GET(
     request: NextRequest,
     { params }: { params: { id: string } }
 ) {
-    const { id: userId } = params;
+    const { id: userId } = await params;
 
     if (!userId) {
         return NextResponse.json({ error: 'ID de usuario no proporcionado' }, { status: 400 });
