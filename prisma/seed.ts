@@ -197,7 +197,176 @@ async function main() {
 
   console.log(`[SEED] ---> Created: ${category.count} categories`)
 
+// Código existente hasta línea 183
+// ...
 
+  console.log(`[SEED] ---> Created Service request test with id: ${serviceRequestTest3.id}`)
+
+  // Agregar más usuarios consumidores
+  console.log("[SEED] ---> Creando usuarios consumidores adicionales...")
+  
+  const additionalConsumers = [];
+  for (let i = 1; i <= 10; i++) {
+    const user = await prisma.user.create({
+      data: {
+        email: `consumer${i+2}@test.com`,
+        rut: `1234567${i}-${i}`,
+        hashedPassword: await bcrypt.hash('1234', 10),
+        name: `Usuario ${i}`,
+        lastName: `Apellido ${i}`,
+        lastName2: `Segundo ${i}`,
+        role: 'USER',
+      }
+    });
+    additionalConsumers.push(user);
+    console.log(`[SEED] ---> Creado usuario consumidor con id: ${user.id}`);
+  }
+
+  // Crear ubicaciones para algunos consumidores
+  for (let i = 0; i < 5; i++) {
+    const location = await prisma.location.create({
+      data: {
+        address: `Calle ${i+1} #${i*100}`,
+        city: ['Santiago', 'Valparaíso', 'Concepción', 'Temuco', 'La Serena'][i % 5],
+        region: ['Metropolitana', 'Valparaíso', 'Biobío', 'Araucanía', 'Coquimbo'][i % 5],
+        country: 'Chile',
+        latitude: -33.4489 + (Math.random() * 2 - 1),
+        longitude: -70.6693 + (Math.random() * 2 - 1),
+        user: {
+          connect: { id: additionalConsumers[i].id }
+        },
+      },
+    });
+    console.log(`[SEED] ---> Creada ubicación para consumidor con id: ${location.id}`);
+  }
+
+  // Crear más servicios para tener variedad
+  const serviceNames = [
+    'Plomería General', 
+    'Electricidad Domiciliaria', 
+    'Carpintería a Medida', 
+    'Reparación de Techos', 
+    'Pintura Interior',
+    'Instalación de Pisos',
+    'Jardinería y Paisajismo',
+    'Limpieza Profunda',
+    'Reparación de Electrodomésticos',
+    'Instalación de Aire Acondicionado'
+  ];
+  
+  const serviceTags = [
+    'Hogar', 'Reparaciones', 'Instalaciones', 'Emergencias', 'Mantenimiento',
+    'Interior', 'Exterior', 'Especializado', 'Certificado', 'Económico'
+  ];
+
+  console.log("[SEED] ---> Creando servicios adicionales...");
+  const additionalServices = [];
+  
+  for (let i = 0; i < 10; i++) {
+    const service = await prisma.services.create({
+      data: {
+        title: serviceNames[i],
+        price: Math.floor(Math.random() * 50000) + 10000,
+        minServicePrice: Math.floor(Math.random() * 5000) + 5000,
+        maxServicePrice: Math.floor(Math.random() * 100000) + 50000,
+        description: `Servicio profesional de ${serviceNames[i].toLowerCase()} con garantía de satisfacción. Presupuesto sin compromiso.`,
+        userId: ServiceProviderUser.id,
+        serviceTag: serviceTags[Math.floor(Math.random() * serviceTags.length)],
+        serviceTag2: serviceTags[Math.floor(Math.random() * serviceTags.length)],
+        serviceTag3: serviceTags[Math.floor(Math.random() * serviceTags.length)],
+      }
+    });
+    additionalServices.push(service);
+    console.log(`[SEED] ---> Creado servicio con id: ${service.id}`);
+  }
+
+  // Crear solicitudes de servicio con diferentes estados y fechas en el último año
+  console.log("[SEED] ---> Creando solicitudes de servicio con diferentes estados y fechas...");
+  
+  const allServices = [serviceTest, serviceTest2, serviceTest3, ...additionalServices];
+  const allUsers = [ConsumerUser, ConsumerUser2, ...additionalConsumers];
+  
+  const statusOptions = ['PENDING', 'ACCEPTED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED', 'REJECTED'];
+  
+  // Generar fechas en el último año
+  const getRandomDate = (start: Date, end: Date) => {
+    return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+  };
+  
+  const endDate = new Date();
+  const startDate = new Date();
+  startDate.setFullYear(endDate.getFullYear() - 1); // Un año atrás
+  
+  // Crear 100 solicitudes de servicio distribuidas en el último año con diferentes estados
+  for (let i = 0; i < 100; i++) {
+    const randomUser = allUsers[Math.floor(Math.random() * allUsers.length)];
+    const randomService = allServices[Math.floor(Math.random() * allServices.length)];
+    const randomStatus = statusOptions[Math.floor(Math.random() * statusOptions.length)];
+    const randomDate = getRandomDate(startDate, endDate);
+    
+    // Para solicitudes completadas, rechazadas o canceladas, aseguramos que la fecha de actualización sea posterior a la creación
+    let updatedAt = null;
+    if (['COMPLETED', 'CANCELLED', 'REJECTED'].includes(randomStatus)) {
+      const minDelay = 1000 * 60 * 60; // 1 hora mínimo
+      const maxDelay = 1000 * 60 * 60 * 24 * 14; // Máximo 14 días
+      const delay = Math.floor(Math.random() * (maxDelay - minDelay)) + minDelay;
+      updatedAt = new Date(randomDate.getTime() + delay);
+      
+      // Si la fecha de actualización es posterior a la fecha actual, ajustarla
+      if (updatedAt > endDate) {
+        updatedAt = endDate;
+      }
+    }
+    
+    try {
+      const request = await prisma.serviceRequest.create({
+        data: {
+          consumerId: randomUser.id,
+          serviceId: randomService.id,
+          providerId: ServiceProviderUser.id,
+          status: randomStatus,
+          message: `Solicitud de ${randomService.title}. Necesito este servicio con urgencia.`,
+          createdAt: randomDate,
+          ...(updatedAt && { updatedAt })
+        }
+      });
+      
+      console.log(`[SEED] ---> Creada solicitud ${i+1}/100 con id: ${request.id}, estado: ${randomStatus}, fecha: ${randomDate.toISOString()}`);
+      
+      // Para solicitudes completadas, agregar una reseña en algunos casos (70% de probabilidad)
+      if (randomStatus === 'COMPLETED' && Math.random() < 0.7) {
+        const reviewDate = new Date(updatedAt!.getTime() + Math.floor(Math.random() * 1000 * 60 * 60 * 72)); // 0-72 horas después
+        
+        // Si la fecha de reseña es posterior a la fecha actual, ajustarla
+        const actualReviewDate = reviewDate > endDate ? endDate : reviewDate;
+        
+        const rating = Math.floor(Math.random() * 5) + 1; // Rating 1-5
+        
+        const review = await prisma.reviews.create({
+          data: {
+            rating,
+            comment: rating >= 4 
+              ? `Excelente servicio, muy satisfecho con el trabajo realizado.` 
+              : rating >= 3 
+                ? `Servicio aceptable, aunque podrían mejorar en algunos aspectos.`
+                : `Servicio por debajo de mis expectativas, necesitan mejorar.`,
+            serviceId: randomService.id,
+            userId: randomUser.id,
+            createdAt: actualReviewDate
+          }
+        });
+        
+        console.log(`[SEED] ---> Creada reseña para solicitud completada, rating: ${rating}, id: ${review.id}`);
+      }
+    } catch (error) {
+      console.error(`Error al crear solicitud ${i+1}:`, error);
+    }
+  }
+
+  console.log("[SEED] ---> Proceso de seed completado con éxito!");
+
+// Código existente desde aquí hasta el final
+// ...
 
   const conversation = await prisma.conversation.create({
     data: {
@@ -294,6 +463,8 @@ async function main() {
   });
   console.log(`[SEED] ---> Created Message from Provider with id: ${message6.id}`);
 }
+
+
 main()
   .then(async () => {
     await prisma.$disconnect()
