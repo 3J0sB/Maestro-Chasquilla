@@ -16,7 +16,10 @@ type RequestCardProps = {
   clientAvatar?: string;
   onAccept: (requestId: string) => void;
   onDecline: (requestId: string) => void;
-  providerId: string; // Añadir ID del proveedor
+  onComplete: (requestId: string) => void;
+  onStartProgress: (requestId: string) => void;
+  onCancel: (requestId: string) => void;
+  providerId: string;
 }
 
 function RequestCard({
@@ -32,6 +35,9 @@ function RequestCard({
   clientAvatar,
   onAccept,
   onDecline,
+  onComplete,
+  onStartProgress,
+  onCancel,
   providerId,
 }: RequestCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -52,9 +58,139 @@ function RequestCard({
     }
   }
 
+  const handleStartProgress = () => {
+    try {
+      onStartProgress(requestId);
+    } catch (error) {
+      console.error("Error starting progress:", error);
+    }
+  }
+
+  const handleComplete = () => {
+    try {
+      onComplete(requestId);
+    } catch (error) {
+      console.error("Error completing request:", error);
+    }
+  }
+
+  const handleCancel = () => {
+    try {
+      onCancel(requestId);
+    } catch (error) {
+      console.error("Error cancelling request:", error);
+    }
+  }
+
   const handleMessageClick = () => {
     setIsModalOpen(true);
   }
+
+  // Función para renderizar las acciones según el estado actual
+  const renderActionButtons = () => {
+    switch (status) {
+      case 'PENDING':
+        return (
+          <>
+            <button
+              onClick={() => handleDecline()}
+              className="px-3 sm:px-4 py-1.5 text-xs sm:text-sm cursor-pointer border border-gray-200 rounded-md hover:bg-gray-50 transition-colors flex-1 sm:flex-none"
+            >
+              Rechazar
+            </button>
+            <button
+              onClick={() => handleAccept()}
+              className="px-3 sm:px-4 py-1.5 text-xs sm:text-sm cursor-pointer bg-orange-500 hover:bg-orange-600 text-white rounded-md transition-colors flex-1 sm:flex-none"
+            >
+              Aceptar
+            </button>
+          </>
+        );
+      case 'ACCEPTED':
+        return (
+          <>
+            <button
+              onClick={() => handleStartProgress()}
+              className="px-3 sm:px-4 py-1.5 text-xs sm:text-sm cursor-pointer bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors flex-1 sm:flex-none"
+            >
+              Iniciar Trabajo
+            </button>
+            <button
+              onClick={() => handleCancel()}
+              className="px-3 sm:px-4 py-1.5 text-xs sm:text-sm cursor-pointer border border-gray-200 rounded-md hover:bg-gray-50 transition-colors flex-1 sm:flex-none"
+            >
+              Cancelar
+            </button>
+          </>
+        );
+      case 'IN_PROGRESS':
+        return (
+          <button
+            onClick={() => handleComplete()}
+            className="px-3 sm:px-4 py-1.5 text-xs sm:text-sm cursor-pointer bg-green-500 hover:bg-green-600 text-white rounded-md transition-colors flex-1 sm:flex-none"
+          >
+            Completar
+          </button>
+        );
+      case 'COMPLETED':
+      case 'CANCELLED':
+      case 'REJECTED':
+        return (
+          <button
+            className="px-3 sm:px-4 py-1.5 text-xs sm:text-sm border border-gray-200 rounded-md opacity-50 cursor-not-allowed flex-1 sm:flex-none"
+            disabled
+          >
+            {status === 'COMPLETED' ? 'Completado' : status === 'CANCELLED' ? 'Cancelado' : 'Rechazado'}
+          </button>
+        );
+      default:
+        return null;
+    }
+  };
+
+  // Función para renderizar el badge de estado
+  const renderStatusBadge = () => {
+    switch (status) {
+      case 'PENDING':
+        return (
+          <span className="ml-2 px-2 text-yellow-500 rounded-full bg-yellow-100 font-medium">
+            Pendiente
+          </span>
+        );
+      case 'ACCEPTED':
+        return (
+          <span className="ml-2 px-2 text-blue-500 rounded-full bg-blue-100 font-medium">
+            Aceptado
+          </span>
+        );
+      case 'IN_PROGRESS':
+        return (
+          <span className="ml-2 px-2 text-indigo-500 rounded-full bg-indigo-100 font-medium">
+            En Progreso
+          </span>
+        );
+      case 'COMPLETED':
+        return (
+          <span className="ml-2 px-2 text-green-500 rounded-full bg-green-100 font-medium">
+            Completado
+          </span>
+        );
+      case 'CANCELLED':
+        return (
+          <span className="ml-2 px-2 text-orange-500 rounded-full bg-orange-100 font-medium">
+            Cancelado
+          </span>
+        );
+      case 'REJECTED':
+        return (
+          <span className="ml-2 px-2 text-red-500 rounded-full bg-red-100 font-medium">
+            Rechazado
+          </span>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-3 sm:p-4 hover:shadow-md transition-shadow">
@@ -100,53 +236,11 @@ function RequestCard({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
           Recibido: {formatDate(requestDate)}
-          {
-            status === 'PENDING' && (
-              <span className="ml-2 px-2 text-yellow-500 rounded-full bg-yellow-100 font-medium">
-                Pendiente
-              </span>
-            )
-          }
-          {
-            status === 'ACCEPTED' && (
-              <span className="ml-2 px-2 text-green-500 rounded-full bg-green-100 font-medium">
-                Aceptado
-              </span>
-            )
-          }
-          {
-            status === 'DECLINED' && (
-              <span className="ml-2 px-2 text-red-500 rounded-full bg-red-100 font-medium">
-                Rechazado
-              </span>
-            )
-          }
-          
+          {renderStatusBadge()}
         </div>
 
         <div className="flex gap-2 w-full sm:w-auto">
-          <button
-            onClick={() => handleDecline()}
-            disabled={status !== 'PENDING'}
-            className={`px-3 sm:px-4 py-1.5 text-xs sm:text-sm cursor-pointer border border-gray-200 rounded-md ${
-              status === 'PENDING' 
-                ? 'hover:bg-gray-50' 
-                : 'opacity-50 cursor-not-allowed'
-            } transition-colors flex-1 sm:flex-none`}
-          >
-            Rechazar
-          </button>
-          <button
-            onClick={() => handleAccept()}
-            disabled={status !== 'PENDING'}
-            className={`px-3 sm:px-4 py-1.5 text-xs sm:text-sm cursor-pointer ${
-              status === 'PENDING' 
-                ? 'bg-orange-500 hover:bg-orange-600' 
-                : 'bg-gray-400 opacity-50 cursor-not-allowed'
-            } text-white rounded-md transition-colors flex-1 sm:flex-none`}
-          >
-            Aceptar
-          </button>
+          {renderActionButtons()}
           <button
             onClick={handleMessageClick}
             className="p-1.5 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"

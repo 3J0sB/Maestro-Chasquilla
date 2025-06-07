@@ -19,7 +19,7 @@ const ProviderServices: React.FC<ProviderServicesProps> = ({
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold text-gray-800">Servicios ofrecidos</h2>
 
-                <div className="flex items-center">
+                {/* <div className="flex items-center">
                     <span className="text-sm text-gray-500 mr-2">Ordenar por:</span>
                     <select
                         className="border-gray-300 rounded-md text-sm"
@@ -31,7 +31,7 @@ const ProviderServices: React.FC<ProviderServicesProps> = ({
                         <option value="price_high">Precio: Mayor a menor</option>
                         <option value="newest">Más recientes</option>
                     </select>
-                </div>
+                </div> */}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -73,7 +73,7 @@ const ProviderServices: React.FC<ProviderServicesProps> = ({
                                     service.serviceTag2 && (
                                         <div className="mt-2">
                                             <span className="bg-orange-100 text-orange-800 text-xs font-medium px-2 py-1 rounded-full">
-                                                {service.serviceTag}
+                                                {service.serviceTag2}
                                             </span>
                                         </div>
                                     )
@@ -82,7 +82,7 @@ const ProviderServices: React.FC<ProviderServicesProps> = ({
                                     service.serviceTag3 && (
                                         <div className="mt-2">
                                             <span className="bg-orange-100 text-orange-800 text-xs font-medium px-2 py-1 rounded-full">
-                                                {service.serviceTag}
+                                                {service.serviceTag3}
                                             </span>
                                         </div>
                                     )

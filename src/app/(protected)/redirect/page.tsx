@@ -23,7 +23,7 @@ export default function RedirectPage() {
                 setLoading(false)
                 setError(true)
             }
-        }, 10000)
+        }, 5000)
 
         // Lógica de redirección basada en el estado de la sesión
         if (status === "loading") {
@@ -34,7 +34,7 @@ export default function RedirectPage() {
         clearTimeout(maxTimeout)
 
         if (status === "unauthenticated") {
-            router.push("/auth/login")
+            router.push("/login")
             return
         }
 

@@ -27,8 +27,8 @@ export default function ProviderDashboard() {
   const fetchDashboardData = async () => {
     setIsLoading(true);
     try {
-const response = await fetch(`/api/service-provider/dashboard?timeRange=${timeRange}&providerId=${session?.user.id}`);      const data = await response.json();
-
+      const response = await fetch(`/api/service-provider/dashboard?timeRange=${timeRange}&providerId=${session?.user.id}`); const data = await response.json();
+      // console.log('Dashboard data:', data);
       setDashboardData(data);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
@@ -61,7 +61,7 @@ const response = await fetch(`/api/service-provider/dashboard?timeRange=${timeRa
         userType={session?.user.role || ''}
         userLastName={session?.user.lastName || ''}
       />
-      
+
       {/* Contenido principal - flex-1 para que ocupe el espacio restante */}
       <div className="flex-1 flex flex-col">
         <DashboardHeader

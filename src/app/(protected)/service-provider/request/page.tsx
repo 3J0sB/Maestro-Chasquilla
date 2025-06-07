@@ -176,7 +176,7 @@ function Home() {
                       <option value="all">Todos los estados</option>
                       <option value="PENDING">Pendientes</option>
                       <option value="ACCEPTED">Aceptadas</option>
-                      <option value="DECLINED">Rechazadas</option>
+                      <option value="REJECTED">Rechazadas</option>
                     </select>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                       <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -243,6 +243,9 @@ function Home() {
                     requestId={request.id}
                     onAccept={() => onAccept(request)}
                     onDecline={() => onDecline(request)}
+                    onCancel={() => console.log('Cancel request', request.id)}
+                    onComplete={() => console.log('Completar solicitud', request.id)}
+                    onStartProgress={() => {console.log('Iniciar progreso de la solicitud', request.id);}}
                     clientId={request.user.id}
                     clientName={`${request.user.name} ${request.user.lastName}` || 'test'}
                     serviceType={request.service.title}

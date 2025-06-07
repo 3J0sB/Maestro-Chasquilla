@@ -108,7 +108,7 @@ function ServiceProviderProfile() {
                                 reviewCount={reviewsData?.totalReviews || 0}
                                 location={provider?.location?.city || ''}
                                 isVerified={provider?.emailVerified || false}
-                                role={session?.user.role || ''} // Assuming role is part of session.user
+                                role={session?.user.role || ''} 
                             />
                             <ProviderAbout
                                 description={provider?.description || ''}

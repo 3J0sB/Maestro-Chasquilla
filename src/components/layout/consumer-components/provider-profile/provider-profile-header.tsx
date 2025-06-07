@@ -61,6 +61,7 @@ const ProviderProfileHeader: React.FC<ProviderProfileHeaderProps> = ({
         <div className="text-center md:text-left flex-grow">
           <h1 className="text-3xl font-bold text-gray-800">{fullName}</h1>
           <p className="text-gray-600 mb-2">{profession}</p>
+          
 
           {/* Rating */}
           <div className="flex items-center justify-center md:justify-start mb-2">

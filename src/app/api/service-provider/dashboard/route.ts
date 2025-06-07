@@ -5,15 +5,12 @@ import { es } from 'date-fns/locale';
 
 export async function GET(request: NextRequest) {
   try {
-
-
-
-    // Obtener parámetros
     const searchParams = request.nextUrl.searchParams;
     const timeRange = searchParams.get('timeRange') || '30d';
     const providerId = searchParams.get('providerId');
-    console.log('Provider ID:', providerId);
-    console.log('Time Range:', timeRange);
+    // console.log('Provider ID:', providerId);
+    // console.log('Time Range:', timeRange);
+    
     // Calcular fechas según el rango de tiempo
     let startDate: Date;
     const now = new Date();
