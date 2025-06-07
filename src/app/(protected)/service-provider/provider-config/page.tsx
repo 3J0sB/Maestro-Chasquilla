@@ -86,30 +86,27 @@ function ProviderConfiguration() {
                 userLastName={session?.user.lastName || ''}
                 userImage={session?.user.image || ''}
             />
-
-            <div className="flex-1 p-6">
-                <div className="max-w-4xl mx-auto">
-                    <h1 className="text-2xl font-bold text-gray-900 mb-6">Configuración de perfil</h1>
-
-                    {isLoading ? (
-                        <div className="flex justify-center items-center h-64">
-                            <LoadingSpinner size="lg" />
-                        </div>
-                    ) : providerData ? (
-                        <div className="bg-white shadow rounded-lg p-6">
-                            <ProfileInfoForm
-
-                                initialData={providerData}
-                                onSubmit={handleUpdateProfile}
-                                isLoading={isLoading}
-                            />
-                        </div>
-
-                    ) : (
-                        <div className="bg-yellow-50 p-4 rounded-md border border-yellow-200 text-yellow-700">
-                            No pudimos cargar tu información. Por favor, intenta de nuevo más tarde.
-                        </div>
-                    )}
+            <div className="flex-1 flex flex-col">
+                <div className="flex-1 p-6 overflow-y-auto">
+                    <div className="max-w-4xl mx-auto">
+                        {isLoading ? (
+                            <div className="flex justify-center items-center h-64">
+                                <LoadingSpinner size="lg" />
+                            </div>
+                        ) : providerData ? (
+                            <div className="bg-white shadow rounded-lg p-6">
+                                <ProfileInfoForm
+                                    initialData={providerData}
+                                    onSubmit={handleUpdateProfile}
+                                    isLoading={isLoading}
+                                />
+                            </div>
+                        ) : (
+                            <div className="bg-yellow-50 p-4 rounded-md border border-yellow-200 text-yellow-700">
+                                No pudimos cargar tu información. Por favor, intenta de nuevo más tarde.
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
