@@ -88,6 +88,7 @@ function ServiceProviderProfile() {
                 userName={session?.user.name || ''}
                 userType={session?.user.role || ''}
                 userLastName={session?.user.lastName || ''}
+                userImage={session?.user.image || ''}
             />
             <div className='flex-1 overflow-y-auto bg-gray-50'>
                 <div className='max-w-5xl mx-auto py-8 px-4'>
@@ -108,15 +109,15 @@ function ServiceProviderProfile() {
                                 reviewCount={reviewsData?.totalReviews || 0}
                                 location={provider?.location?.city || ''}
                                 isVerified={provider?.emailVerified || false}
-                                role={session?.user.role || ''} 
+                                role={session?.user.role || ''}
                             />
                             <ProviderAbout
                                 description={provider?.description || ''}
-                                providerName = {provider?.name || ''}
+                                providerName={provider?.name || ''}
                             />
                             <ProviderServices
                                 services={provider?.services || []}
- 
+
                             />
                             <ProviderReviews
                                 reviews={reviewsData?.reviews || []}

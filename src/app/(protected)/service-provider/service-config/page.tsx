@@ -24,6 +24,7 @@ interface Service {
   status: ServiceStatus;
   userId: string;
   icon: string;
+  image: string
 }
 
 function ServiceConfig() {
@@ -50,7 +51,7 @@ function ServiceConfig() {
         console.log('Fetched services:', data);
       } catch (error) {
         console.log('Error fetching services:', error);
-  
+
       }
     });
   };
@@ -88,6 +89,7 @@ function ServiceConfig() {
         userName={session?.user.name || ''}
         userType={session?.user.role || ''}
         userLastName={session?.user.lastName || ''}
+        userImage={session?.user.image || ''}
       />
       <div className='flex-1 p-8 overflow-y-auto px-4 md:px-10 lg:px-20 xl:px-40'>
         <div className='flex flex-col space-y-4 w-full'>
@@ -139,6 +141,7 @@ function ServiceConfig() {
                 price={service.price}
                 status={service.status}
                 serviceTag={service.serviceTag}
+                image={service.image}
               />
             ))}
           </div>
@@ -149,7 +152,7 @@ function ServiceConfig() {
               <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
               </svg>
-              
+
               <p className="text-gray-500 mb-2">Aun no tienes servicios</p>
               {searchQuery && (
                 <p className="text-gray-400 text-sm">

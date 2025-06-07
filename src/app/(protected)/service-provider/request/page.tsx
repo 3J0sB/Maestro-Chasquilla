@@ -97,7 +97,7 @@ function Home() {
   }
   const handleConfirmDecline = async () => {
     if (!currentRequest) return;
-    
+
     try {
       console.log('Rechazando solicitud:', currentRequest);
       const response = await fetch(`/api/service-provider/service-requests/decline-service-request`, {
@@ -105,46 +105,46 @@ function Home() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({requestId: currentRequest.id,})
+        body: JSON.stringify({ requestId: currentRequest.id, })
       });
-      
+
       if (!response.ok) {
         throw new Error('Error al rechazar la solicitud');
       }
-      
+
       // Actualizar el estado local o recargar los datos
       fetchServiceRequests();
-      
+
     } catch (error) {
       console.error('Error:', error);
       // Mostrar mensaje de error
     }
   };
   const handleConfirmAccept = async () => {
-  if (!currentRequest) return;
-  
-  try {
-    console.log('Aceptando solicitud:', currentRequest);
-    const response = await fetch(`/api/service-provider/service-requests/accept-service-request`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({requestId: currentRequest.id,})
-    });
-    
-    if (!response.ok) {
-      throw new Error('Error al aceptar la solicitud');
+    if (!currentRequest) return;
+
+    try {
+      console.log('Aceptando solicitud:', currentRequest);
+      const response = await fetch(`/api/service-provider/service-requests/accept-service-request`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ requestId: currentRequest.id, })
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al aceptar la solicitud');
+      }
+
+      // Actualizar el estado local o recargar los datos
+      fetchServiceRequests();
+
+    } catch (error) {
+      console.error('Error:', error);
+      // Mostrar mensaje de error
     }
-    
-    // Actualizar el estado local o recargar los datos
-    fetchServiceRequests();
-    
-  } catch (error) {
-    console.error('Error:', error);
-    // Mostrar mensaje de error
-  }
-};
+  };
 
   useEffect(() => {
     fetchServiceRequests();
@@ -156,6 +156,7 @@ function Home() {
         userName={session?.user.name || ''}
         userType={session?.user.role || ''}
         userLastName={session?.user.lastName || ''}
+        userImage={session?.user.image || ''}
       />
 
       <div className="flex-1 p-8 overflow-y-auto px-4 md:px-10 lg:px-20 xl:px-40">
@@ -245,7 +246,7 @@ function Home() {
                     onDecline={() => onDecline(request)}
                     onCancel={() => console.log('Cancel request', request.id)}
                     onComplete={() => console.log('Completar solicitud', request.id)}
-                    onStartProgress={() => {console.log('Iniciar progreso de la solicitud', request.id);}}
+                    onStartProgress={() => { console.log('Iniciar progreso de la solicitud', request.id); }}
                     clientId={request.user.id}
                     clientName={`${request.user.name} ${request.user.lastName}` || 'test'}
                     serviceType={request.service.title}
@@ -271,21 +272,21 @@ function Home() {
               </div>
             )}
             {showAcceptModal && (
-              <AcceptRequestModal 
-              isOpen = {showAcceptModal}
-              onClose ={() => setShowAcceptModal(false)}
-              onConfirm={handleConfirmAccept}
-              clientName={currentRequest?.user.name || ''}
-              serviceType={currentRequest?.service.title || ''}
+              <AcceptRequestModal
+                isOpen={showAcceptModal}
+                onClose={() => setShowAcceptModal(false)}
+                onConfirm={handleConfirmAccept}
+                clientName={currentRequest?.user.name || ''}
+                serviceType={currentRequest?.service.title || ''}
               />
             )}
             {showDeclineModal && (
               <DeclineRequestModal
-              isOpen = {showDeclineModal}
-              onClose = {() => setShowDeclineModal(false)}
-              onConfirm = {handleConfirmDecline}
-              clientName = {currentRequest?.user.name || ''}
-              serviceType = {currentRequest?.service.title || ''}
+                isOpen={showDeclineModal}
+                onClose={() => setShowDeclineModal(false)}
+                onConfirm={handleConfirmDecline}
+                clientName={currentRequest?.user.name || ''}
+                serviceType={currentRequest?.service.title || ''}
               />
             )}
           </div>

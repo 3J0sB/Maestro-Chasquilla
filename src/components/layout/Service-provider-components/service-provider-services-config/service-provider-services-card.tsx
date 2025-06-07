@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Image from 'next/image'
 import UpdateServiceForm from './upDate-service-form'
 import DeleteServiceModal from './delete-service-modal';
 
@@ -8,11 +9,12 @@ type service = {
   title: string;
   description: string;
   price: number;
-  status: string
+  status: string;
   serviceTag: string;
+  image?: string; // Imagen del servicio (opcional)
 }
 
-function ServicesCard({ id, icon, title, status, description, price, serviceTag }: service) {
+function ServicesCard({ id, icon, title, status, description, price, serviceTag, image }: service) {
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedService, setSelectedService] = useState<{
@@ -21,6 +23,7 @@ function ServicesCard({ id, icon, title, status, description, price, serviceTag 
     description: string;
     price: number;
     serviceTag?: string;
+    image?: string;
   } | null>(null);
 
   const onDelete = () => {
@@ -33,7 +36,8 @@ function ServicesCard({ id, icon, title, status, description, price, serviceTag 
       title: title,
       description: description,
       price: price,
-      serviceTag: serviceTag
+      serviceTag: serviceTag,
+      image: image
     };
 
     setSelectedService(serviceData);
@@ -42,16 +46,14 @@ function ServicesCard({ id, icon, title, status, description, price, serviceTag 
 
   const handleServiceUpdate = () => {
     setShowUpdateForm(false);
-
     window.location.reload();
-
   };
 
   const onView = () => {
     console.log('View service with id:', id);
   }
 
-    const handleDeleteConfirm = async () => {
+  const handleDeleteConfirm = async () => {
     try {
       console.log('Deleting service with id:', id);
       
@@ -83,14 +85,37 @@ function ServicesCard({ id, icon, title, status, description, price, serviceTag 
       <div key={id}
         className='bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden 
                 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1'>
+        
+        {/* Imagen del servicio (si existe) */}
+        {image && (
+          <div className="w-full h-48 relative overflow-hidden">
+            <Image 
+              src={image || 'img/miau.jpg'} 
+              alt={title} 
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover hover:scale-105 transition-transform duration-300"
+            />
+            <div className="absolute top-2 right-2">
+              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+              }`}>
+                {status}
+              </span>
+            </div>
+          </div>
+        )}
+
         <div className='p-6'>
           {/* Cabecera de la tarjeta */}
           <div className='flex justify-between items-start mb-4'>
             {/* Icono y título */}
             <div className='flex items-center gap-4'>
-              <div className={`w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-xl ${status === 'Inactive' ? 'opacity-60' : ''}`}>
-                {icon}
-              </div>
+              {!image && ( // Solo mostrar el ícono si no hay imagen
+                <div className={`w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-xl ${status === 'Inactive' ? 'opacity-60' : ''}`}>
+                  {icon}
+                </div>
+              )}
               <div>
                 <h3 className='font-bold text-lg text-gray-800'>{title}</h3>
               </div>
@@ -102,7 +127,7 @@ function ServicesCard({ id, icon, title, status, description, price, serviceTag 
           </div>
 
           {/* Descripción */}
-          <p className='text-gray-600 mb-4'>
+          <p className='text-gray-600 mb-4 line-clamp-3'>
             {description}
           </p>
 
@@ -111,13 +136,15 @@ function ServicesCard({ id, icon, title, status, description, price, serviceTag 
             <div className='text-xl font-bold text-orange-500'>
               ${price.toFixed(2)}
             </div>
-            <div className='text-sm text-gray-500'>
-              {/* Aquí puedes mostrar el estado si lo deseas */}
-              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+            {!image && ( // Solo mostrar el estado aquí si no hay imagen (ya que lo mostramos en la imagen)
+              <div className='text-sm text-gray-500'>
+                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                  status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
                 }`}>
-                {status}
-              </span>
-            </div>
+                  {status}
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Botones de acción */}

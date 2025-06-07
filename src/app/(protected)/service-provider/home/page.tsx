@@ -60,6 +60,7 @@ export default function ProviderDashboard() {
         userName={session?.user.name || ''}
         userType={session?.user.role || ''}
         userLastName={session?.user.lastName || ''}
+        userImage={session?.user.image || ''}
       />
 
       {/* Contenido principal - flex-1 para que ocupe el espacio restante */}

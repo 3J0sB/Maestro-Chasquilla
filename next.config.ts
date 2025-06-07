@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   devIndicators: false,
   // Habilitar orígenes para imágenes
   images: {
-    domains: ['localhost', 'z9lmh397-3000.brs.devtunnels.ms', '192.168.1.88'],
+    domains: ['localhost', 'z9lmh397-3000.brs.devtunnels.ms', '192.168.1.88', 'res.cloudinary.com'],
   },
   // Soporte para acciones del servidor
   experimental: {

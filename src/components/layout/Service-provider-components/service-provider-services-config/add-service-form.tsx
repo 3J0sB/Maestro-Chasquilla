@@ -1,9 +1,11 @@
-import React, { useState, useEffect, use } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { addServiceSchema } from '@/lib/zod'
-import { set, type z } from 'zod'
+import { z } from 'zod'
 import { useSession } from 'next-auth/react'
+import Image from 'next/image'
+
 // Use the type from zod schema
 type FormInputs = z.infer<typeof addServiceSchema>
 
@@ -19,13 +21,16 @@ interface Category {
 
 function AddServiceForm({ onClose, onSave }: AddServiceFormProps) {
   const [categories, setCategories] = useState<Category[]>([]);
-  const { data: session } = useSession()
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { data: session } = useSession();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    watch
   } = useForm<FormInputs>({
     resolver: zodResolver(addServiceSchema),
     defaultValues: {
@@ -36,8 +41,6 @@ function AddServiceForm({ onClose, onSave }: AddServiceFormProps) {
     }
   });
 
-
-
   const fetchCategories = async () => {
     try {
       const response = await fetch('/api/service-provider/service-categories');
@@ -46,10 +49,8 @@ function AddServiceForm({ onClose, onSave }: AddServiceFormProps) {
       }
       const data = await response.json();
       setCategories(data);
-      console.log('Fetched categories:', data);
     } catch (error) {
       console.error('Error fetching categories:', error);
-
     }
   }
 
@@ -57,46 +58,107 @@ function AddServiceForm({ onClose, onSave }: AddServiceFormProps) {
     fetchCategories();
   }, []);
 
-  // Form submission handler - now uses the Zod validated data
-  const onSubmit = handleSubmit((data) => {
-    // Create object with the service data
-    const serviceData = {
-      name: data.serviceName,
-      description: data.description,
-      price: parseFloat(data.price),
-      serviceTag: data.category,
-      userId: session?.user.id,
-    };
-
-    const res = fetch('/api/service-provider/services/add-service', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(serviceData),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log('Service created:', data);
-        onSave(serviceData);
-        onClose();
-      })
-      .catch((error) => {
-        console.error('Error creating service:', error);
-      });
-    });
+  // Handle image selection
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
     
+    // Validate file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('La imagen no debe superar los 5MB');
+      return;
+    }
+    
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Por favor, selecciona un archivo de imagen válido');
+      return;
+    }
+    
+    setImageFile(file);
+    
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = () => {
+      setImagePreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
 
+  // Remove selected image
+  const handleRemoveImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
 
+  // Form submission handler
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      setIsUploading(true);
+      let imageUrl = null;
 
+      // Upload image if selected
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append('image', imageFile);
+        
+        const uploadResponse = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData
+        });
+        
+        if (!uploadResponse.ok) {
+          throw new Error('Error al subir la imagen');
+        }
+        
+        const uploadResult = await uploadResponse.json();
+        imageUrl = uploadResult.imageUrl;
+      }
+      
+      // Create service data object
+      const serviceData = {
+        title: data.serviceName,
+        description: data.description,
+        price: parseFloat(data.price),
+        serviceTag: data.category,
+        userId: session?.user.id,
+        image: imageUrl,
+      };
 
+      // Create service
+      const response = await fetch('/api/service-provider/services/add-service', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(serviceData),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Error al crear el servicio');
+      }
+      
+      const result = await response.json();
+      console.log('Service created:', result);
+      onSave(result);
+      onClose();
+    } catch (error) {
+      console.error('Error creating service:', error);
+      alert('Error al crear el servicio. Por favor, inténtalo de nuevo.');
+    } finally {
+      setIsUploading(false);
+    }
+  });
 
   return (
     <div className="fixed inset-0 bg-black/25 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex justify-between items-center border-b p-4">
-          <h2 className="text-xl font-bold text-gray-800">Add New Service</h2>
+        <div className="flex justify-between items-center border-b p-4 sticky top-0 bg-white z-10">
+          <h2 className="text-xl font-bold text-gray-800">Añadir Nuevo Servicio</h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -110,6 +172,56 @@ function AddServiceForm({ onClose, onSave }: AddServiceFormProps) {
 
         {/* Form */}
         <form onSubmit={onSubmit} className="p-6">
+          {/* Service Image */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Imagen del Servicio
+            </label>
+            <div className="flex items-center justify-center">
+              <div className="w-full max-w-xs">
+                {imagePreview ? (
+                  <div className="relative">
+                    <Image 
+                      src={imagePreview} 
+                      alt="Preview" 
+                      width={300} 
+                      height={200}
+                      className="w-full h-40 object-cover rounded-md"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleRemoveImage}
+                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 shadow-md hover:bg-red-600 transition-colors"
+                      aria-label="Remove image"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                    </button>
+                  </div>
+                ) : (
+                  <div 
+                    onClick={() => fileInputRef.current?.click()}
+                    className="border-2 border-dashed border-gray-300 rounded-md p-6 flex flex-col items-center justify-center cursor-pointer hover:border-orange-500 transition-colors"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <p className="mt-2 text-sm text-gray-500">Haz clic para subir una imagen</p>
+                    <p className="text-xs text-gray-400 mt-1">PNG, JPG, GIF hasta 5MB</p>
+                  </div>
+                )}
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleImageChange}
+                  accept="image/*"
+                  className="hidden"
+                />
+              </div>
+            </div>
+          </div>
+
           {/* Service Name */}
           <div className="mb-4">
             <label htmlFor="serviceName" className="block text-sm font-medium text-gray-700 mb-1">
@@ -118,7 +230,7 @@ function AddServiceForm({ onClose, onSave }: AddServiceFormProps) {
             <input
               id="serviceName"
               className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${errors.serviceName ? 'border-red-500' : 'border-gray-300'}`}
-              placeholder="Enter service name"
+              placeholder="Ej: Instalación de grifería"
               {...register("serviceName")}
             />
             {errors.serviceName && (
@@ -129,13 +241,13 @@ function AddServiceForm({ onClose, onSave }: AddServiceFormProps) {
           {/* Description */}
           <div className="mb-4">
             <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-              Descripcion
+              Descripción
             </label>
             <textarea
               id="description"
               rows={4}
               className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${errors.description ? 'border-red-500' : 'border-gray-300'}`}
-              placeholder="Describe your service"
+              placeholder="Describe detalladamente tu servicio"
               {...register("description")}
             />
             {errors.description && (
@@ -143,7 +255,7 @@ function AddServiceForm({ onClose, onSave }: AddServiceFormProps) {
             )}
           </div>
 
-          {/* Price and Duration (in row for larger screens) */}
+          {/* Price and Category (in row for larger screens) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             {/* Price */}
             <div>
@@ -168,21 +280,18 @@ function AddServiceForm({ onClose, onSave }: AddServiceFormProps) {
                 )}
               </div>
             </div>
-          </div>
 
-          {/* Category and Status (in row for larger screens) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             {/* Category */}
             <div>
               <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
-                Categoria
+                Categoría
               </label>
               <select
                 id="category"
                 className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 appearance-none bg-white ${errors.category ? 'border-red-500' : 'border-gray-300'}`}
                 {...register("category")}
               >
-                <option value="" disabled>Selecciona una Categoria</option>
+                <option value="" disabled>Selecciona una categoría</option>
                 {categories.map((cat) => (
                   <option key={cat.id} value={cat.name}>{cat.name}</option>
                 ))}
@@ -191,9 +300,6 @@ function AddServiceForm({ onClose, onSave }: AddServiceFormProps) {
                 <p className="mt-1 text-sm text-red-600">{errors.category.message}</p>
               )}
             </div>
-
-            {/* Status */}
-
           </div>
 
           {/* Action buttons */}
@@ -202,14 +308,26 @@ function AddServiceForm({ onClose, onSave }: AddServiceFormProps) {
               type="button"
               onClick={onClose}
               className="px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              disabled={isUploading}
             >
-              Cancel
+              Cancelar
             </button>
             <button
               type="submit"
-              className="px-4 py-2 text-sm font-medium text-white bg-orange-500 border border-transparent rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="px-4 py-2 text-sm font-medium text-white bg-orange-500 border border-transparent rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:opacity-70 disabled:cursor-not-allowed"
+              disabled={isUploading}
             >
-              Save Service
+              {isUploading ? (
+                <span className="flex items-center">
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Guardando...
+                </span>
+              ) : (
+                'Guardar Servicio'
+              )}
             </button>
           </div>
         </form>

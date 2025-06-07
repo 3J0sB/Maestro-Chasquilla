@@ -13,6 +13,7 @@ function ProviderMessages() {
                 userName={session?.user.name || ''}
                 userType={session?.user.role || ''}
                 userLastName={session?.user.lastName || ''}
+                userImage={session?.user.image || ''}
             />
             <div className="flex-1 overflow-hidden">
                 {status === 'authenticated' && (

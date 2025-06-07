@@ -236,7 +236,6 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
 
     markMessagesAsRead();
   }, [selectedConversation, providerId]);
-
   return (
     <div className="flex h-full">
       {/* Panel de conversaciones */}
