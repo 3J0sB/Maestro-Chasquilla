@@ -9,8 +9,7 @@ import LoadingSpinner from '@/components/shared/loading-spinner'
 import { useSession } from 'next-auth/react'
 import { serviceRequest } from '@/types'
 import { formatDate, formatShortDate } from '../../../../../utils'
-// Tipos
-
+import MessageModal from '@/components/layout/consumer-components/consumer-messages/message-modal'
 
 interface RequestedServicesTabProps {
     userId: string | undefined
@@ -22,6 +21,10 @@ export default function RequestedServicesTab({ userId }: RequestedServicesTabPro
     const [loading, setLoading] = useState(true)
     const [statusFilter, setStatusFilter] = useState('all')
     const router = useRouter()
+    
+    // Estados para el modal de mensaje
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [selectedRequest, setSelectedRequest] = useState<serviceRequest | null>(null)
 
     useEffect(() => {
         if (userId) {
@@ -47,6 +50,12 @@ export default function RequestedServicesTab({ userId }: RequestedServicesTabPro
         } finally {
             setLoading(false)
         }
+    }
+
+    // Abrir modal de mensaje
+    const openMessageModal = (request: serviceRequest) => {
+        setSelectedRequest(request)
+        setIsModalOpen(true)
     }
 
     // Filtrar solicitudes por estado
@@ -199,7 +208,7 @@ export default function RequestedServicesTab({ userId }: RequestedServicesTabPro
                     </button>
                 </div>
             ) : (
-                // Nuevo diseño en grid responsivo con 3 columnas
+                // Diseño en grid responsivo con 3 columnas
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredRequests.map((request) => {
                         const statusInfo = getStatusInfo(request.status);
@@ -246,7 +255,7 @@ export default function RequestedServicesTab({ userId }: RequestedServicesTabPro
                                 <div className="p-4">
                                     {/* Descripción breve o detalles del servicio */}
                                     <p className="text-gray-600 mb-4 line-clamp-2">
-                                        {request.message || `Servicio de ${request.service?.title} solicitado a ${request.user?.name} ${request.user?.lastName}`}
+                                        {request.message || `Servicio de ${request.service?.title} solicitado a ${request.service.user?.name} ${request.service.user?.lastName}`}
                                     </p>
 
                                     {/* Precio */}
@@ -259,15 +268,28 @@ export default function RequestedServicesTab({ userId }: RequestedServicesTabPro
 
                                     {/* Acciones */}
                                     <div className="flex flex-col gap-2">
-                                        {/* Botones según el estado */}
-                                        {(request.status === 'PENDING' || request.status === 'ACCEPTED') && (
+                                        {/* Para el estado PENDING */}
+                                        {request.status === 'PENDING' && (
+                                            <button
+                                                onClick={() => cancelRequest(request.id)}
+                                                className="w-full px-4 py-2 border border-red-500 text-red-500 rounded-md text-sm hover:bg-red-50 transition-colors"
+                                            >
+                                                Cancelar
+                                            </button>
+                                        )}
+
+                                        {/* Para el estado ACCEPTED */}
+                                        {request.status === 'ACCEPTED' && (
                                             <div className="flex gap-2">
-                                                {request.status === 'ACCEPTED' && (
-                                                    <Link href={`/messages/${request.user?.id}`}
-                                                        className="flex-1 text-center px-4 py-2 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600 transition-colors">
-                                                        Mensaje
-                                                    </Link>
-                                                )}
+                                                <button
+                                                    onClick={() => openMessageModal(request)}
+                                                    className="flex-1 text-center px-4 py-2 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600 transition-colors flex items-center justify-center gap-2"
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                                    </svg>
+                                                    Mensaje
+                                                </button>
                                                 <button
                                                     onClick={() => cancelRequest(request.id)}
                                                     className="flex-1 px-4 py-2 border border-red-500 text-red-500 rounded-md text-sm hover:bg-red-50 transition-colors"
@@ -277,13 +299,18 @@ export default function RequestedServicesTab({ userId }: RequestedServicesTabPro
                                             </div>
                                         )}
 
-                                        {/* Para el estado EN_PROGRESO */}
+                                        {/* Para el estado IN_PROGRESS */}
                                         {request.status === 'IN_PROGRESS' && (
                                             <div className="flex gap-2">
-                                                <Link href={`/messages/${request.user?.id}`}
-                                                    className="flex-1 text-center px-4 py-2 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600 transition-colors">
+                                                <button
+                                                    onClick={() => openMessageModal(request)}
+                                                    className="flex-1 text-center px-4 py-2 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600 transition-colors flex items-center justify-center gap-2"
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                                    </svg>
                                                     Mensaje
-                                                </Link>
+                                                </button>
                                                 <button
                                                     onClick={() => cancelRequest(request.id)}
                                                     className="flex-1 px-4 py-2 border border-red-500 text-red-500 rounded-md text-sm hover:bg-red-50 transition-colors"
@@ -293,6 +320,7 @@ export default function RequestedServicesTab({ userId }: RequestedServicesTabPro
                                             </div>
                                         )}
 
+                                        {/* Para el estado COMPLETED */}
                                         {request.status === 'COMPLETED' && (
                                             <Link href={`/services/${request.service?.id}`}
                                                 className="w-full text-center px-4 py-2 bg-orange-500 text-white rounded-md text-sm hover:bg-orange-600 transition-colors">
@@ -300,6 +328,7 @@ export default function RequestedServicesTab({ userId }: RequestedServicesTabPro
                                             </Link>
                                         )}
 
+                                        {/* Para los estados CANCELLED o REJECTED */}
                                         {(request.status === 'CANCELLED' || request.status === 'REJECTED') && (
                                             <Link href={`/services/${request.service?.id}`}
                                                 className="w-full text-center px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md text-sm hover:bg-gray-50 transition-colors">
@@ -312,6 +341,20 @@ export default function RequestedServicesTab({ userId }: RequestedServicesTabPro
                         )
                     })}
                 </div>
+            )}
+
+            {/* Modal de mensajes */}
+            {selectedRequest && (
+                <MessageModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    providerId={selectedRequest.service.user?.id || ''}
+                    userId={session?.user.id || ''}
+                    providerName={`${selectedRequest.service.user?.name || ''} ${selectedRequest.service.user?.lastName || ''}`}
+                    providerImage={selectedRequest.service.user?.image || undefined}
+                    serviceTitle={selectedRequest.service?.title || ''}
+                    requestId={selectedRequest.id}
+                />
             )}
         </div>
     )

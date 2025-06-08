@@ -166,7 +166,7 @@ export default function ConsumerSidebar({ activeTab, onTabChange, userName, user
       {/* Botón para colapsar/expandir */}
       <button
         onClick={toggleSidebar}
-        className="absolute top-4 z-10 p-1 fixed rounded-full bg-white border border-gray-300 shadow-md hover:bg-gray-100 transition-all duration-300"
+        className="top-4 z-10 p-1 fixed rounded-full bg-white border border-gray-300 shadow-md hover:bg-gray-100 transition-all duration-300"
         style={{ left: collapsed ? '50px' : '245px' }}
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
