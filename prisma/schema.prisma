@@ -41,28 +41,29 @@ model User {
   accounts       Account[]
   serviceRequest ServiceRequest[]
   location       Location?        @relation(fields: [locationId], references: [id])
-  Messages       Messages[] @relation("UserMessages")
+  Messages       Messages[]       @relation("UserMessages")
 
   @@map("users")
 }
 
 model ServiceProviderUser {
-  id             String    @id @default(cuid())
-  name           String?
-  lastName       String?
-  lastName2      String?
-  about          String?
-  description    String?
-  rut            String    @unique
-  email          String    @unique
-  emailVerified  DateTime? @map("email_verified")
-  image          String?
-  hashedPassword String    @map("hashed_password")
-  role           Role      @default(SERVICE_PROVIDER)
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  deletedAt      DateTime? @map("deleted_at")
-  locationId     String?   @unique @map("location_id") // Hacemos esto @unique para garantizar relación 1:1
+  id               String    @id @default(cuid())
+  name             String?
+  lastName         String?
+  lastName2        String?
+  about            String?
+  description      String?
+  areasOfExpertise String?
+  rut              String    @unique
+  email            String    @unique
+  emailVerified    DateTime? @map("email_verified")
+  image            String?
+  hashedPassword   String    @map("hashed_password")
+  role             Role      @default(SERVICE_PROVIDER)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  deletedAt        DateTime? @map("deleted_at")
+  locationId       String?   @unique @map("location_id") // Hacemos esto @unique para garantizar relación 1:1
 
   conversations Conversation[]
   services      Services[]
@@ -179,7 +180,7 @@ model Messages {
   id             String    @id @default(cuid())
   conversationId String    @map("conversation_id")
   senderId       String    @map("sender_id")
-  senderType     String    @map("sender_type") 
+  senderType     String    @map("sender_type")
   content        String
   isRead         Boolean   @default(false)
   createdAt      DateTime  @default(now())
@@ -188,9 +189,9 @@ model Messages {
   providerId     String?   @map("provider_id")
   userId         String?   @map("user_id")
 
-  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  provider      ServiceProviderUser? @relation("ProviderMessages", fields: [providerId], references: [id])
-  user          User? @relation("UserMessages", fields: [userId], references: [id])
+  conversation Conversation         @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  provider     ServiceProviderUser? @relation("ProviderMessages", fields: [providerId], references: [id])
+  user         User?                @relation("UserMessages", fields: [userId], references: [id])
 
   @@map("messages")
 }

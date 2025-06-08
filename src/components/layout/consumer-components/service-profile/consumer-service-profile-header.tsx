@@ -10,16 +10,18 @@ interface ProviderInfo {
     providerId: string;
     providerRating?: number;
     providerRatingCount?: number;
+    providerImage?: string;
+    areaOfExpertise?: string | null;
 }
 
-export default function ServiceProfileHeader({ providerId,providerRating, providerRatingCount,providerName, providerLastName, providerLastName2}: ProviderInfo) {
+export default function ServiceProfileHeader({ providerId, areaOfExpertise,providerImage,providerRating, providerRatingCount,providerName, providerLastName, providerLastName2}: ProviderInfo) {
+    console.log(providerImage, areaOfExpertise)
     return (
         <div className="bg-white rounded-xl shadow p-6 flex flex-col md:flex-row items-center justify-between mb-6">
             <div className="flex items-center gap-4">
-                {/* SVG Avatar */}
                 <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
                     <Image
-                        src="/img/miau.jpg"
+                        src={providerImage || '/img/miau.jpg'} 
                         alt="Foto de perfil"
                         width={80}
                         height={80}
@@ -30,11 +32,10 @@ export default function ServiceProfileHeader({ providerId,providerRating, provid
                 <div>
                     <div className="flex items-center gap-2">
                         <Link className="flex items-center gap-2" href={`/services/provider/${providerId}`}>
-                            <h2 className="text-xl font-bold text-gray-800">{providerName}</h2>
-                            <span className="bg-green-400 w-3 h-3 rounded-full inline-block" title="En línea"></span>
+                            <h2 className="text-xl font-bold text-gray-800">{providerName} {providerLastName}</h2>
                         </Link>
                     </div>
-                    <div className="text-gray-500 text-sm">Panadero</div>
+                    <div className="text-gray-500 text-sm">{areaOfExpertise || 'Profesion no especificada'}</div>
                     <div className="flex gap-2 text-xs text-gray-400 mt-1">
                         <span className="flex items-center gap-1">
                             {/* Ubicación SVG */}

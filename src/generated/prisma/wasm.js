@@ -141,6 +141,7 @@ exports.Prisma.ServiceProviderUserScalarFieldEnum = {
   lastName2: 'lastName2',
   about: 'about',
   description: 'description',
+  areasOfExpertise: 'areasOfExpertise',
   rut: 'rut',
   email: 'email',
   emailVerified: 'emailVerified',

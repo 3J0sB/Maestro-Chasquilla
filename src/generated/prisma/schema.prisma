@@ -47,22 +47,23 @@ model User {
 }
 
 model ServiceProviderUser {
-  id             String    @id @default(cuid())
-  name           String?
-  lastName       String?
-  lastName2      String?
-  about          String?
-  description    String?
-  rut            String    @unique
-  email          String    @unique
-  emailVerified  DateTime? @map("email_verified")
-  image          String?
-  hashedPassword String    @map("hashed_password")
-  role           Role      @default(SERVICE_PROVIDER)
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  deletedAt      DateTime? @map("deleted_at")
-  locationId     String?   @unique @map("location_id") // Hacemos esto @unique para garantizar relación 1:1
+  id               String    @id @default(cuid())
+  name             String?
+  lastName         String?
+  lastName2        String?
+  about            String?
+  description      String?
+  areasOfExpertise String?
+  rut              String    @unique
+  email            String    @unique
+  emailVerified    DateTime? @map("email_verified")
+  image            String?
+  hashedPassword   String    @map("hashed_password")
+  role             Role      @default(SERVICE_PROVIDER)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  deletedAt        DateTime? @map("deleted_at")
+  locationId       String?   @unique @map("location_id") // Hacemos esto @unique para garantizar relación 1:1
 
   conversations Conversation[]
   services      Services[]

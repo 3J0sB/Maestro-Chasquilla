@@ -23,6 +23,8 @@ export async function GET(request: NextRequest) {
                         rut: true,
                         email: true,
                         image: true,
+                        areasOfExpertise: true,
+                        description: true,
                     },
                 },
             },

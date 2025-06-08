@@ -149,15 +149,13 @@ function ServiceProviderSidebar({ userName, userType, userLastName, userImage }:
           {!collapsed ? (
             <Link href="/service-provider/profile" className="flex items-center gap-3 hover:bg-gray-100 p-2 rounded-lg transition-colors">
               <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-                {userImage &&
-                  <Image
-                    src={userImage}
-                    alt={`${userName} ${userLastName}`}
-                    width={40}
-                    height={40}
-                    className="w-full h-full object-cover"
-                  />
-                }
+                <Image
+                  src={userImage || '/img/miau.jpg'}
+                  alt={`${userName} ${userLastName}`}
+                  width={40}
+                  height={40}
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-700">{userName} {userLastName}</p>
@@ -169,21 +167,13 @@ function ServiceProviderSidebar({ userName, userType, userLastName, userImage }:
           ) : (
             <div className="flex justify-center">
               <div className="w-10 h-10 rounded-full overflow-hidden">
-                {userImage ? (
-                  <Image
-                    src={userImage}
-                    alt={`${userName}`}
-                    width={40}
-                    height={40}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                  </div>
-                )}
+                <Image
+                  src={userImage || '/img/miau.jpg'}
+                  alt={`${userName}`}
+                  width={40}
+                  height={40}
+                  className="w-full h-full object-cover"
+                />
               </div>
             </div>
           )}

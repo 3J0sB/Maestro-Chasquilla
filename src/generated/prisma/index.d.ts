@@ -3345,6 +3345,7 @@ export namespace Prisma {
     lastName2: string | null
     about: string | null
     description: string | null
+    areasOfExpertise: string | null
     rut: string | null
     email: string | null
     emailVerified: Date | null
@@ -3364,6 +3365,7 @@ export namespace Prisma {
     lastName2: string | null
     about: string | null
     description: string | null
+    areasOfExpertise: string | null
     rut: string | null
     email: string | null
     emailVerified: Date | null
@@ -3383,6 +3385,7 @@ export namespace Prisma {
     lastName2: number
     about: number
     description: number
+    areasOfExpertise: number
     rut: number
     email: number
     emailVerified: number
@@ -3404,6 +3407,7 @@ export namespace Prisma {
     lastName2?: true
     about?: true
     description?: true
+    areasOfExpertise?: true
     rut?: true
     email?: true
     emailVerified?: true
@@ -3423,6 +3427,7 @@ export namespace Prisma {
     lastName2?: true
     about?: true
     description?: true
+    areasOfExpertise?: true
     rut?: true
     email?: true
     emailVerified?: true
@@ -3442,6 +3447,7 @@ export namespace Prisma {
     lastName2?: true
     about?: true
     description?: true
+    areasOfExpertise?: true
     rut?: true
     email?: true
     emailVerified?: true
@@ -3534,6 +3540,7 @@ export namespace Prisma {
     lastName2: string | null
     about: string | null
     description: string | null
+    areasOfExpertise: string | null
     rut: string
     email: string
     emailVerified: Date | null
@@ -3570,6 +3577,7 @@ export namespace Prisma {
     lastName2?: boolean
     about?: boolean
     description?: boolean
+    areasOfExpertise?: boolean
     rut?: boolean
     email?: boolean
     emailVerified?: boolean
@@ -3595,6 +3603,7 @@ export namespace Prisma {
     lastName2?: boolean
     about?: boolean
     description?: boolean
+    areasOfExpertise?: boolean
     rut?: boolean
     email?: boolean
     emailVerified?: boolean
@@ -3615,6 +3624,7 @@ export namespace Prisma {
     lastName2?: boolean
     about?: boolean
     description?: boolean
+    areasOfExpertise?: boolean
     rut?: boolean
     email?: boolean
     emailVerified?: boolean
@@ -3635,6 +3645,7 @@ export namespace Prisma {
     lastName2?: boolean
     about?: boolean
     description?: boolean
+    areasOfExpertise?: boolean
     rut?: boolean
     email?: boolean
     emailVerified?: boolean
@@ -3647,7 +3658,7 @@ export namespace Prisma {
     locationId?: boolean
   }
 
-  export type ServiceProviderUserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "lastName" | "lastName2" | "about" | "description" | "rut" | "email" | "emailVerified" | "image" | "hashedPassword" | "role" | "createdAt" | "updatedAt" | "deletedAt" | "locationId", ExtArgs["result"]["serviceProviderUser"]>
+  export type ServiceProviderUserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "lastName" | "lastName2" | "about" | "description" | "areasOfExpertise" | "rut" | "email" | "emailVerified" | "image" | "hashedPassword" | "role" | "createdAt" | "updatedAt" | "deletedAt" | "locationId", ExtArgs["result"]["serviceProviderUser"]>
   export type ServiceProviderUserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     conversations?: boolean | ServiceProviderUser$conversationsArgs<ExtArgs>
     services?: boolean | ServiceProviderUser$servicesArgs<ExtArgs>
@@ -3679,6 +3690,7 @@ export namespace Prisma {
       lastName2: string | null
       about: string | null
       description: string | null
+      areasOfExpertise: string | null
       rut: string
       email: string
       emailVerified: Date | null
@@ -4123,6 +4135,7 @@ export namespace Prisma {
     readonly lastName2: FieldRef<"ServiceProviderUser", 'String'>
     readonly about: FieldRef<"ServiceProviderUser", 'String'>
     readonly description: FieldRef<"ServiceProviderUser", 'String'>
+    readonly areasOfExpertise: FieldRef<"ServiceProviderUser", 'String'>
     readonly rut: FieldRef<"ServiceProviderUser", 'String'>
     readonly email: FieldRef<"ServiceProviderUser", 'String'>
     readonly emailVerified: FieldRef<"ServiceProviderUser", 'DateTime'>
@@ -14904,6 +14917,7 @@ export namespace Prisma {
     lastName2: 'lastName2',
     about: 'about',
     description: 'description',
+    areasOfExpertise: 'areasOfExpertise',
     rut: 'rut',
     email: 'email',
     emailVerified: 'emailVerified',
@@ -15287,6 +15301,7 @@ export namespace Prisma {
     lastName2?: StringNullableFilter<"ServiceProviderUser"> | string | null
     about?: StringNullableFilter<"ServiceProviderUser"> | string | null
     description?: StringNullableFilter<"ServiceProviderUser"> | string | null
+    areasOfExpertise?: StringNullableFilter<"ServiceProviderUser"> | string | null
     rut?: StringFilter<"ServiceProviderUser"> | string
     email?: StringFilter<"ServiceProviderUser"> | string
     emailVerified?: DateTimeNullableFilter<"ServiceProviderUser"> | Date | string | null
@@ -15311,6 +15326,7 @@ export namespace Prisma {
     lastName2?: SortOrderInput | SortOrder
     about?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
+    areasOfExpertise?: SortOrderInput | SortOrder
     rut?: SortOrder
     email?: SortOrder
     emailVerified?: SortOrderInput | SortOrder
@@ -15341,6 +15357,7 @@ export namespace Prisma {
     lastName2?: StringNullableFilter<"ServiceProviderUser"> | string | null
     about?: StringNullableFilter<"ServiceProviderUser"> | string | null
     description?: StringNullableFilter<"ServiceProviderUser"> | string | null
+    areasOfExpertise?: StringNullableFilter<"ServiceProviderUser"> | string | null
     emailVerified?: DateTimeNullableFilter<"ServiceProviderUser"> | Date | string | null
     image?: StringNullableFilter<"ServiceProviderUser"> | string | null
     hashedPassword?: StringFilter<"ServiceProviderUser"> | string
@@ -15362,6 +15379,7 @@ export namespace Prisma {
     lastName2?: SortOrderInput | SortOrder
     about?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
+    areasOfExpertise?: SortOrderInput | SortOrder
     rut?: SortOrder
     email?: SortOrder
     emailVerified?: SortOrderInput | SortOrder
@@ -15387,6 +15405,7 @@ export namespace Prisma {
     lastName2?: StringNullableWithAggregatesFilter<"ServiceProviderUser"> | string | null
     about?: StringNullableWithAggregatesFilter<"ServiceProviderUser"> | string | null
     description?: StringNullableWithAggregatesFilter<"ServiceProviderUser"> | string | null
+    areasOfExpertise?: StringNullableWithAggregatesFilter<"ServiceProviderUser"> | string | null
     rut?: StringWithAggregatesFilter<"ServiceProviderUser"> | string
     email?: StringWithAggregatesFilter<"ServiceProviderUser"> | string
     emailVerified?: DateTimeNullableWithAggregatesFilter<"ServiceProviderUser"> | Date | string | null
@@ -16248,6 +16267,7 @@ export namespace Prisma {
     lastName2?: string | null
     about?: string | null
     description?: string | null
+    areasOfExpertise?: string | null
     rut: string
     email: string
     emailVerified?: Date | string | null
@@ -16271,6 +16291,7 @@ export namespace Prisma {
     lastName2?: string | null
     about?: string | null
     description?: string | null
+    areasOfExpertise?: string | null
     rut: string
     email: string
     emailVerified?: Date | string | null
@@ -16294,6 +16315,7 @@ export namespace Prisma {
     lastName2?: NullableStringFieldUpdateOperationsInput | string | null
     about?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    areasOfExpertise?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16317,6 +16339,7 @@ export namespace Prisma {
     lastName2?: NullableStringFieldUpdateOperationsInput | string | null
     about?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    areasOfExpertise?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16340,6 +16363,7 @@ export namespace Prisma {
     lastName2?: string | null
     about?: string | null
     description?: string | null
+    areasOfExpertise?: string | null
     rut: string
     email: string
     emailVerified?: Date | string | null
@@ -16359,6 +16383,7 @@ export namespace Prisma {
     lastName2?: NullableStringFieldUpdateOperationsInput | string | null
     about?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    areasOfExpertise?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16377,6 +16402,7 @@ export namespace Prisma {
     lastName2?: NullableStringFieldUpdateOperationsInput | string | null
     about?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    areasOfExpertise?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -17407,6 +17433,7 @@ export namespace Prisma {
     lastName2?: SortOrder
     about?: SortOrder
     description?: SortOrder
+    areasOfExpertise?: SortOrder
     rut?: SortOrder
     email?: SortOrder
     emailVerified?: SortOrder
@@ -17426,6 +17453,7 @@ export namespace Prisma {
     lastName2?: SortOrder
     about?: SortOrder
     description?: SortOrder
+    areasOfExpertise?: SortOrder
     rut?: SortOrder
     email?: SortOrder
     emailVerified?: SortOrder
@@ -17445,6 +17473,7 @@ export namespace Prisma {
     lastName2?: SortOrder
     about?: SortOrder
     description?: SortOrder
+    areasOfExpertise?: SortOrder
     rut?: SortOrder
     email?: SortOrder
     emailVerified?: SortOrder
@@ -19758,6 +19787,7 @@ export namespace Prisma {
     lastName2?: string | null
     about?: string | null
     description?: string | null
+    areasOfExpertise?: string | null
     rut: string
     email: string
     emailVerified?: Date | string | null
@@ -19780,6 +19810,7 @@ export namespace Prisma {
     lastName2?: string | null
     about?: string | null
     description?: string | null
+    areasOfExpertise?: string | null
     rut: string
     email: string
     emailVerified?: Date | string | null
@@ -19865,6 +19896,7 @@ export namespace Prisma {
     lastName2?: NullableStringFieldUpdateOperationsInput | string | null
     about?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    areasOfExpertise?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -19887,6 +19919,7 @@ export namespace Prisma {
     lastName2?: NullableStringFieldUpdateOperationsInput | string | null
     about?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    areasOfExpertise?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -19992,6 +20025,7 @@ export namespace Prisma {
     lastName2?: string | null
     about?: string | null
     description?: string | null
+    areasOfExpertise?: string | null
     rut: string
     email: string
     emailVerified?: Date | string | null
@@ -20014,6 +20048,7 @@ export namespace Prisma {
     lastName2?: string | null
     about?: string | null
     description?: string | null
+    areasOfExpertise?: string | null
     rut: string
     email: string
     emailVerified?: Date | string | null
@@ -20100,6 +20135,7 @@ export namespace Prisma {
     lastName2?: NullableStringFieldUpdateOperationsInput | string | null
     about?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    areasOfExpertise?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -20122,6 +20158,7 @@ export namespace Prisma {
     lastName2?: NullableStringFieldUpdateOperationsInput | string | null
     about?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    areasOfExpertise?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -20448,6 +20485,7 @@ export namespace Prisma {
     lastName2?: string | null
     about?: string | null
     description?: string | null
+    areasOfExpertise?: string | null
     rut: string
     email: string
     emailVerified?: Date | string | null
@@ -20470,6 +20508,7 @@ export namespace Prisma {
     lastName2?: string | null
     about?: string | null
     description?: string | null
+    areasOfExpertise?: string | null
     rut: string
     email: string
     emailVerified?: Date | string | null
@@ -20612,6 +20651,7 @@ export namespace Prisma {
     lastName2?: NullableStringFieldUpdateOperationsInput | string | null
     about?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    areasOfExpertise?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -20634,6 +20674,7 @@ export namespace Prisma {
     lastName2?: NullableStringFieldUpdateOperationsInput | string | null
     about?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    areasOfExpertise?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -20739,6 +20780,7 @@ export namespace Prisma {
     lastName2?: string | null
     about?: string | null
     description?: string | null
+    areasOfExpertise?: string | null
     rut: string
     email: string
     emailVerified?: Date | string | null
@@ -20761,6 +20803,7 @@ export namespace Prisma {
     lastName2?: string | null
     about?: string | null
     description?: string | null
+    areasOfExpertise?: string | null
     rut: string
     email: string
     emailVerified?: Date | string | null
@@ -20868,6 +20911,7 @@ export namespace Prisma {
     lastName2?: NullableStringFieldUpdateOperationsInput | string | null
     about?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    areasOfExpertise?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -20890,6 +20934,7 @@ export namespace Prisma {
     lastName2?: NullableStringFieldUpdateOperationsInput | string | null
     about?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    areasOfExpertise?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -20935,6 +20980,7 @@ export namespace Prisma {
     lastName2?: string | null
     about?: string | null
     description?: string | null
+    areasOfExpertise?: string | null
     rut: string
     email: string
     emailVerified?: Date | string | null
@@ -20957,6 +21003,7 @@ export namespace Prisma {
     lastName2?: string | null
     about?: string | null
     description?: string | null
+    areasOfExpertise?: string | null
     rut: string
     email: string
     emailVerified?: Date | string | null
@@ -21071,6 +21118,7 @@ export namespace Prisma {
     lastName2?: NullableStringFieldUpdateOperationsInput | string | null
     about?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    areasOfExpertise?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -21093,6 +21141,7 @@ export namespace Prisma {
     lastName2?: NullableStringFieldUpdateOperationsInput | string | null
     about?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    areasOfExpertise?: NullableStringFieldUpdateOperationsInput | string | null
     rut?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

@@ -35,6 +35,7 @@ export interface user {
     name: string;
     lastName: string;
     lastName2: string;
+    areasOfExpertise: string?;
     rut: string;
     email: string;
     emailVerified: boolean;

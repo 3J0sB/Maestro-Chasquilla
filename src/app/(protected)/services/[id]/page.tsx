@@ -244,6 +244,8 @@ function ServiceProfile({ params }: ServiceProfileParams) {
                     providerLastName2={service.user.lastName2}
                     providerRating={reviewsData?.averageRating || 0}
                     providerRatingCount={reviewsData?.totalReviews || 0}
+                    providerImage={service.user.image || '/img/miau.jpg'}
+                    areaOfExpertise={service.user.areasOfExpertise}
                 />
                 <div className='bg-white rounded-xl shadow p-6 mb-6 flex justify-between items-start'>
                     <ServiceMainInfo
@@ -276,7 +278,7 @@ function ServiceProfile({ params }: ServiceProfileParams) {
 
                 <ServiceDetailDescription
                     description = {service.description}
-                    serviceImage={service.image ? service.image : '/default-service-image.png'}
+                    serviceImage={service.image ? service.image : '/img/miau.jpg'}
                 />
 
                 {/* Modal de solicitud */}

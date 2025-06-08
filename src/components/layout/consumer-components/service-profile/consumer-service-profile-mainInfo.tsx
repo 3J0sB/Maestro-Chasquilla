@@ -13,6 +13,16 @@ interface ServiceMainInfoProps {
 }
 
 export default function ServiceMainInfo({ title,  servicePrice,  serviceSmallDescription,serviceTag1, serviceTag2, serviceTag3, userImage }: ServiceMainInfoProps) {
+  
+  console.log('ServiceMainInfo props:', {
+    title,
+    servicePrice,
+    serviceTag1,
+    serviceTag2,
+    serviceTag3,
+    userImage,
+    serviceSmallDescription
+  });
   return (
     <div className="">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between">

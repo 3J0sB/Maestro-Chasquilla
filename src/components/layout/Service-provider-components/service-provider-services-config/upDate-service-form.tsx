@@ -20,6 +20,7 @@ interface UpdateServiceFormProps {
     price: number;
     serviceTag?: string;
     image?: string;
+    smallDescription?: string;
   }
 }
 
@@ -47,6 +48,7 @@ function UpdateServiceForm({ onClose, onUpdate, serviceData }: UpdateServiceForm
     defaultValues: {
       serviceName: serviceData.title,
       description: serviceData.description,
+      smallDescription: serviceData.smallDescription || '',
       price: serviceData.price.toString(),
       category: serviceData.serviceTag || '',
     }
@@ -70,6 +72,7 @@ function UpdateServiceForm({ onClose, onUpdate, serviceData }: UpdateServiceForm
     fetchCategories();
     
     setValue('serviceName', serviceData.title);
+    setValue('smallDescription', serviceData.smallDescription || '');
     setValue('description', serviceData.description);
     setValue('price', serviceData.price.toString());
     setValue('category', serviceData.serviceTag || '');
@@ -137,6 +140,7 @@ function UpdateServiceForm({ onClose, onUpdate, serviceData }: UpdateServiceForm
     const updatedServiceData = {
       id: serviceData.id,
       title: data.serviceName,
+      smallDescription: data.smallDescription,
       description: data.description,
       price: parseFloat(data.price),
       serviceTag: data.category,
@@ -300,6 +304,26 @@ function UpdateServiceForm({ onClose, onUpdate, serviceData }: UpdateServiceForm
             {errors.serviceName && (
               <p className="mt-1 text-sm text-red-600">{errors.serviceName.message}</p>
             )}
+          </div>
+
+          {/* Small Description */}
+          <div className="mb-4">
+            <label htmlFor="smallDescription" className="block text-sm font-medium text-gray-700 mb-1">
+              Descripción Breve
+            </label>
+            <input
+              id="smallDescription"
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${errors.smallDescription ? 'border-red-500' : 'border-gray-300'}`}
+              placeholder="Breve resumen del servicio (máx. 100 caracteres)"
+              maxLength={100}
+              {...register("smallDescription")}
+            />
+            {errors.smallDescription && (
+              <p className="mt-1 text-sm text-red-600">{errors.smallDescription.message}</p>
+            )}
+            <p className="mt-1 text-xs text-gray-500">
+              Una descripción corta que aparecerá en las tarjetas de servicios
+            </p>
           </div>
 
           {/* Description */}
