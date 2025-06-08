@@ -248,7 +248,7 @@ function ServiceProfile({ params }: ServiceProfileParams) {
                 <div className='bg-white rounded-xl shadow p-6 mb-6 flex justify-between items-start'>
                     <ServiceMainInfo
                         title={service.title}
-                        serviceDescription={service.description}
+                        serviceSmallDescription={service.smallDescription}
                         servicePrice={service.price}
                         serviceTag1={service.serviceTag}
                         serviceTag2={service.serviceTag2}
@@ -274,7 +274,10 @@ function ServiceProfile({ params }: ServiceProfileParams) {
                     </div>
                 </div>
 
-                <ServiceDetailDescription />
+                <ServiceDetailDescription
+                    description = {service.description}
+                    serviceImage={service.image ? service.image : '/default-service-image.png'}
+                />
 
                 {/* Modal de solicitud */}
                 <RequestModal

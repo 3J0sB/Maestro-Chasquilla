@@ -34,7 +34,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
             }
         })
         if (!serviceRequest || serviceRequest.length === 0) {
-            return NextResponse.json({ error: "No se encontraron solicitudes de servicio" }, { status: 404 });
+            return NextResponse.json({ message: "No se encontraron solicitudes de servicio" }, { status: 200 });
         }
 
         return NextResponse.json(serviceRequest, { status: 200 });

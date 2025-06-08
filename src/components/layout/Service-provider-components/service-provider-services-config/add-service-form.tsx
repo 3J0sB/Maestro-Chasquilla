@@ -36,6 +36,7 @@ function AddServiceForm({ onClose, onSave }: AddServiceFormProps) {
     defaultValues: {
       serviceName: '',
       description: '',
+      smallDescription: '',
       price: '',
       category: '',
     }
@@ -62,21 +63,21 @@ function AddServiceForm({ onClose, onSave }: AddServiceFormProps) {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    
+
     // Validate file size (5MB max)
     if (file.size > 5 * 1024 * 1024) {
       alert('La imagen no debe superar los 5MB');
       return;
     }
-    
+
     // Validate file type
     if (!file.type.startsWith('image/')) {
       alert('Por favor, selecciona un archivo de imagen válido');
       return;
     }
-    
+
     setImageFile(file);
-    
+
     // Create preview
     const reader = new FileReader();
     reader.onload = () => {
@@ -104,26 +105,27 @@ function AddServiceForm({ onClose, onSave }: AddServiceFormProps) {
       if (imageFile) {
         const formData = new FormData();
         formData.append('image', imageFile);
-        
+
         const uploadResponse = await fetch('/api/upload', {
           method: 'POST',
           body: formData
         });
-        
+
         if (!uploadResponse.ok) {
           throw new Error('Error al subir la imagen');
         }
-        
+
         const uploadResult = await uploadResponse.json();
         imageUrl = uploadResult.imageUrl;
       }
-      
+
       // Create service data object
       const serviceData = {
         title: data.serviceName,
         description: data.description,
         price: parseFloat(data.price),
         serviceTag: data.category,
+        smallDescription: data.smallDescription, 
         userId: session?.user.id,
         image: imageUrl,
       };
@@ -136,11 +138,11 @@ function AddServiceForm({ onClose, onSave }: AddServiceFormProps) {
         },
         body: JSON.stringify(serviceData),
       });
-      
+
       if (!response.ok) {
         throw new Error('Error al crear el servicio');
       }
-      
+
       const result = await response.json();
       console.log('Service created:', result);
       onSave(result);
@@ -181,10 +183,10 @@ function AddServiceForm({ onClose, onSave }: AddServiceFormProps) {
               <div className="w-full max-w-xs">
                 {imagePreview ? (
                   <div className="relative">
-                    <Image 
-                      src={imagePreview} 
-                      alt="Preview" 
-                      width={300} 
+                    <Image
+                      src={imagePreview}
+                      alt="Preview"
+                      width={300}
                       height={200}
                       className="w-full h-40 object-cover rounded-md"
                     />
@@ -200,7 +202,7 @@ function AddServiceForm({ onClose, onSave }: AddServiceFormProps) {
                     </button>
                   </div>
                 ) : (
-                  <div 
+                  <div
                     onClick={() => fileInputRef.current?.click()}
                     className="border-2 border-dashed border-gray-300 rounded-md p-6 flex flex-col items-center justify-center cursor-pointer hover:border-orange-500 transition-colors"
                   >
@@ -236,6 +238,24 @@ function AddServiceForm({ onClose, onSave }: AddServiceFormProps) {
             {errors.serviceName && (
               <p className="mt-1 text-sm text-red-600">{errors.serviceName.message}</p>
             )}
+          </div>
+          <div className="mb-4">
+            <label htmlFor="smallDescription" className="block text-sm font-medium text-gray-700 mb-1">
+              Descripción Breve
+            </label>
+            <input
+              id="smallDescription"
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${errors.smallDescription ? 'border-red-500' : 'border-gray-300'}`}
+              placeholder="Breve resumen del servicio (máx. 100 caracteres)"
+              maxLength={100}
+              {...register("smallDescription")}
+            />
+            {errors.smallDescription && (
+              <p className="mt-1 text-sm text-red-600">{errors.smallDescription.message}</p>
+            )}
+            <p className="mt-1 text-xs text-gray-500">
+              Una descripción corta que aparecerá en las tarjetas de servicios
+            </p>
           </div>
 
           {/* Description */}

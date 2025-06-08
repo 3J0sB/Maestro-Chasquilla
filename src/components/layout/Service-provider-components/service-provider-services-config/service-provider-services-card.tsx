@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Image from 'next/image'
 import UpdateServiceForm from './upDate-service-form'
 import DeleteServiceModal from './delete-service-modal';
+import { useRouter } from 'next/navigation';
 
 type service = {
   id: string;
@@ -26,6 +27,7 @@ function ServicesCard({ id, icon, title, status, description, price, serviceTag,
     image?: string;
   } | null>(null);
 
+  const router = useRouter();
   const onDelete = () => {
     setShowDeleteModal(true);
   };
@@ -51,6 +53,7 @@ function ServicesCard({ id, icon, title, status, description, price, serviceTag,
 
   const onView = () => {
     console.log('View service with id:', id);
+    router.push(`/services/${id}`);
   }
 
   const handleDeleteConfirm = async () => {

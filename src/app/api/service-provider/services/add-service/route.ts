@@ -5,7 +5,7 @@ import { title } from "process";
 
 export async function POST(request: NextRequest) {
     const body = await request.json()
-    const { title, description, price, serviceTag, userId, image } =  body;
+    const { title, description, price, serviceTag, userId, image, smallDescription} =  body;
 
     const service = await prisma.services.create({
         data: {
@@ -13,6 +13,7 @@ export async function POST(request: NextRequest) {
             description: description,
             price: parseFloat(price),
             serviceTag: serviceTag,
+            smallDescription: smallDescription,
             userId: userId,
             image: image,
         }})

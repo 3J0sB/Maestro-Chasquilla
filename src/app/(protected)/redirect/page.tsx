@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { signOut } from "next-auth/react"
 
 export default function RedirectPage() {
     const { data: session, status } = useSession()
@@ -13,9 +14,37 @@ export default function RedirectPage() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
     const [timeoutReached, setTimeoutReached] = useState(false)
+    const [retryCount, setRetryCount] = useState(0)
+
+    // Función para reintentar la autenticación
+    const handleRetry = () => {
+        setLoading(true)
+        setTimeoutReached(false)
+        setError(false)
+        setMessage("Reintentando verificar tus credenciales...")
+        setRetryCount(prev => prev + 1)
+        
+        // Forzar una actualización de la sesión
+        router.refresh()
+    }
+
+    // Función para limpiar la sesión y redirigir al login
+    const handleClearSession = async () => {
+        setMessage("Limpiando sesión...")
+        try {
+            await signOut({ redirect: false })
+            router.push("/login")
+        } catch (error) {
+            console.error("Error al cerrar sesión:", error)
+            // Redirección forzada en caso de error
+            window.location.href = "/login"
+        }
+    }
 
     useEffect(() => {
-        // Configurar un timeout máximo de espera (10 segundos)
+        // Configurar un timeout graduado - primero corto, luego más largo
+        const timeoutDuration = retryCount === 0 ? 5000 : 8000
+        
         const maxTimeout = setTimeout(() => {
             if (status === "loading") {
                 setTimeoutReached(true)
@@ -23,22 +52,36 @@ export default function RedirectPage() {
                 setLoading(false)
                 setError(true)
             }
-        }, 5000)
+        }, timeoutDuration)
+
+        // Reintento automático limitado (máximo 2 intentos)
+        const autoRetryTimeout = setTimeout(() => {
+            if (status === "loading" && retryCount < 2) {
+                console.log("Reintentando automáticamente...")
+                handleRetry()
+            }
+        }, timeoutDuration + 2000)
 
         // Lógica de redirección basada en el estado de la sesión
         if (status === "loading") {
-            return () => clearTimeout(maxTimeout)
+            return () => {
+                clearTimeout(maxTimeout)
+                clearTimeout(autoRetryTimeout)
+            }
         }
 
-        // Limpiar el timeout si ya cargó
+        // Limpiar los timeouts
         clearTimeout(maxTimeout)
+        clearTimeout(autoRetryTimeout)
 
         if (status === "unauthenticated") {
+            console.log("No autenticado, redirigiendo a login")
             router.push("/login")
             return
         }
 
         if (session) {
+            console.log("Sesión encontrada:", session.user?.role)
             const userRole = session?.user?.role
             let redirectPath = "/"
 
@@ -60,6 +103,8 @@ export default function RedirectPage() {
                     setMessage("Redirigiendo a la página principal...")
             }
 
+            // Registrar datos antes de redirección
+            console.log(`Redirigiendo a ${redirectPath} para rol ${userRole}`)
 
             const redirectTimer = setTimeout(() => {
                 router.push(redirectPath)
@@ -68,8 +113,11 @@ export default function RedirectPage() {
             return () => clearTimeout(redirectTimer)
         }
 
-        return () => clearTimeout(maxTimeout)
-    }, [session, status, router])
+        return () => {
+            clearTimeout(maxTimeout)
+            clearTimeout(autoRetryTimeout)
+        }
+    }, [session, status, router, retryCount])
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
@@ -81,6 +129,7 @@ export default function RedirectPage() {
                         height={60}
                         alt='logo'
                         className="rounded-full"
+                        priority={true}
                     />
                 </div>
 
@@ -93,22 +142,42 @@ export default function RedirectPage() {
                 {timeoutReached && (
                     <div className="mb-6 text-sm">
                         <p className="text-orange-600 mb-2">
-                            Hay un problema con la verificación de tu sesión.
+                            {retryCount >= 2 
+                                ? "Seguimos teniendo problemas para verificar tu sesión." 
+                                : "Hay un problema con la verificación de tu sesión."}
                         </p>
-                        <div className="flex justify-center space-x-4 mt-3">
-                            <Link 
-                                href="/auth/login" 
+                        
+                        <div className="text-gray-500 mb-4 text-xs px-4">
+                            <p>Esto puede deberse a problemas de conexión o del servidor.</p>
+                        </div>
+                        
+                        <div className="flex flex-col sm:flex-row justify-center gap-3 mt-3">
+                            <button 
+                                onClick={handleClearSession}
                                 className="text-white bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-md transition-colors"
                             >
-                                Iniciar sesión
-                            </Link>
+                                Ir al inicio de sesión
+                            </button>
+                            
                             <button 
-                                onClick={() => window.location.reload()}
-                                className="text-orange-500 border border-orange-500 hover:bg-orange-50 px-4 py-2 rounded-md transition-colors"
+                                onClick={handleRetry}
+                                disabled={retryCount >= 3}
+                                className={`border px-4 py-2 rounded-md transition-colors ${
+                                    retryCount >= 3 
+                                        ? "border-gray-300 text-gray-400 cursor-not-allowed" 
+                                        : "border-orange-500 text-orange-500 hover:bg-orange-50"
+                                }`}
                             >
-                                Intentar de nuevo
+                                {retryCount >= 3 ? "Demasiados intentos" : "Intentar de nuevo"}
                             </button>
                         </div>
+                        
+                        {retryCount >= 3 && (
+                            <p className="text-xs text-gray-500 mt-4">
+                                Se ha excedido el número de intentos. Intenta refrescar la página
+                                o vuelve más tarde.
+                            </p>
+                        )}
                     </div>
                 )}
 
@@ -117,6 +186,10 @@ export default function RedirectPage() {
                         <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-orange-500"></div>
                     </div>
                 )}
+                
+                <div className="text-xs text-gray-400 mt-6">
+                    Estado: {status} {retryCount > 0 ? `· Intentos: ${retryCount}/3` : ''}
+                </div>
             </div>
         </div>
     )

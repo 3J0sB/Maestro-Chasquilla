@@ -30,6 +30,7 @@ function Home() {
   
   const providerId = session?.user.id || '';
 
+  
   const fetchServiceRequests = async () => {
     setIsLoading(true);
     try {
@@ -43,11 +44,15 @@ function Home() {
         throw new Error('Error al obtener las solicitudes de servicio');
       }
       const data = await response.json();
-      setServiceRequests(data);
+      
+      
+      setServiceRequests(Array.isArray(data) ? data : []);
       
     } catch (error) {
       toast.error("No se pudieron cargar las solicitudes");
       console.error('Error:', error);
+     
+      setServiceRequests([]);
     } finally {
       setIsLoading(false);
     }

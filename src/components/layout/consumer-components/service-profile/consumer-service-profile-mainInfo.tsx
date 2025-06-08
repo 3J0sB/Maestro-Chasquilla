@@ -4,15 +4,15 @@ import React from "react";
 interface ServiceMainInfoProps {
   title: string;
   servicePrice: number | null;
-  serviceDescription: string | null;
   serviceTag1: string | null;
   serviceTag2: string | null;
   serviceTag3: string | null;
   userImage: string | null;
+  serviceSmallDescription?: string | null;
  
 }
 
-export default function ServiceMainInfo({ title,  servicePrice, serviceDescription, serviceTag1, serviceTag2, serviceTag3, userImage }: ServiceMainInfoProps) {
+export default function ServiceMainInfo({ title,  servicePrice,  serviceSmallDescription,serviceTag1, serviceTag2, serviceTag3, userImage }: ServiceMainInfoProps) {
   return (
     <div className="">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between">
@@ -38,7 +38,7 @@ export default function ServiceMainInfo({ title,  servicePrice, serviceDescripti
             </span>
           </div>
           <p className="text-gray-700 mb-3">
-            {serviceDescription}
+            {serviceSmallDescription}
           </p>
           <div className="flex flex-wrap gap-2 mt-2">
             {

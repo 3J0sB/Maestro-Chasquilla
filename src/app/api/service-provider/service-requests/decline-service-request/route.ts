@@ -10,7 +10,7 @@ export async function PUT(request: NextRequest) {
                 id: requestId,
             },
             data: {
-                status: "DECLINED",
+                status: "REJECTED",
             },
         });
 

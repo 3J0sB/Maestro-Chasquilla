@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No se proporcionó ninguna imagen' }, { status: 400 })
     }
     
-    // Validar tamaño y tipo
+ 
     if (file.size > 5 * 1024 * 1024) {
       return NextResponse.json({ error: 'La imagen no debe superar los 5MB' }, { status: 400 })
     }
@@ -28,17 +28,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'El archivo debe ser una imagen' }, { status: 400 })
     }
     
-    // Convertir File a buffer para Cloudinary
+   
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
     
-    // Subir a Cloudinary
+
     const uploadPromise = new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
           folder: 'maestro-chasquilla/profiles',
           resource_type: 'image',
-          // Optimizaciones para imágenes de perfil
+ 
           transformation: [
             { width: 400, height: 400, crop: 'limit' },
             { quality: 'auto:good' },

@@ -60,6 +60,9 @@ export const addServiceSchema = object({
     description: string()
         .min(1, 'La descripción es requerida')
         .max(500, 'La descripción no puede exceder los 500 caracteres'),
+    smallDescription: string()
+        .min(1, 'La descripción es requerida')
+        .max(500, 'La descripción no puede exceder los 500 caracteres'),
     price: string()
         .min(1, 'El precio es requerido')
         .refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) >= 0, {

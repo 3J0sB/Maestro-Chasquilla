@@ -19,6 +19,7 @@ export interface service {
     minServicePrice: number?;
     maxServicePrice: number?;
     description: string?;
+    smallDescription: string?;
     serviceTag: string?;
     serviceTag2: string?;
     serviceTag3: string?;
