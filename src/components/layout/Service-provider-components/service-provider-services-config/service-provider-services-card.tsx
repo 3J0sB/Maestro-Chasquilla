@@ -114,11 +114,6 @@ function ServicesCard({ id, icon, title, status, description, price, serviceTag,
           <div className='flex justify-between items-start mb-4'>
             {/* Icono y título */}
             <div className='flex items-center gap-4'>
-              {!image && ( // Solo mostrar el ícono si no hay imagen
-                <div className={`w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-xl ${status === 'Inactive' ? 'opacity-60' : ''}`}>
-                  {icon}
-                </div>
-              )}
               <div>
                 <h3 className='font-bold text-lg text-gray-800'>{title}</h3>
               </div>

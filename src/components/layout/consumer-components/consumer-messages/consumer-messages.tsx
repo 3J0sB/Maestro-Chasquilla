@@ -210,12 +210,9 @@ const ConsumerMessagesComponent: React.FC<ConsumerMessagesProps> = ({ userId }) 
   }, [selectedConversation, userId]);
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-min-screen">
       {/* Panel de conversaciones */}
       <div className="w-1/3 border-r border-gray-200 overflow-y-auto">
-        <div className="p-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-800">Mis conversaciones</h2>
-        </div>
 
         {loading && conversations.length === 0 ? (
           <div className="flex justify-center items-center p-8">
