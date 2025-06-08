@@ -81,7 +81,7 @@ const MessageModal: React.FC<MessageModalProps> = ({
       onClose();
       
       // Opcional: redirigir al usuario a la página de mensajes
-      router.push('/profile?tab=messages');
+      router.push('/services/consumer-profile/messages');
     } catch (error) {
       console.error('Error:', error);
       toast.error('No se pudo enviar el mensaje. Intenta de nuevo más tarde.');

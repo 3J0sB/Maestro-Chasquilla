@@ -8,8 +8,6 @@ import { usePathname } from 'next/navigation'
 import LogoutButton from '@/components/logoutButton'
 
 interface ConsumerSidebarProps {
-  activeTab: string
-  onTabChange: (tab: string) => void
   userName: string
   userLastName: string
   userImage?: string
@@ -17,17 +15,17 @@ interface ConsumerSidebarProps {
 
 type SidebarLinkProps = {
   id: string;
+  href: string;
   icon: React.ReactNode;
   text: string;
   active: boolean;
   collapsed: boolean;
-  onClick: () => void;
 };
 
-const SidebarLink = ({ id, icon, text, active, collapsed, onClick }: SidebarLinkProps) => {
+const SidebarLink = ({ id, href, icon, text, active, collapsed }: SidebarLinkProps) => {
   return (
-    <button
-      onClick={onClick}
+    <Link
+      href={href}
       className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3'} w-full px-4 py-3 rounded-lg transition-colors ${
         active
           ? "border border-orange-500 text-orange-500 font-medium"
@@ -36,11 +34,11 @@ const SidebarLink = ({ id, icon, text, active, collapsed, onClick }: SidebarLink
     >
       <div className="flex-shrink-0">{icon}</div>
       {!collapsed && <span className="truncate">{text}</span>}
-    </button>
+    </Link>
   );
 };
 
-export default function ConsumerSidebar({ activeTab, onTabChange, userName, userLastName, userImage }: ConsumerSidebarProps) {
+export default function ConsumerSidebar({ userName, userLastName, userImage }: ConsumerSidebarProps) {
   const [collapsed, setCollapsed] = useState(false)
   const pathname = usePathname()
 
@@ -70,35 +68,35 @@ export default function ConsumerSidebar({ activeTab, onTabChange, userName, user
         </div>
 
         {/* Navegación principal */}
-        <nav className="flex-1 p-4 space-y-1">
-          <SidebarLink
+        <nav className="flex-1 p-4 space-y-1">          <SidebarLink
             id="services"
+            href="/services/consumer-profile/services"
             icon={
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
             }
             text="Mis Servicios"
-            active={activeTab === "services"}
+            active={pathname === "/services/consumer-profile" || pathname === "/services/consumer-profile/services"}
             collapsed={collapsed}
-            onClick={() => onTabChange('services')}
           />
 
           <SidebarLink
             id="messages"
+            href="/services/consumer-profile/messages"
             icon={
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
               </svg>
             }
             text="Mensajes"
-            active={activeTab === "messages"}
+            active={pathname === "/services/consumer-profile/messages"}
             collapsed={collapsed}
-            onClick={() => onTabChange('messages')}
           />
 
           <SidebarLink
             id="settings"
+            href="/services/consumer-profile/settings"
             icon={
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -106,9 +104,8 @@ export default function ConsumerSidebar({ activeTab, onTabChange, userName, user
               </svg>
             }
             text="Configuración"
-            active={activeTab === "settings"}
+            active={pathname === "/services/consumer-profile/settings"}
             collapsed={collapsed}
-            onClick={() => onTabChange('settings')}
           />
 
           <div className="pt-2">
