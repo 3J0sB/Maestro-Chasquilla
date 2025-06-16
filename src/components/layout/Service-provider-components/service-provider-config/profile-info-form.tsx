@@ -23,6 +23,7 @@ interface ProfileData {
   image: string | null
   about: string | null
   description: string | null
+  areasOfExpertise?: string | null
   location: LocationData | null
 }
 
@@ -38,6 +39,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({ initialData, onSubmit
     lastName: initialData.lastName || '',
     lastName2: initialData.lastName2 || '',
     about: initialData.about || '',
+    areasOfExpertise: initialData.areasOfExpertise || '',
     description: initialData.description || '',
     location: {
       country: initialData.location?.country || 'Chile',
@@ -48,14 +50,15 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({ initialData, onSubmit
       longitude: initialData.location?.longitude || 0,
     },
   })
-  
+  console.log('Initial data:', initialData)
+
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(initialData.image)
   const fileInputRef = useRef<HTMLInputElement>(null)
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    
+
     // Handle nested location fields
     if (name.startsWith('location.')) {
       const locationField = name.split('.')[1]
@@ -73,24 +76,24 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({ initialData, onSubmit
       }))
     }
   }
-  
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
-    
+
     // Validar tamaño y tipo de archivo
     if (file.size > 5 * 1024 * 1024) {
       alert('La imagen no debe superar los 5MB')
       return
     }
-    
+
     if (!file.type.startsWith('image/')) {
       alert('Por favor, selecciona un archivo de imagen válido')
       return
     }
-    
+
     setImageFile(file)
-    
+
     // Crear preview
     const reader = new FileReader()
     reader.onload = () => {
@@ -98,25 +101,25 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({ initialData, onSubmit
     }
     reader.readAsDataURL(file)
   }
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     // Crear FormData si hay imagen
     if (imageFile) {
       const formDataWithImage = new FormData()
       formDataWithImage.append('image', imageFile)
-      
+
       try {
         const uploadResponse = await fetch('/api/upload', {
           method: 'POST',
           body: formDataWithImage
         })
-        
+
         if (!uploadResponse.ok) throw new Error('Error al subir la imagen')
-        
+
         const { imageUrl } = await uploadResponse.json()
-        
+
         // Enviar el resto de los datos con la URL de la imagen
         await onSubmit({
           ...formData,
@@ -136,16 +139,16 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({ initialData, onSubmit
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="bg-white shadow-sm rounded-lg p-6">
         <h2 className="text-lg font-medium text-gray-900 mb-4">Información personal</h2>
-        
+
         {/* Foto de perfil */}
         <div className="flex flex-col items-center mb-6">
           <div className="relative mb-4">
             <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-100 border border-gray-200">
               {imagePreview ? (
-                <Image 
-                  src={imagePreview} 
-                  alt="Foto de perfil" 
-                  width={128} 
+                <Image
+                  src={imagePreview}
+                  alt="Foto de perfil"
+                  width={128}
                   height={128}
                   className="w-full h-full object-cover"
                 />
@@ -157,7 +160,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({ initialData, onSubmit
                 </div>
               )}
             </div>
-            <button 
+            <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
               className="absolute bottom-0 right-0 bg-orange-500 text-white p-2 rounded-full shadow hover:bg-orange-600 transition"
@@ -167,8 +170,8 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({ initialData, onSubmit
                 <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
               </svg>
             </button>
-            <input 
-              type="file" 
+            <input
+              type="file"
               ref={fileInputRef}
               onChange={handleImageChange}
               accept="image/*"
@@ -177,7 +180,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({ initialData, onSubmit
           </div>
           <p className="text-sm text-gray-500">Formatos aceptados: JPG, PNG. Máximo 5MB.</p>
         </div>
-        
+
         {/* Datos personales */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
@@ -191,7 +194,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({ initialData, onSubmit
               required
             />
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Apellido Paterno</label>
             <input
@@ -203,7 +206,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({ initialData, onSubmit
               required
             />
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Apellido Materno</label>
             <input
@@ -214,7 +217,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({ initialData, onSubmit
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">RUT</label>
             <input
@@ -225,7 +228,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({ initialData, onSubmit
             />
             <p className="text-xs text-gray-500 mt-1">El RUT no puede ser modificado</p>
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label>
             <input
@@ -238,14 +241,14 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({ initialData, onSubmit
           </div>
         </div>
       </div>
-      
+
       {/* Información profesional */}
       <div className="bg-white shadow-sm rounded-lg p-6">
         <h2 className="text-lg font-medium text-gray-900 mb-4">Información profesional</h2>
-        
+
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Título profesional</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Sobre ti</label>
             <input
               type="text"
               name="about"
@@ -255,7 +258,19 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({ initialData, onSubmit
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
-          
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Área de especialidad
+            </label>
+            <input
+              type="text"
+              name="areasOfExpertise" 
+              value={formData.areasOfExpertise } 
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+          </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Descripción profesional</label>
             <textarea
@@ -270,11 +285,11 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({ initialData, onSubmit
           </div>
         </div>
       </div>
-      
+
       {/* Información de ubicación */}
       <div className="bg-white shadow-sm rounded-lg p-6">
         <h2 className="text-lg font-medium text-gray-900 mb-4">Ubicación</h2>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">País</label>
@@ -287,7 +302,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({ initialData, onSubmit
               required
             />
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Región</label>
             <input
@@ -299,7 +314,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({ initialData, onSubmit
               required
             />
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Ciudad</label>
             <input
@@ -311,7 +326,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({ initialData, onSubmit
               required
             />
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
             <input
@@ -324,12 +339,12 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({ initialData, onSubmit
             />
           </div>
         </div>
-        
+
         <p className="text-xs text-gray-500 mt-4">
           Tu dirección exacta no será pública. Solo utilizamos esta información para mostrarte en búsquedas cercanas.
         </p>
       </div>
-      
+
       {/* Botones de acción */}
       <div className="flex justify-end">
         <button
@@ -339,7 +354,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({ initialData, onSubmit
         >
           Cancelar
         </button>
-        
+
         <button
           type="submit"
           className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"

@@ -43,7 +43,7 @@ export async function PATCH(request: NextRequest) {
 
     
     const body = await request.json()
-    const { providerId, name, lastName, lastName2, about, description, image, location } = body
+    const { providerId, name, lastName, lastName2, about, description, image, location, areasOfExpertise } = body
     
     const updatedProvider = await prisma.$transaction(async (tx) => {
       // Primero actualizar el proveedor
@@ -57,6 +57,7 @@ export async function PATCH(request: NextRequest) {
           lastName2,
           about,
           description,
+          areasOfExpertise,
           ...(image && { image }),
         },
         include: {

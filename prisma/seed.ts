@@ -255,8 +255,8 @@ async function main() {
   ];
   
   const serviceTags = [
-    'Hogar', 'Reparaciones', 'Instalaciones', 'Emergencias', 'Mantenimiento',
-    'Interior', 'Exterior', 'Especializado', 'Certificado', 'Económico'
+    'Hogar y mantenimiento', 'Confección y moda', 'Automotrices', 'Creativos y personalizados', 'Alimentos y catering',
+    'Servicios personales y de bienestar', 'Educación y apoyo escolar', 'Artesanías y productos hechos a mano', 'Servicios técnicos y digitales', 
   ];
 
   console.log("[SEED] ---> Creando servicios adicionales...");

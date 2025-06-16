@@ -53,7 +53,7 @@ function RequestCard({
 }: RequestCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showTimelineDetails, setShowTimelineDetails] = useState(false);
-
+  console.log("cliente avatar:",clientAvatar)
   // Handlers para los diferentes botones (sin cambios)
   const handleAccept = () => {
     try {
@@ -289,7 +289,7 @@ function RequestCard({
         <div className="flex items-center gap-2 sm:gap-3">
           <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 overflow-hidden">
             {clientAvatar ? (
-              <Image src={clientAvatar} alt={clientName} width={40} height={40} className="object-cover" />
+              <Image src={clientAvatar || "/img/miau.jpg"} alt={clientName} width={40} height={40} className="object-cover" />
             ) : (
               <span className="text-base sm:text-lg font-medium">{clientName?.charAt(0) || "?"}</span>
             )}

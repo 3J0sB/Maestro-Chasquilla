@@ -18,6 +18,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
                         name: true,
                         lastName: true,
                         email: true,
+                        image: true,
                     }
                 },
                 service: {

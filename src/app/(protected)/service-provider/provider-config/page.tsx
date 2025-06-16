@@ -29,6 +29,7 @@ function ProviderConfiguration() {
             if (!response.ok) throw new Error('Error al cargar los datos del perfil')
 
             const data = await response.json()
+            console.log('Provider data:', data)
             setProviderData(data)
         } catch (error) {
             console.error('Error fetching provider data:', error)

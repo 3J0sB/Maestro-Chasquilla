@@ -86,7 +86,7 @@ function Home() {
       return true;
     });
   }, [serviceRequests, searchQuery, statusFilter, serviceTypeFilter]);
-
+  console.log('Filtered Requests:', filteredRequests);
   // Funciones para manejar acciones en las solicitudes
   const onAccept = (request: serviceRequest) => {
     setCurrentRequest(request);

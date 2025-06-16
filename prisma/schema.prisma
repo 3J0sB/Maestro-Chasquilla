@@ -70,7 +70,6 @@ model ServiceProviderUser {
   requests      ServiceRequest[]
   location      Location?        @relation(fields: [locationId], references: [id])
   Messages      Messages[]       @relation("ProviderMessages")
-  notifications Notification[]   // Relación con las notificaciones
 
   @@map("service_provider_users")
 }
@@ -224,23 +223,4 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_tokens")
-}
-
-model Notification {
-  id          String    @id @default(cuid())
-  createdAt   DateTime  @default(now()) @map("created_at")
-  readAt      DateTime? @map("read_at")
-  title       String
-  message     String
-  type        String    // REQUEST_NEW, REQUEST_ACCEPTED, REQUEST_CANCELLED, REVIEW_NEW, etc.
-  linkPath    String?   @map("link_path") // Ruta a la que dirigir cuando se hace clic
-  providerId  String    @map("provider_id")
-  provider    ServiceProviderUser @relation(fields: [providerId], references: [id], onDelete: Cascade)
-  relatedId   String?   @map("related_id") // ID del objeto relacionado (servicio, solicitud, etc.)
-  metadata    Json?     // Datos adicionales en formato JSON
-  deletedAt   DateTime? @map("deleted_at")
-
-  @@index([providerId])
-  @@index([type])
-  @@map("notifications")
 }
