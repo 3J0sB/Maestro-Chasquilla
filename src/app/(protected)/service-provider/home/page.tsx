@@ -27,7 +27,8 @@ export default function ProviderDashboard() {
   const fetchDashboardData = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/service-provider/dashboard?timeRange=${timeRange}&providerId=${session?.user.id}`); const data = await response.json();
+      const response = await fetch(`/api/service-provider/dashboard?timeRange=${timeRange}&providerId=${session?.user.id}`);
+      const data = await response.json();
       // console.log('Dashboard data:', data);
       setDashboardData(data);
     } catch (error) {

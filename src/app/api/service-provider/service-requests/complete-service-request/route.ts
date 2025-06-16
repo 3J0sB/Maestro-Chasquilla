@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-
+import { createProviderNotification } from '@/utils/notifications';
 
 export async function PUT(req: NextRequest) {
   try {
-
-    
     const body = await req.json();
     const { requestId } = body;
     
@@ -27,6 +25,7 @@ export async function PUT(req: NextRequest) {
           select: {
             name: true,
             lastName: true,
+            image: true,
           }
         }
       },
@@ -35,8 +34,6 @@ export async function PUT(req: NextRequest) {
     if (!serviceRequest) {
       return NextResponse.json({ error: 'Solicitud no encontrada' }, { status: 404 });
     }
-    
-
     
     // Verificar que la solicitud esté en estado IN_PROGRESS
     if (serviceRequest.status !== 'IN_PROGRESS') {
@@ -49,11 +46,24 @@ export async function PUT(req: NextRequest) {
       data: {
         status: 'COMPLETED',
         updatedAt: new Date(),
-
       },
     });
     
-    // Crear notificación para el cliente
+    // Crear notificación para el proveedor
+    await createProviderNotification({
+      providerId: serviceRequest.providerId,
+      type: 'REQUEST_COMPLETED',
+      title: 'Servicio completado',
+      message: `Has completado el servicio "${serviceRequest.service.title}" para ${serviceRequest.user.name}`,
+      relatedId: serviceRequest.id,
+      linkPath: `/service-provider/request?id=${serviceRequest.id}`,
+      metadata: {
+        userName: serviceRequest.user.name,
+        userImage: serviceRequest.user.image,
+        serviceTitle: serviceRequest.service.title,
+        status: 'COMPLETED'
+      }
+    });
     
     return NextResponse.json({
       message: 'Servicio completado correctamente',

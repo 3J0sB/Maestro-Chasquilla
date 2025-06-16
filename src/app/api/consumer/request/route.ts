@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { createProviderNotification } from '@/utils/notifications';
 
 export async function POST(request: NextRequest) {
   try {
@@ -39,8 +40,7 @@ export async function POST(request: NextRequest) {
         { status: 404 }
       );
     }
-    
-    // Crear la solicitud de servicio
+      // Crear la solicitud de servicio
     const serviceRequest = await prisma.serviceRequest.create({
       data: {
         message,
@@ -49,6 +49,25 @@ export async function POST(request: NextRequest) {
         providerId,
         serviceId,
       },
+      include: {
+        service: true,
+        user: true
+      }
+    });
+
+    // Crear notificación para el proveedor
+    await createProviderNotification({
+      providerId,
+      type: 'REQUEST_NEW',
+      title: 'Nueva solicitud de servicio',
+      message: `${serviceRequest.user.name} ha solicitado tu servicio "${serviceRequest.service.title}"`,
+      relatedId: serviceRequest.id,
+      linkPath: `/service-provider/request?id=${serviceRequest.id}`,
+      metadata: {
+        userName: serviceRequest.user.name,
+        userImage: serviceRequest.user.image,
+        serviceTitle: serviceRequest.service.title
+      }
     });
     
     return NextResponse.json({

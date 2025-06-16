@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-
+import { createProviderNotification } from '@/utils/notifications';
 
 export async function PUT(req: NextRequest) {
   try {
-
-    
     const body = await req.json();
     const { requestId, cancelReason } = body;
     
@@ -27,6 +25,12 @@ export async function PUT(req: NextRequest) {
             title: true,
           },
         },
+        user: {
+          select: {
+            name: true,
+            image: true,
+          }
+        }
       },
     });
     
@@ -34,7 +38,6 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: 'Solicitud no encontrada' }, { status: 404 });
     }
     
-
     // Verificar que la solicitud no esté ya completada o cancelada
     if (['COMPLETED', 'CANCELLED', 'REJECTED'].includes(serviceRequest.status)) {
       return NextResponse.json({ error: 'No se puede cancelar una solicitud que ya está completada, cancelada o rechazada' }, { status: 400 });
@@ -48,8 +51,23 @@ export async function PUT(req: NextRequest) {
         updatedAt: new Date(),
       },
     });
-    
 
+    // Crear notificación para el proveedor
+    await createProviderNotification({
+      providerId: serviceRequest.providerId,
+      type: 'REQUEST_CANCELLED',
+      title: 'Servicio cancelado',
+      message: `Has cancelado el servicio "${serviceRequest.service.title}" para ${serviceRequest.user.name}`,
+      relatedId: serviceRequest.id,
+      linkPath: `/service-provider/request?id=${serviceRequest.id}`,
+      metadata: {
+        userName: serviceRequest.user.name,
+        userImage: serviceRequest.user.image,
+        serviceTitle: serviceRequest.service.title,
+        status: 'CANCELLED',
+        reason: cancelReason
+      }
+    });
     
     return NextResponse.json({
       message: 'Servicio cancelado correctamente',

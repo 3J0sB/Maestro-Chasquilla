@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { createProviderNotification } from '@/utils/notifications';
 
 export async function GET(request: NextRequest ){
     try {
@@ -81,8 +82,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    if (existingReview) {
-      // Actualizar la reseña existente en lugar de crear una nueva
+    if (existingReview) {      // Actualizar la reseña existente en lugar de crear una nueva
       const updatedReview = await prisma.reviews.update({
         where: { id: existingReview.id },
         data: {
@@ -92,13 +92,42 @@ export async function POST(request: NextRequest) {
         },
       });
 
+      // Obtener información para la notificación
+      const serviceWithProvider = await prisma.services.findUnique({
+        where: { id: serviceId },
+        include: {
+          user: true  // Esto obtiene el provider
+        }
+      });
+
+      const reviewer = await prisma.user.findUnique({
+        where: { id: userId }
+      });
+
+      // Enviar notificación al proveedor sobre la actualización de la reseña
+      if (serviceWithProvider && serviceWithProvider.user) {
+        await createProviderNotification({
+          providerId: serviceWithProvider.user.id,
+          type: 'REVIEW_NEW',
+          title: 'Reseña actualizada',
+          message: `${reviewer?.name || 'Un usuario'} ha actualizado su reseña a ${rating} estrellas para tu servicio "${serviceWithProvider.title}"`,
+          relatedId: updatedReview.id,
+          linkPath: `/service-provider/profile`,
+          metadata: {
+            rating: rating,
+            userName: reviewer?.name,
+            userImage: reviewer?.image,
+            serviceTitle: serviceWithProvider.title,
+            isUpdate: true
+          }
+        });
+      }
+
       return NextResponse.json({
         message: 'Reseña actualizada con éxito',
         review: updatedReview,
       });
-    }
-
-    // Crear una nueva reseña
+    }    // Crear una nueva reseña
     const newReview = await prisma.reviews.create({
       data: {
         serviceId,
@@ -107,6 +136,36 @@ export async function POST(request: NextRequest) {
         comment: comment || null,
       },
     });
+
+    // Obtener información para la notificación
+    const serviceWithProvider = await prisma.services.findUnique({
+      where: { id: serviceId },
+      include: {
+        user: true  // Esto obtiene el provider
+      }
+    });
+
+    const reviewer = await prisma.user.findUnique({
+      where: { id: userId }
+    });
+
+    // Enviar notificación al proveedor sobre la nueva reseña
+    if (serviceWithProvider && serviceWithProvider.user) {
+      await createProviderNotification({
+        providerId: serviceWithProvider.user.id,
+        type: 'REVIEW_NEW',
+        title: 'Nueva reseña recibida',
+        message: `${reviewer?.name || 'Un usuario'} ha dejado una reseña de ${rating} estrellas para tu servicio "${serviceWithProvider.title}"`,
+        relatedId: newReview.id,
+        linkPath: `/service-provider/profile`,
+        metadata: {
+          rating: rating,
+          userName: reviewer?.name,
+          userImage: reviewer?.image,
+          serviceTitle: serviceWithProvider.title
+        }
+      });
+    }
 
     return NextResponse.json({
       message: 'Reseña creada con éxito',

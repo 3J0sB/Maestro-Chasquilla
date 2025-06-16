@@ -1,5 +1,5 @@
 import React from 'react';
-
+import NotificationIndicator from '../notification/notification-indicator';
 
 interface DashboardHeaderProps {
     providerName: string;
@@ -28,9 +28,10 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                             Hola, {providerName}
                         </h1>
                         <p className="text-sm text-gray-500 capitalize">{currentDate}</p>
-                    </div>
+                    </div>                    <div className="flex items-center space-x-4">
+                        {/* Indicador de notificaciones */}
+                        <NotificationIndicator />
 
-                    <div className="flex items-center space-x-4">
                         <select
                             value={timeRange}
                             onChange={(e) => onTimeRangeChange(e.target.value)}

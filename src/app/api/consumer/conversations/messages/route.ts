@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { createProviderNotification } from '@/utils/notifications';
 
 export async function POST(request: NextRequest) {
     try {
@@ -12,11 +13,13 @@ export async function POST(request: NextRequest) {
                 { error: 'Faltan datos requeridos para crear el mensaje' },
                 { status: 400 }
             );
-        }
-
-        // Verificar que la conversación existe
+        }        // Verificar que la conversación existe
         const conversation = await prisma.conversation.findUnique({
             where: { id: conversationId },
+            include: {
+                user: true,
+                provider: true
+            }
         });
 
         if (!conversation) {
@@ -44,13 +47,29 @@ export async function POST(request: NextRequest) {
                 isRead: false,
                 userId: senderId, // Para mensajes de usuario
             },
-        });
-
-        // Actualizar la fecha de la conversación
+        });        // Actualizar la fecha de la conversación
         await prisma.conversation.update({
             where: { id: conversationId },
             data: { updatedAt: new Date() },
         });
+
+        // Solo crear notificación si el mensaje es del usuario al proveedor
+        if (senderType === 'USER' && conversation.provider) {
+            // Crear notificación para el proveedor
+            await createProviderNotification({
+                providerId: conversation.providerId,
+                type: 'NEW_MESSAGE',
+                title: 'Nuevo mensaje recibido',
+                message: `${conversation.user.name} te ha enviado un mensaje`,
+                relatedId: conversationId,
+                linkPath: `/service-provider/messages?conversationId=${conversationId}`,
+                metadata: {
+                    userName: conversation.user.name,
+                    userImage: conversation.user.image,
+                    messagePreview: content.length > 50 ? `${content.substring(0, 50)}...` : content
+                }
+            });
+        }
 
         return NextResponse.json(newMessage, { status: 201 });
     } catch (error) {
