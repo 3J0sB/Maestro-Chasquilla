@@ -197,16 +197,14 @@ async function main() {
 
   console.log(`[SEED] ---> Created: ${category.count} categories`)
 
-// Código existente hasta línea 183
-// ...
+
 
   console.log(`[SEED] ---> Created Service request test with id: ${serviceRequestTest3.id}`)
 
-  // Agregar más usuarios consumidores
   console.log("[SEED] ---> Creando usuarios consumidores adicionales...")
   
   const additionalConsumers = [];
-  for (let i = 1; i <= 10; i++) {
+  for (let i = 1; i <= 50; i++) {
     const user = await prisma.user.create({
       data: {
         email: `consumer${i+2}@test.com`,
@@ -258,22 +256,25 @@ async function main() {
     'Hogar y mantenimiento', 'Confección y moda', 'Automotrices', 'Creativos y personalizados', 'Alimentos y catering',
     'Servicios personales y de bienestar', 'Educación y apoyo escolar', 'Artesanías y productos hechos a mano', 'Servicios técnicos y digitales', 
   ];
+  const serviceStatus = ['APPROVED', 'PENDING', 'REJECTED'];
 
   console.log("[SEED] ---> Creando servicios adicionales...");
   const additionalServices = [];
   
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 50; i++) {
+    const randomIndex = Math.floor(Math.random() * serviceNames.length);
     const service = await prisma.services.create({
       data: {
-        title: serviceNames[i],
+        title: serviceNames[randomIndex],
         price: Math.floor(Math.random() * 50000) + 10000,
         minServicePrice: Math.floor(Math.random() * 5000) + 5000,
         maxServicePrice: Math.floor(Math.random() * 100000) + 50000,
-        description: `Servicio profesional de ${serviceNames[i].toLowerCase()} con garantía de satisfacción. Presupuesto sin compromiso.`,
+        description: `Servicio profesional de ${serviceNames[randomIndex].toLowerCase()} con garantía de satisfacción. Presupuesto sin compromiso.`,
         userId: ServiceProviderUser.id,
         serviceTag: serviceTags[Math.floor(Math.random() * serviceTags.length)],
         serviceTag2: serviceTags[Math.floor(Math.random() * serviceTags.length)],
         serviceTag3: serviceTags[Math.floor(Math.random() * serviceTags.length)],
+        status: serviceStatus[Math.floor(Math.random() * serviceStatus.length)],
       }
     });
     additionalServices.push(service);

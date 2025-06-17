@@ -40,6 +40,10 @@ function AdminReviewsModeration({ session }: { session: Session | null }) {
   const [error, setError] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [deliting, setDeliting] = useState(false);
+  // Estado para confirmación de eliminación
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [reviewToDelete, setReviewToDelete] = useState<string | null>(null);
 
   // Cargar datos de reviews
   useEffect(() => {
@@ -149,6 +153,47 @@ function AdminReviewsModeration({ session }: { session: Session | null }) {
       console.error('Error al rechazar review:', error);
       setError('Error al rechazar la review');
     }
+  };
+  
+  // Función para eliminar una review permanentemente
+  const deleteReview = async (id: string) => {
+    try {
+      setDeliting(true);
+      const response = await fetch(`/api/admin/reviews/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ permanent: true }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al eliminar la review');
+      }
+
+      // Eliminar del estado local
+      setReviews(reviews.filter(review => review.id !== id));
+      setDeliting(false);
+      
+      // Cerrar modal si la review eliminada estaba siendo mostrada
+      if (selectedReview?.id === id) {
+        closeModal();
+      }
+      
+      // Cerrar confirmación
+      setShowDeleteConfirm(false);
+      setReviewToDelete(null);
+      
+    } catch (error) {
+      console.error('Error al eliminar review:', error);
+      setError('Error al eliminar la review');
+    }
+  };
+  
+  // Función para confirmar eliminación
+  const confirmDelete = (id: string) => {
+    setReviewToDelete(id);
+    setShowDeleteConfirm(true);
   };
 
   // Función para abrir el modal con los detalles de la review
@@ -285,6 +330,14 @@ function AdminReviewsModeration({ session }: { session: Session | null }) {
                             </button>
                           </>
                         )}
+                        
+                        {/* Botón para eliminar la review */}
+                        <button 
+                          onClick={() => confirmDelete(review.id)}
+                          className="text-gray-600 hover:text-gray-800 bg-gray-100 hover:bg-gray-200 rounded px-2 py-1 text-sm mt-2"
+                        >
+                          Eliminar
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -347,7 +400,7 @@ function AdminReviewsModeration({ session }: { session: Session | null }) {
                 
                 <div>
                   <h4 className="text-sm font-medium text-gray-500 mb-1">Estado</h4>
-                  <span className={`px-2 inline-flex  text-xs leading-5 font-semibold rounded-full 
+                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
                     ${selectedReview.status === 'APPROVED' ? 'bg-green-100 text-green-800' : 
                       selectedReview.status === 'REJECTED' ? 'bg-red-100 text-red-800' : 
                       'bg-yellow-100 text-yellow-800'}`}>
@@ -366,6 +419,15 @@ function AdminReviewsModeration({ session }: { session: Session | null }) {
               >
                 Cerrar
               </button>
+              
+              {/* Botón para eliminar review permanentemente */}
+              <button 
+                onClick={() => confirmDelete(selectedReview.id)}
+                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700"
+              >
+                Eliminar
+              </button>
+              
               {selectedReview.status === 'PENDING' && (
                 <>
                   <button 
@@ -382,6 +444,43 @@ function AdminReviewsModeration({ session }: { session: Session | null }) {
                   </button>
                 </>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Modal de confirmación de eliminación */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md mx-4">
+            <div className="text-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              
+              <h3 className="text-lg font-medium text-gray-900 mt-4">¿Eliminar review permanentemente?</h3>
+              <p className="text-sm text-gray-500 mt-2">
+                Esta acción no se puede deshacer. La review será eliminada permanentemente del sistema.
+              </p>
+            </div>
+            
+            <div className="mt-6 flex justify-center space-x-4">
+              <button
+                className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+                onClick={() => {
+                  setShowDeleteConfirm(false);
+                  setReviewToDelete(null);
+                }}
+              >
+                Cancelar
+              </button>
+              <button
+                disabled={deliting}
+                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700"
+                onClick={() => reviewToDelete && deleteReview(reviewToDelete)}
+              >
+                Eliminar
+              </button>
             </div>
           </div>
         </div>

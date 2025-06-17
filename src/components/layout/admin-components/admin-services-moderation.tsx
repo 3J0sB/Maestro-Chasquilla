@@ -48,14 +48,17 @@ export function AdminServicesModeration({ session }: { session: Session | null }
 
         const data = await response.json();
         console.log('Datos de servicios recibidos:', data);
-        // Mapear los servicios para normalizar estructura
-        const mappedServices = data.services.map((service: any) => ({
-          ...service,
-          // Determinar el estado basado en el deletedAt
-          status: service.deletedAt ? 'REJECTED' : service.status === 'ACTIVE'
-            ? 'APPROVED'
-            : 'PENDING'
-        }));
+        const mappedServices = data.services.map((service: any) => {
+          // Mantener el estado original si no está en deletedAt
+          // Si deletedAt tiene valor, marcar como REJECTED independientemente del estado actual
+          const standardStatus = service.deletedAt ? 'REJECTED' : service.status;
+
+          return {
+            ...service,
+            status: standardStatus
+          };
+        });
+
 
         setServices(mappedServices);
         console.log('Servicios cargados:', mappedServices);
@@ -256,10 +259,10 @@ export function AdminServicesModeration({ session }: { session: Session | null }
                                 'Pendiente'}
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td className="py-4 whitespace-nowrap text-sm text-gray-500 ">
                           <button
                             onClick={() => openServiceDetails(service)}
-                            className="text-blue-600 hover:text-blue-800 mr-3"
+                            className="text-blue-600 hover:text-blue-800 mr-3 bg-blue-100 px-2 py-1 rounded-md text-sm font-medium"
                           >
                             Ver
                           </button>
@@ -267,16 +270,28 @@ export function AdminServicesModeration({ session }: { session: Session | null }
                             <>
                               <button
                                 onClick={() => approveService(service.id)}
-                                className="text-green-600 hover:text-green-800 mr-3"
+                                className="text-green-600 hover:text-green-800 mr-3 bg-green-100 px-2 py-1 rounded-md text-sm font-medium"
                               >
                                 Aprobar
                               </button>
                               <button
                                 onClick={() => rejectService(service.id)}
-                                className="text-red-600 hover:text-red-800"
+                                className="text-red-600 hover:text-red-800 bg-red-100 px-2 py-1 rounded-md text-sm font-medium"
                               >
                                 Rechazar
                               </button>
+                            </>
+                          )}
+
+                          {service.status === 'REJECTED' && (
+                            <>
+                              <button
+                                onClick={() => approveService(service.id)}
+                                className="text-green-600 hover:text-green-800 mr-3 bg-green-100 px-2 py-1 rounded-md text-sm font-medium"
+                              >
+                                Aprobar
+                              </button>
+  
                             </>
                           )}
                         </td>
@@ -303,7 +318,7 @@ export function AdminServicesModeration({ session }: { session: Session | null }
               </button>
             </div>
 
-          
+
             {selectedService.image && (
               <div className="mb-6">
                 <img

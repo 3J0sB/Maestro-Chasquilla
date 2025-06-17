@@ -14,8 +14,8 @@ export async function PATCH(
         status: 401,
       });
     }
-
-    const reviewId = params.reviewId;
+    const resolvedParams = await params;
+    const reviewId = resolvedParams.reviewId;
     const { status } = await req.json();
 
     if (!reviewId || !status) {
@@ -90,7 +90,7 @@ export async function PATCH(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { reviewId: string } }
+  { params }: {  params: { reviewId: string } }
 ) {
   try {
     const session = await auth();
@@ -100,8 +100,8 @@ export async function DELETE(
         status: 401,
       });
     }
-
-    const reviewId = params.reviewId;
+    const resolvedParams = await params;
+    const reviewId = resolvedParams.reviewId;
 
     if (!reviewId) {
       return new NextResponse(JSON.stringify({ error: "Se requiere ID de review" }), {

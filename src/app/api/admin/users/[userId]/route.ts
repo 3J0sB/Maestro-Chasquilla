@@ -8,14 +8,14 @@ export async function PATCH(
 ) {
   try {
     const session = await auth();
-    
+
     if (!session || session.user.role !== 'ADMIN') {
       return new NextResponse(JSON.stringify({ error: "No autorizado" }), {
         status: 401,
       });
     }
-
-    const userId = await params.userId;
+    const resolvedParams = await params;
+    const userId = await resolvedParams.userId;
     const { status } = await req.json();
 
     if (!userId || !status) {
@@ -78,9 +78,9 @@ export async function PATCH(
       }
     }
 
-    return NextResponse.json({ 
-      success: true, 
-      message: `Usuario actualizado a estado: ${status}` 
+    return NextResponse.json({
+      success: true,
+      message: `Usuario actualizado a estado: ${status}`
     });
 
   } catch (error) {
@@ -97,14 +97,15 @@ export async function DELETE(
 ) {
   try {
     const session = await auth();
-    
+
     if (!session || session.user.role !== 'ADMIN') {
       return new NextResponse(JSON.stringify({ error: "No autorizado" }), {
         status: 401,
       });
     }
 
-    const userId = await params.userId;
+    const resolvedParams = await params;
+    const userId = await resolvedParams.userId;
 
     if (!userId) {
       return new NextResponse(JSON.stringify({ error: "Se requiere ID de usuario" }), {
@@ -131,22 +132,22 @@ export async function DELETE(
     if (userExists) {
       await prisma.user.update({
         where: { id: userId },
-        data: { 
-          deletedAt: new Date() 
+        data: {
+          deletedAt: new Date()
         },
       });
     } else if (providerExists) {
       await prisma.serviceProviderUser.update({
         where: { id: userId },
-        data: { 
-          deletedAt: new Date() 
+        data: {
+          deletedAt: new Date()
         },
       });
     }
 
-    return NextResponse.json({ 
-      success: true, 
-      message: "Usuario eliminado correctamente" 
+    return NextResponse.json({
+      success: true,
+      message: "Usuario eliminado correctamente"
     });
 
   } catch (error) {

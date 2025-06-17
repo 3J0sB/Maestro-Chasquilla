@@ -15,7 +15,8 @@ export async function PATCH(
       });
     }
 
-    const serviceId = await params.serviceId;
+    const resolvedParams = await params;
+    const serviceId = resolvedParams.serviceId;
     const { status } = await req.json();
 
     if (!serviceId || !status) {
