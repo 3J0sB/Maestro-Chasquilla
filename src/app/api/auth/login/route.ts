@@ -20,6 +20,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Usuario no encontrado" }, { status: 401 })
   }
   
+  if (user?.deletedAt) {
+    return NextResponse.json({ error: "Cuenta desactivada" }, { status: 403 })
+  }
+  
+  if (serviceProviderUser?.deletedAt) {
+    return NextResponse.json({ error: "Cuenta desactivada" }, { status: 403 })
+  }
+
   let isValidPassword = false;
   let userData = null;
   

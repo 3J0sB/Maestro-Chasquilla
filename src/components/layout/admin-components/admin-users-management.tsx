@@ -2,7 +2,7 @@
 
 import { Session } from 'next-auth';
 import AdminLayout from './admin-layout';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 
 // Tipo para los usuarios
@@ -13,70 +13,41 @@ interface User {
   email: string;
   role: 'USER' | 'ADMIN' | 'SERVICE_PROVIDER';
   status: 'ACTIVE' | 'INACTIVE' | 'BANNED';
-  image: string;
+  image: string | null;
   createdAt: string;
   lastLogin: string;
+  deletedAt: string | null;
 }
 
 function AdminUsersManagement({ session }: { session: Session | null }) {
   // Estado para los usuarios
-  const [users, setUsers] = useState<User[]>([
-    {
-      id: '1',
-      name: 'Ana',
-      lastName: 'Martínez',
-      email: 'ana.martinez@example.com',
-      role: 'USER',
-      status: 'ACTIVE',
-      image: '/img/default-user-image.png',
-      createdAt: '2025-01-15T10:30:00Z',
-      lastLogin: '2025-06-15T14:20:00Z',
-    },
-    {
-      id: '2',
-      name: 'Roberto',
-      lastName: 'Silva',
-      email: 'roberto.silva@example.com',
-      role: 'SERVICE_PROVIDER',
-      status: 'ACTIVE',
-      image: '/img/default-user-image.png',
-      createdAt: '2025-02-22T09:15:00Z',
-      lastLogin: '2025-06-14T11:45:00Z',
-    },
-    {
-      id: '3',
-      name: 'Carlos',
-      lastName: 'Soto',
-      email: 'carlos.soto@example.com',
-      role: 'USER',
-      status: 'INACTIVE',
-      image: '/img/default-user-image.png',
-      createdAt: '2025-03-10T15:45:00Z',
-      lastLogin: '2025-05-20T17:30:00Z',
-    },
-    {
-      id: '4',
-      name: 'María',
-      lastName: 'González',
-      email: 'maria.gonzalez@example.com',
-      role: 'SERVICE_PROVIDER',
-      status: 'ACTIVE',
-      image: '/img/default-user-image.png',
-      createdAt: '2025-01-05T11:20:00Z',
-      lastLogin: '2025-06-16T09:10:00Z',
-    },
-    {
-      id: '5',
-      name: 'Juan',
-      lastName: 'López',
-      email: 'juan.lopez@example.com',
-      role: 'ADMIN',
-      status: 'ACTIVE',
-      image: '/img/default-user-image.png',
-      createdAt: '2024-12-01T08:30:00Z',
-      lastLogin: '2025-06-16T10:05:00Z',
-    },
-  ]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Cargar datos de usuarios
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/admin/users');
+        
+        if (!response.ok) {
+          throw new Error('Error al cargar los usuarios');
+        }
+        
+        const data = await response.json();
+        setUsers(data.users);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        setError('No se pudieron cargar los usuarios');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   // Estado para el usuario seleccionado en el modal
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -101,20 +72,69 @@ function AdminUsersManagement({ session }: { session: Session | null }) {
   };
 
   // Función para cambiar el estado de un usuario
-  const changeUserStatus = (id: string, newStatus: 'ACTIVE' | 'INACTIVE' | 'BANNED') => {
-    setUsers(users.map(user => 
-      user.id === id ? { ...user, status: newStatus } : user
-    ));
-    if (selectedUser?.id === id) {
-      setSelectedUser({ ...selectedUser, status: newStatus });
+  const changeUserStatus = async (id: string, newStatus: 'ACTIVE' | 'INACTIVE' | 'BANNED') => {
+    try {
+      const response = await fetch(`/api/admin/users/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          status: newStatus,
+          // Si el estado es inactivo o baneado, se marca como eliminado
+          deletedAt: newStatus === 'ACTIVE' ? null : new Date().toISOString()
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error al cambiar el estado del usuario a ${newStatus}`);
+      }
+
+      // Actualizar estado local
+      setUsers(users.map(user => 
+        user.id === id ? { 
+          ...user, 
+          status: newStatus,
+          deletedAt: newStatus === 'ACTIVE' ? null : new Date().toISOString()
+        } : user
+      ));
+      
+      if (selectedUser?.id === id) {
+        setSelectedUser({ 
+          ...selectedUser, 
+          status: newStatus,
+          deletedAt: newStatus === 'ACTIVE' ? null : new Date().toISOString()
+        });
+      }
+    } catch (error) {
+      console.error(`Error al cambiar estado de usuario:`, error);
+      setError(`Error al cambiar el estado del usuario`);
     }
   };
 
   // Función para eliminar un usuario
-  const deleteUser = (id: string) => {
-    setUsers(users.filter(user => user.id !== id));
-    setIsDeleteModalOpen(false);
-    setIsModalOpen(false);
+  const deleteUser = async (id: string) => {
+    try {
+      const response = await fetch(`/api/admin/users/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al eliminar el usuario');
+      }
+
+      // Actualizar estado local
+      setUsers(users.filter(user => user.id !== id));
+      setIsDeleteModalOpen(false);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Error al eliminar usuario:', error);
+      setError('Error al eliminar el usuario');
+      setIsDeleteModalOpen(false);
+    }
   };
 
   // Función para abrir el modal con los detalles del usuario
@@ -156,6 +176,13 @@ function AdminUsersManagement({ session }: { session: Session | null }) {
     <AdminLayout session={session}>
       <div>
         <h1 className="text-2xl font-bold text-gray-800 mb-6">Gestión de Usuarios</h1>
+        
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6">
+            <strong className="font-bold">Error: </strong>
+            <span className="block sm:inline">{error}</span>
+          </div>
+        )}
         
         {/* Tarjetas de resumen */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -200,7 +227,7 @@ function AdminUsersManagement({ session }: { session: Session | null }) {
                   <option value="all">Todos los estados</option>
                   <option value="ACTIVE">Activos</option>
                   <option value="INACTIVE">Inactivos</option>
-                  <option value="BANNED">Bloqueados</option>
+                  <option value="BANNED">Baneados</option>
                 </select>
               </div>
               <input 
@@ -213,250 +240,203 @@ function AdminUsersManagement({ session }: { session: Session | null }) {
             </div>
           </div>
           
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rol</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Último Login</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {filteredUsers.map((user) => (
-                  <tr key={user.id}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <div className="flex-shrink-0 h-10 w-10">
-                          <Image
-                            src={user.image || '/img/default-user-image.png'}
-                            alt={`${user.name} ${user.lastName}`}
-                            width={40}
-                            height={40}
-                            className="h-10 w-10 rounded-full object-cover"
-                          />
-                        </div>
-                        <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900">{user.name} {user.lastName}</div>
-                          <div className="text-sm text-gray-500">ID: {user.id}</div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.email}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                        ${user.role === 'ADMIN' ? 'bg-purple-100 text-purple-800' : 
-                          user.role === 'SERVICE_PROVIDER' ? 'bg-blue-100 text-blue-800' : 
-                          'bg-green-100 text-green-800'}`}>
-                        {user.role === 'ADMIN' ? 'Administrador' : 
-                         user.role === 'SERVICE_PROVIDER' ? 'Proveedor' : 
-                         'Consumidor'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                        ${user.status === 'ACTIVE' ? 'bg-green-100 text-green-800' : 
-                          user.status === 'INACTIVE' ? 'bg-yellow-100 text-yellow-800' : 
-                          'bg-red-100 text-red-800'}`}>
-                        {user.status === 'ACTIVE' ? 'Activo' : 
-                         user.status === 'INACTIVE' ? 'Inactivo' : 
-                         'Bloqueado'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(user.lastLogin)}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      <button 
-                        onClick={() => openUserDetails(user)}
-                        className="text-blue-600 hover:text-blue-800 mr-3"
-                      >
-                        Ver
-                      </button>
-                      {user.status === 'ACTIVE' && (
-                        <button 
-                          onClick={() => changeUserStatus(user.id, 'INACTIVE')}
-                          className="text-yellow-600 hover:text-yellow-800 mr-3"
-                        >
-                          Desactivar
-                        </button>
-                      )}
-                      {user.status === 'INACTIVE' && (
-                        <button 
-                          onClick={() => changeUserStatus(user.id, 'ACTIVE')}
-                          className="text-green-600 hover:text-green-800 mr-3"
-                        >
-                          Activar
-                        </button>
-                      )}
-                      {user.status !== 'BANNED' && (
-                        <button 
-                          onClick={() => changeUserStatus(user.id, 'BANNED')}
-                          className="text-red-600 hover:text-red-800"
-                        >
-                          Bloquear
-                        </button>
-                      )}
-                      {user.status === 'BANNED' && (
-                        <button 
-                          onClick={() => changeUserStatus(user.id, 'ACTIVE')}
-                          className="text-green-600 hover:text-green-800"
-                        >
-                          Desbloquear
-                        </button>
-                      )}
-                    </td>
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rol</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Registro</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          
-          {filteredUsers.length === 0 && (
-            <div className="text-center py-10">
-              <p className="text-gray-500">No se encontraron usuarios con los criterios de búsqueda</p>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {filteredUsers.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
+                        No se encontraron usuarios
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredUsers.map((user) => (
+                      <tr key={user.id}>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="flex-shrink-0 h-10 w-10 relative">
+                              <Image 
+                                src={user.image || '/img/default-user-image.png'} 
+                                alt={user.name}
+                                width={40}
+                                height={40}
+                                className="rounded-full"
+                              />
+                            </div>
+                            <div className="ml-4">
+                              <div className="text-sm font-medium text-gray-900">{user.name} {user.lastName}</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.email}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                            ${user.role === 'ADMIN' ? 'bg-purple-100 text-purple-800' : 
+                              user.role === 'SERVICE_PROVIDER' ? 'bg-blue-100 text-blue-800' : 
+                              'bg-green-100 text-green-800'}`}>
+                            {user.role === 'ADMIN' ? 'Administrador' : 
+                             user.role === 'SERVICE_PROVIDER' ? 'Proveedor' : 
+                             'Consumidor'}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                            ${user.status === 'ACTIVE' ? 'bg-green-100 text-green-800' : 
+                              user.status === 'BANNED' ? 'bg-red-100 text-red-800' : 
+                              'bg-yellow-100 text-yellow-800'}`}>
+                            {user.status === 'ACTIVE' ? 'Activo' : 
+                             user.status === 'BANNED' ? 'Baneado' : 
+                             'Inactivo'}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(user.createdAt)}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                          <button 
+                            onClick={() => openUserDetails(user)}
+                            className="text-blue-600 hover:text-blue-800 mr-3"
+                          >
+                            Ver
+                          </button>
+                          <button 
+                            onClick={() => user.status === 'ACTIVE' ? changeUserStatus(user.id, 'INACTIVE') : changeUserStatus(user.id, 'ACTIVE')}
+                            className={`${user.status === 'ACTIVE' ? 'text-yellow-600 hover:text-yellow-800' : 'text-green-600 hover:text-green-800'} mr-3`}
+                          >
+                            {user.status === 'ACTIVE' ? 'Desactivar' : 'Activar'}
+                          </button>
+                          {user.status !== 'BANNED' && (
+                            <button 
+                              onClick={() => changeUserStatus(user.id, 'BANNED')}
+                              className="text-red-600 hover:text-red-800"
+                            >
+                              Banear
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
             </div>
           )}
-          
-          <div className="mt-6 flex justify-between items-center">
-            <div className="text-sm text-gray-500">
-              Mostrando <span className="font-medium">{filteredUsers.length}</span> de <span className="font-medium">{users.length}</span> usuarios
-            </div>
-            <div className="flex space-x-2">
-              <button className="px-3 py-1 border border-gray-300 rounded-md text-sm">Anterior</button>
-              <button className="px-3 py-1 bg-blue-600 text-white rounded-md text-sm">1</button>
-              <button className="px-3 py-1 border border-gray-300 rounded-md text-sm">2</button>
-              <button className="px-3 py-1 border border-gray-300 rounded-md text-sm">3</button>
-              <button className="px-3 py-1 border border-gray-300 rounded-md text-sm">Siguiente</button>
-            </div>
-          </div>
         </div>
       </div>
 
-      {/* Modal de detalles de usuario */}
+      {/* Modal de detalles del usuario */}
       {isModalOpen && selectedUser && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-bold text-gray-800">Detalles del Usuario</h3>
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl mx-4">
+            <div className="flex justify-between items-start mb-4">
+              <h3 className="text-xl font-bold text-gray-900">Detalles del Usuario</h3>
+              <button onClick={closeModal} className="text-gray-500 hover:text-gray-700">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row items-start mb-6 gap-6">
+              <div className="flex-shrink-0 h-24 w-24 relative">
+                <Image 
+                  src={selectedUser.image || '/img/default-user-image.png'} 
+                  alt={selectedUser.name}
+                  width={96}
+                  height={96}
+                  className="rounded-full"
+                />
+              </div>
+              
+              <div className="flex-1">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-500 mb-1">Nombre Completo</h4>
+                    <p className="text-base text-gray-900">{selectedUser.name} {selectedUser.lastName}</p>
+                  </div>
+                  
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-500 mb-1">Email</h4>
+                    <p className="text-base text-gray-900">{selectedUser.email}</p>
+                  </div>
+                  
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-500 mb-1">Rol</h4>
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                      ${selectedUser.role === 'ADMIN' ? 'bg-purple-100 text-purple-800' : 
+                        selectedUser.role === 'SERVICE_PROVIDER' ? 'bg-blue-100 text-blue-800' : 
+                        'bg-green-100 text-green-800'}`}>
+                      {selectedUser.role === 'ADMIN' ? 'Administrador' : 
+                       selectedUser.role === 'SERVICE_PROVIDER' ? 'Proveedor' : 
+                       'Consumidor'}
+                    </span>
+                  </div>
+                  
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-500 mb-1">Estado</h4>
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                      ${selectedUser.status === 'ACTIVE' ? 'bg-green-100 text-green-800' : 
+                        selectedUser.status === 'BANNED' ? 'bg-red-100 text-red-800' : 
+                        'bg-yellow-100 text-yellow-800'}`}>
+                      {selectedUser.status === 'ACTIVE' ? 'Activo' : 
+                       selectedUser.status === 'BANNED' ? 'Baneado' : 
+                       'Inactivo'}
+                    </span>
+                  </div>
+                  
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-500 mb-1">Fecha de Registro</h4>
+                    <p className="text-base text-gray-900">{formatDate(selectedUser.createdAt)}</p>
+                  </div>
+                  
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-500 mb-1">Último Acceso</h4>
+                    <p className="text-base text-gray-900">{formatDate(selectedUser.lastLogin)}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-6 flex justify-end space-x-3">
+              <button 
+                onClick={closeModal}
+                className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+              >
+                Cerrar
+              </button>
+              <button 
+                onClick={() => selectedUser.status === 'ACTIVE' ? changeUserStatus(selectedUser.id, 'INACTIVE') : changeUserStatus(selectedUser.id, 'ACTIVE')}
+                className={`px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${selectedUser.status === 'ACTIVE' ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-green-600 hover:bg-green-700'}`}
+              >
+                {selectedUser.status === 'ACTIVE' ? 'Desactivar' : 'Activar'}
+              </button>
+              {selectedUser.status !== 'BANNED' && (
                 <button 
-                  onClick={closeModal}
-                  className="text-gray-500 hover:text-gray-700"
+                  onClick={() => changeUserStatus(selectedUser.id, 'BANNED')}
+                  className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
+                  Banear
                 </button>
-              </div>
-              
-              <div className="space-y-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-20 h-20 rounded-full overflow-hidden flex-shrink-0">
-                    <Image
-                      src={selectedUser.image || '/img/default-user-image.png'}
-                      alt={`${selectedUser.name} ${selectedUser.lastName}`}
-                      width={80}
-                      height={80}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-medium text-gray-800">{selectedUser.name} {selectedUser.lastName}</h4>
-                    <p className="text-gray-600">{selectedUser.email}</p>
-                    <div className="flex mt-2 space-x-2">
-                      <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                        ${selectedUser.role === 'ADMIN' ? 'bg-purple-100 text-purple-800' : 
-                          selectedUser.role === 'SERVICE_PROVIDER' ? 'bg-blue-100 text-blue-800' : 
-                          'bg-green-100 text-green-800'}`}>
-                        {selectedUser.role === 'ADMIN' ? 'Administrador' : 
-                         selectedUser.role === 'SERVICE_PROVIDER' ? 'Proveedor' : 
-                         'Consumidor'}
-                      </span>
-                      <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                        ${selectedUser.status === 'ACTIVE' ? 'bg-green-100 text-green-800' : 
-                          selectedUser.status === 'INACTIVE' ? 'bg-yellow-100 text-yellow-800' : 
-                          'bg-red-100 text-red-800'}`}>
-                        {selectedUser.status === 'ACTIVE' ? 'Activo' : 
-                         selectedUser.status === 'INACTIVE' ? 'Inactivo' : 
-                         'Bloqueado'}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-500">ID de Usuario</h4>
-                    <p className="text-base text-gray-900 mt-1">{selectedUser.id}</p>
-                  </div>
-                  
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-500">Fecha de registro</h4>
-                    <p className="text-base text-gray-900 mt-1">{formatDate(selectedUser.createdAt)}</p>
-                  </div>
-                  
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-500">Último inicio de sesión</h4>
-                    <p className="text-base text-gray-900 mt-1">{formatDate(selectedUser.lastLogin)}</p>
-                  </div>
-                </div>
-                
-                {/* Aquí irían más detalles como historial de actividades, etc */}
-              </div>
-              
-              <div className="mt-6 border-t border-gray-200 pt-4">
-                <h4 className="text-lg font-medium text-gray-800 mb-3">Acciones</h4>
-                <div className="flex flex-wrap gap-3">
-                  {selectedUser.status === 'ACTIVE' && (
-                    <button 
-                      onClick={() => changeUserStatus(selectedUser.id, 'INACTIVE')}
-                      className="px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700"
-                    >
-                      Desactivar cuenta
-                    </button>
-                  )}
-                  {selectedUser.status === 'INACTIVE' && (
-                    <button 
-                      onClick={() => changeUserStatus(selectedUser.id, 'ACTIVE')}
-                      className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-                    >
-                      Activar cuenta
-                    </button>
-                  )}
-                  {selectedUser.status !== 'BANNED' && (
-                    <button 
-                      onClick={() => changeUserStatus(selectedUser.id, 'BANNED')}
-                      className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-                    >
-                      Bloquear cuenta
-                    </button>
-                  )}
-                  {selectedUser.status === 'BANNED' && (
-                    <button 
-                      onClick={() => changeUserStatus(selectedUser.id, 'ACTIVE')}
-                      className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-                    >
-                      Desbloquear cuenta
-                    </button>
-                  )}
-                  
-                  <button 
-                    onClick={() => setIsDeleteModalOpen(true)}
-                    className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-                  >
-                    Eliminar cuenta
-                  </button>
-                  
-                  <button 
-                    onClick={closeModal}
-                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-                  >
-                    Cerrar
-                  </button>
-                </div>
-              </div>
+              )}
+              <button 
+                onClick={() => setIsDeleteModalOpen(true)}
+                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-800 hover:bg-red-900"
+              >
+                Eliminar
+              </button>
             </div>
           </div>
         </div>
@@ -464,28 +444,26 @@ function AdminUsersManagement({ session }: { session: Session | null }) {
 
       {/* Modal de confirmación de eliminación */}
       {isDeleteModalOpen && selectedUser && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
-            <div className="p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">Confirmar eliminación</h3>
-              <p className="text-gray-600 mb-6">
-                ¿Estás seguro de que deseas eliminar la cuenta de <span className="font-medium">{selectedUser.name} {selectedUser.lastName}</span>? 
-                Esta acción no se puede deshacer.
-              </p>
-              <div className="flex justify-end space-x-3">
-                <button 
-                  onClick={() => setIsDeleteModalOpen(false)}
-                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-                >
-                  Cancelar
-                </button>
-                <button 
-                  onClick={() => deleteUser(selectedUser.id)}
-                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-                >
-                  Eliminar
-                </button>
-              </div>
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md mx-4">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">Confirmar Eliminación</h3>
+            <p className="text-gray-700 mb-6">
+              ¿Estás seguro de que deseas eliminar permanentemente al usuario {selectedUser.name} {selectedUser.lastName}? Esta acción no se puede deshacer.
+            </p>
+            
+            <div className="flex justify-end space-x-3">
+              <button 
+                onClick={() => setIsDeleteModalOpen(false)}
+                className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={() => deleteUser(selectedUser.id)}
+                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700"
+              >
+                Eliminar
+              </button>
             </div>
           </div>
         </div>

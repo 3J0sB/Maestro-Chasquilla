@@ -16,6 +16,7 @@ export async function POST(request: NextRequest) {
             smallDescription: smallDescription,
             userId: userId,
             image: image,
+            status: "PENDING",
         }})
     
 

@@ -8,6 +8,9 @@ export async function GET(request: NextRequest) {
         const category = searchParams.get('category') || '';
         if (category === 'all') {
             const service = await prisma.services.findMany({
+                where: {
+                    status: 'APPROVED',
+                },
                 include: {
                     user: {
                         select: {

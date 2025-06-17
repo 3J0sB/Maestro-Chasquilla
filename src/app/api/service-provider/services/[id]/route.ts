@@ -18,6 +18,7 @@ export async function GET(
     const services = await prisma.services.findMany({
       where: {
         userId: serviceProviderId,
+      
       }
     });
 

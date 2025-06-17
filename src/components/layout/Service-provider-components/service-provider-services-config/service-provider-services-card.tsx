@@ -137,7 +137,7 @@ function ServicesCard({ id, icon, title, status, description, price, serviceTag,
             {!image && ( // Solo mostrar el estado aquí si no hay imagen (ya que lo mostramos en la imagen)
               <div className='text-sm text-gray-500'>
                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                  status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                  status === 'REJECTED' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
                 }`}>
                   {status}
                 </span>
