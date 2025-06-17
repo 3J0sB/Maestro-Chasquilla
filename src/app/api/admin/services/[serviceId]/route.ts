@@ -8,7 +8,7 @@ export async function PATCH(
 ) {
   try {
     const session = await auth();
-    
+
     if (!session || session.user.role !== 'ADMIN') {
       return new NextResponse(JSON.stringify({ error: "No autorizado" }), {
         status: 401,
@@ -56,7 +56,7 @@ export async function PATCH(
           relatedId: serviceId,
         },
       });
-    } 
+    }
     // Si el servicio es rechazado, enviar una notificación al proveedor
     else if (status === 'REJECTED') {
       await prisma.notification.create({
@@ -71,8 +71,8 @@ export async function PATCH(
       });
     }
 
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       message: `Servicio actualizado a estado: ${status}`,
       service: updatedService
     });
@@ -90,17 +90,17 @@ export async function DELETE(
   { params }: { params: { serviceId: string } }
 ) {
   try {
-    console.log("[ENDPOINT ADMIN/SERVICE]-->Eliminando servicio con ID:", params.serviceId);
     const { status } = await req.json();
     const session = await auth();
-    
+
     if (!session || session.user.role !== 'ADMIN') {
       return new NextResponse(JSON.stringify({ error: "No autorizado" }), {
         status: 401,
       });
     }
 
-    const serviceId = await params.serviceId;
+    const resolvedParams = await params;
+    const serviceId = resolvedParams.serviceId;
 
     if (!serviceId) {
       return new NextResponse(JSON.stringify({ error: "Se requiere ID de servicio" }), {
@@ -126,7 +126,7 @@ export async function DELETE(
       },
     });
 
-    console.log("[ENDPOINT ADMIN/SERVICE]-->Servicio eliminado:", deletedService);
+
     // Notificar al proveedor
     await prisma.notification.create({
       data: {
@@ -139,9 +139,9 @@ export async function DELETE(
       },
     });
 
-    return NextResponse.json({ 
-      success: true, 
-      message: "Servicio eliminado correctamente" 
+    return NextResponse.json({
+      success: true,
+      message: "Servicio eliminado correctamente"
     });
 
   } catch (error) {
