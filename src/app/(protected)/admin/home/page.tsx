@@ -1,7 +1,10 @@
 import { auth } from '@/auth'
 import React from 'react'
-import LogoutButton from '@/components/logoutButton'
 import AccessDenied from '@/components/Access-denied/access-denied'
+// Update the import path and/or extension as needed, for example:
+import AdminDashboard from '../../../../components/layout/admin-components/admin-dashboard'
+// or, if the file is named 'admin-dashboard.tsx':
+// import AdminDashboard from '@/components/admin-dashboard.tsx'
 
 
 async function admin() {
@@ -15,14 +18,7 @@ async function admin() {
 
     }
    
-    return (
-      <div className="container">
-        <header>
-            <LogoutButton/>
-        </header>
-        <pre>{JSON.stringify(session, null, 2)}</pre>
-      </div>
-    )
+    return <AdminDashboard session={session} />
 }
 
 export default admin
