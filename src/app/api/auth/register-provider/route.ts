@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import bcrypt from 'bcrypt'
+import { sendWelcomeEmail } from "@/lib/mail"
 
 
 export async function POST(request: NextRequest) {
@@ -30,6 +31,7 @@ export async function POST(request: NextRequest) {
             role: 'SERVICE_PROVIDER',
         }
     })
+    await sendWelcomeEmail(email, name,"proveedor de servicios");
     console.log(newUser)
     return  NextResponse.json({message: "new user added: ", status: 200})
 }
