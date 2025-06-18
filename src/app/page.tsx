@@ -3,7 +3,6 @@ import HeroSection from '@/components/layout/landing-components/hero-section'
 import HowWorks from '@/components/layout/landing-components/how-works'
 import ServicesSection from '@/components/layout/landing-components/services-section'
 import PublicHeader from '@/components/layout/publicHeader'
-import Image from 'next/image'
 import React from 'react'
 
 function HomePage() {

@@ -47,7 +47,7 @@ function AcceptRequestModal({ isOpen, onClose, onConfirm, clientName, serviceTyp
                 </h3>
                 <div className="mt-2">
                   <p className="text-sm text-gray-500">
-                    Estás a punto de aceptar la solicitud de <span className="font-semibold text-gray-700">{clientName}</span> para el servicio "<span className="font-semibold text-gray-700">{serviceType}</span>".
+                    Estás a punto de aceptar la solicitud de <span className="font-semibold text-gray-700">{clientName}</span> para el servicio &quot;<span className="font-semibold text-gray-700">{serviceType}</span>&quot;.
                   </p>
                   <p className="text-sm text-gray-500 mt-2">
                     Al aceptar esta solicitud, se notificará al cliente y se te agregarán sus datos de contacto para coordinar el servicio.

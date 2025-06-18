@@ -13,7 +13,7 @@ import CompleteServiceModal from '@/components/layout/Service-provider-component
 import CancelServiceModal from '@/components/layout/Service-provider-components/service-provider-services-config/cancel-service-modal';
 
 function Home() {
-  const { status, data: session } = useSession();
+  const { data: session } = useSession();
   const [statusFilter, setStatusFilter] = useState('all');
   const [serviceTypeFilter, setServiceTypeFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -344,7 +344,7 @@ function Home() {
                   <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
                 </div>
               ) : filteredRequests.length > 0 ? (
-                filteredRequests.map((request, index) => (
+                filteredRequests.map((request) => (
                   <RequestCard
                     providerId={session?.user.id || ''}
                     key={request.id}

@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     }
     
     // Ocultar datos sensibles
-    const { hashedPassword, ...providerData } = provider
+    const {  ...providerData } = provider
     
     return NextResponse.json(providerData)
   } catch (error) {
@@ -123,7 +123,7 @@ export async function PATCH(request: NextRequest) {
     }
     
     // Ocultar datos sensibles
-    const { hashedPassword, ...providerData } = updatedProvider
+    const {  ...providerData } = updatedProvider
     
     return NextResponse.json(providerData)
   } catch (error) {

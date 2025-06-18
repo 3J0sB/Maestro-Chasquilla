@@ -1,5 +1,5 @@
-import { object, string, boolean } from "zod";
-import { validate } from "rut.js"
+import { object, string} from "zod";
+// import { validate } from "rut.js"
 
 export const loginSchema = object({
     email: string({ required_error: "El correo es requerido" })
@@ -11,15 +11,15 @@ export const loginSchema = object({
         .max(20, "La contraseña no puede tener más de 20 caracteres"),
 })
 
-interface RegisterProviderSchema {
-    email: string;
-    name: string;
-    lastName: string;
-    lastName2?: string;
-    rut: string;
-    password: string;
-    confirmPassword: string;
-}
+// interface RegisterProviderSchema {
+//     email: string;
+//     name: string;
+//     lastName: string;
+//     lastName2?: string;
+//     rut: string;
+//     password: string;
+//     confirmPassword: string;
+// }
 
 export const registerProviderSchema = object({
     email: string()

@@ -162,7 +162,7 @@ function UpdateServiceForm({ onClose, onUpdate, serviceData }: UpdateServiceForm
         }
         return res.json();
       })
-      .then((result) => {
+      .then(() => {
         toast.success('Servicio actualizado correctamente');
         onUpdate();
         onClose();

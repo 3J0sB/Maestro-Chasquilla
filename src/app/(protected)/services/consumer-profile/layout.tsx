@@ -16,7 +16,7 @@ export default function ConsumerProfileLayout({
   const router = useRouter()
   const pathname = usePathname()
   const [loading, setLoading] = useState(true)
-  const [userData, setUserData] = useState(null)
+
 
   useEffect(() => {
     // Redirect if not authenticated
@@ -41,7 +41,6 @@ export default function ConsumerProfileLayout({
       }
 
       const data = await response.json()
-      setUserData(data)
     } catch (error) {
       console.error('Error:', error)
       toast.error('Could not load your data')

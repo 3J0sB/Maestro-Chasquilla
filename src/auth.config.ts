@@ -2,9 +2,8 @@
 import Credentials from "next-auth/providers/credentials"
 import type { NextAuthConfig } from "next-auth"
 import { loginSchema } from "./lib/zod"
-import { getUserByEmail } from "../utils/getUserByEmail"
-import { compare } from "bcrypt-ts";
-import { error } from "console";
+
+
 
 export default {
   providers: [
@@ -14,7 +13,7 @@ export default {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         const { data, success } = loginSchema.safeParse(credentials)
 
         if (!success) {

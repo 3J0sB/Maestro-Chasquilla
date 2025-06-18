@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { service } from '@/types';
-import { serialize } from 'v8';
+
 
 
 interface ProviderServicesProps {
@@ -12,7 +12,7 @@ interface ProviderServicesProps {
 const ProviderServices: React.FC<ProviderServicesProps> = ({
     services = []
 }) => {
-    const [sortBy, setSortBy] = useState('popular');
+
 
     return (
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">

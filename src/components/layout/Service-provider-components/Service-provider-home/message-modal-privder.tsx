@@ -22,7 +22,7 @@ const MessageModal: React.FC<MessageModalProps> = ({
   userName,
   userImage,
   serviceType,
-  requestId
+
 }) => {
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);

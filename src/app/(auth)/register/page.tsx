@@ -53,6 +53,7 @@ function RegisterPage() {
                 router.push('/login')
             }
         } catch (error) {
+            console.error("Error al registrar usuario:", error) 
             setError("Error de conexión al servidor")
         }
     })

@@ -51,5 +51,6 @@ export async function PUT(request: NextRequest) {
         return NextResponse.json(serviceRequest, { status: 200 });
     } catch (error) {
         return NextResponse.json({ error: "Error al aceptar la solicitud" }, { status: 500 });
+        console.error("Error accepting service request:", error);
     }
 }

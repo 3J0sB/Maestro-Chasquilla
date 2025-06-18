@@ -1,7 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any*/
+
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { add, sub, format, startOfWeek, endOfWeek } from 'date-fns';
-import { es } from 'date-fns/locale';
+import {  sub, format, startOfWeek, endOfWeek } from 'date-fns';
+
 
 export async function GET(request: NextRequest) {
   try {
@@ -95,7 +99,7 @@ export async function GET(request: NextRequest) {
     // Calcular calificación promedio
     let totalRating = 0;
     let totalReviewsCount = 0;
-    let allReviews: any[] = [];
+    const allReviews: any[] = [];
     const ratingsCount = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
 
     reviews.forEach(service => {

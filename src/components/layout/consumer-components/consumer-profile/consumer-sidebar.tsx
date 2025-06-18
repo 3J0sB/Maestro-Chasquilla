@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { signOut } from 'next-auth/react'
+
 import { usePathname } from 'next/navigation'
 import LogoutButton from '@/components/logoutButton'
 
@@ -22,7 +22,7 @@ type SidebarLinkProps = {
   collapsed: boolean;
 };
 
-const SidebarLink = ({ id, href, icon, text, active, collapsed }: SidebarLinkProps) => {
+const SidebarLink = ({  href, icon, text, active, collapsed }: SidebarLinkProps) => {
   return (
     <Link
       href={href}

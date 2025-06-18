@@ -14,7 +14,7 @@ interface ProviderInfo {
     areaOfExpertise?: string | null;
 }
 
-export default function ServiceProfileHeader({ providerId, areaOfExpertise,providerImage,providerRating, providerRatingCount,providerName, providerLastName, providerLastName2}: ProviderInfo) {
+export default function ServiceProfileHeader({ providerId, areaOfExpertise,providerImage,providerRating, providerRatingCount,providerName, providerLastName}: ProviderInfo) {
     console.log(providerImage, areaOfExpertise)
     return (
         <div className="bg-white rounded-xl shadow p-6 flex flex-col md:flex-row items-center justify-between mb-6">

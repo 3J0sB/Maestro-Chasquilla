@@ -47,6 +47,7 @@ function ServicesHome() {
       console.log('Datos de los servicios:', data);
 
     } catch (error) {
+      console.error('Error fetching services:', error);
 
     }
   }

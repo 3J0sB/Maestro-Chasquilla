@@ -32,7 +32,7 @@ const StartProgressModal: React.FC<StartProgressModalProps> = ({
           </div>
           <p>
             Al iniciar el trabajo, notificarás al cliente que has comenzado y el estado 
-            del servicio cambiará a "En Progreso".
+            del servicio cambiará a &quot;En Progreso&quot;.
           </p>
         </div>
         

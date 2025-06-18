@@ -4,23 +4,20 @@ import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import Image from "next/image"
-import Link from "next/link"
+
 import { signOut } from "next-auth/react"
 
 export default function RedirectPage() {
     const { data: session, status } = useSession()
     const router = useRouter()
     const [message, setMessage] = useState("Verificando tus credenciales...")
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(false)
+
     const [timeoutReached, setTimeoutReached] = useState(false)
     const [retryCount, setRetryCount] = useState(0)
 
     // Función para reintentar la autenticación
     const handleRetry = () => {
-        setLoading(true)
         setTimeoutReached(false)
-        setError(false)
         setMessage("Reintentando verificar tus credenciales...")
         setRetryCount(prev => prev + 1)
         
@@ -49,8 +46,7 @@ export default function RedirectPage() {
             if (status === "loading") {
                 setTimeoutReached(true)
                 setMessage("La verificación está tardando más de lo esperado...")
-                setLoading(false)
-                setError(true)
+
             }
         }, timeoutDuration)
 
@@ -117,7 +113,7 @@ export default function RedirectPage() {
             clearTimeout(maxTimeout)
             clearTimeout(autoRetryTimeout)
         }
-    }, [session, status, router, retryCount])
+    }, [session, status, router, retryCount, handleRetry])
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">

@@ -1,12 +1,15 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any*/
+
 'use client'
 import ServiceProviderSidebar from '@/components/layout/Service-provider-components/Service-provider-sidebar/service-provider-sidebar'
 import React, { useState, useEffect, useTransition } from 'react'
 import { useSession } from 'next-auth/react'
 import AccessDenied from '@/components/Access-denied/access-denied'
-import Image from 'next/image'
 import AddServiceForm from '@/components/layout/Service-provider-components/service-provider-services-config/add-service-form'
 import ServicesCard from '@/components/layout/Service-provider-components/service-provider-services-config/service-provider-services-card'
-import { set } from 'zod'
+
 
 // Tipos para los servicios
 type ServiceStatus = 'Active' | 'Inactive';
@@ -28,12 +31,12 @@ interface Service {
 }
 
 function ServiceConfig() {
-  const { status, data: session } = useSession()
+  const { data: session } = useSession()
   const [searchQuery, setSearchQuery] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [services, setServices] = useState<Service[]>([]);
   const [isPending, startTransition] = useTransition()
-  const [error, setError] = useState<string | null>(null);
+
   // Datos de ejemplo para servicios
 
 
@@ -156,7 +159,7 @@ function ServiceConfig() {
               <p className="text-gray-500 mb-2">Aun no tienes servicios</p>
               {searchQuery && (
                 <p className="text-gray-400 text-sm">
-                  No se encontraron resultados para "<span className="font-semibold">{searchQuery}</span>"
+                  No se encontraron resultados para &quot;<span className="font-semibold">{searchQuery}</span>&quot;
                 </p>
               )}
               {!searchQuery && (

@@ -48,7 +48,7 @@ function DeleteServiceModal({ isOpen, onClose, onConfirm, serviceName }: DeleteS
                 </h3>
                 <div className="mt-2">
                   <p className="text-sm text-gray-500">
-                    ¿Estás seguro que deseas eliminar el servicio "<span className="font-semibold text-gray-700">{serviceName}</span>"? 
+                    ¿Estás seguro que deseas eliminar el servicio &quot;<span className="font-semibold text-gray-700">{serviceName}</span>&quot;? 
                     Esta acción no puede deshacerse y eliminará permanentemente este servicio de tu perfil.
                   </p>
                 </div>

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { createProviderNotification } from '@/utils/notifications';
 import { sendServiceCancelledEmail } from '@/lib/mail';
-import { id } from 'date-fns/locale';
+
 
 export async function PUT(req: NextRequest) {
   try {

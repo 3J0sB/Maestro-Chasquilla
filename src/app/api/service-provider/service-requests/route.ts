@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any*/
+
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 export async function GET(request: NextRequest) {

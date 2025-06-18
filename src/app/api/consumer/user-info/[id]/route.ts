@@ -61,7 +61,7 @@ export async function PUT(
     const body = await request.json();
     
     // Validar los campos recibidos
-    const { name, lastName, email, phone, address, city, image } = body;
+    const { name, lastName, email, image } = body;
 
     if (!name || !lastName || !email) {
       return new NextResponse("Missing required fields", { status: 400 });

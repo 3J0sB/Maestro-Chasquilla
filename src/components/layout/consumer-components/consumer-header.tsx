@@ -1,15 +1,15 @@
 'use client';
-import React, { use } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useSession, signOut } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import LogoutButton from '@/components/logoutButton';
 
 interface ConsumerHeaderProps {
     userName?: string;
 }
 
-const ConsumerHeader: React.FC<ConsumerHeaderProps> = ({ userName }) => {
+const ConsumerHeader: React.FC<ConsumerHeaderProps> = ({ }) => {
     const { data: session } = useSession();
 
     return (

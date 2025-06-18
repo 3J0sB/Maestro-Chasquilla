@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import { loginAction } from '../../../../actions/auth-actions'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Public } from '@prisma/client/runtime/library'
 import PublicHeader from '@/components/layout/publicHeader'
 
 type FormValues = {

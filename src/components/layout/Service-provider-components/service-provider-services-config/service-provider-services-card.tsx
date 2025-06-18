@@ -15,7 +15,7 @@ type service = {
   image?: string; // Imagen del servicio (opcional)
 }
 
-function ServicesCard({ id, icon, title, status, description, price, serviceTag, image }: service) {
+function ServicesCard({ id, title, status, description, price, serviceTag, image }: service) {
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedService, setSelectedService] = useState<{

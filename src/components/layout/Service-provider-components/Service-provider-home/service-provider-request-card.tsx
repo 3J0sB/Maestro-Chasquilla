@@ -52,7 +52,7 @@ function RequestCard({
   providerId,
 }: RequestCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showTimelineDetails, setShowTimelineDetails] = useState(false);
+
   console.log("cliente avatar:",clientAvatar)
   // Handlers para los diferentes botones (sin cambios)
   const handleAccept = () => {
@@ -172,29 +172,6 @@ function RequestCard({
           })}
         </div>
 
-        {/* Detalles de la línea de tiempo (expandibles) */}
-        {showTimelineDetails && (
-          <div className="mt-5 pt-2 border-t border-gray-100">
-            <div className="grid grid-cols-4 gap-2 text-xs text-center">
-              {STATUS_ORDER.map((step, index) => {
-                const isCompleted = index <= currentStatusIndex;
-                const isActive = index === currentStatusIndex;
-
-                return (
-                  <div
-                    key={step}
-                    className={`py-1  rounded ${isActive ? 'font-medium text-blue-600' :
-                      isCompleted ? 'font-medium text-green-600' :
-                        'text-gray-400'
-                      }`}
-                  >
-                    {getStatusText(step)}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
       </div>
     );
   };

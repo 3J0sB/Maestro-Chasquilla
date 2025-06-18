@@ -1,6 +1,6 @@
 import NextAuth from "next-auth"
 import authConfig from "./auth.config"
-import { publicRoutes, authRoutes, protectedRoutes } from "./routes";
+import { publicRoutes, authRoutes } from "./routes";
 import { NextResponse } from "next/server";
 
 const { auth: middleware } = NextAuth(authConfig)

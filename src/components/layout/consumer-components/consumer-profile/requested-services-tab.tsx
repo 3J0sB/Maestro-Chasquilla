@@ -1,14 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Image from 'next/image'
+
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-hot-toast'
 import LoadingSpinner from '@/components/shared/loading-spinner'
 import { useSession } from 'next-auth/react'
 import { serviceRequest } from '@/types'
-import { formatDate, formatShortDate } from '../../../../../utils'
+import { formatDate} from '../../../../../utils'
 import MessageModal from '@/components/layout/consumer-components/consumer-messages/message-modal'
 
 interface RequestedServicesTabProps {

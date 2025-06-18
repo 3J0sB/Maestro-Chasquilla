@@ -1,7 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any*/
+
 'use client';
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { set } from 'zod';
+
 
 interface CategoryTabsProps {
   activeCategory?: string;

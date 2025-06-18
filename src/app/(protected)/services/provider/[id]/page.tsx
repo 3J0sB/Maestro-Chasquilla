@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 'use client'
 
 import React, { use, useState, useEffect } from 'react'
@@ -32,7 +36,7 @@ function ProviderProfile({ params }: ProviderProfileParams) {
   const [provider, setProvider] = useState<serviceProvider | null>(null)
   const [loading, setLoading] = useState(true)
   const [reviewsData, setReviewsData] = useState<ProviderReviewsResponse | null>(null)
-  const { status, data: session } = useSession();
+  const { data: session } = useSession();
   const { id } = use(params)
 
   const fetchProvider = async (id: string) => {

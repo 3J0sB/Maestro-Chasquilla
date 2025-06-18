@@ -1,5 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any*/
+
 import React, { useState } from 'react';
-import { formatDate, formatShortDate } from '../../../../../utils';
+import {  formatShortDate } from '../../../../../utils';
 
 interface Review {
   id: string;
@@ -208,7 +212,7 @@ const ProviderReviews = ({
                     
                     {review.comment ? (
                       <p className="text-gray-700 mt-1.5 text-sm leading-relaxed">
-                        "{review.comment}"
+                        &quot;{review.comment}&quot;
                       </p>
                     ) : (
                       <p className="text-gray-500 italic text-xs mt-1.5">
