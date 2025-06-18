@@ -21,14 +21,12 @@ export async function sendWelcomeEmail(to: string, name: string, userType: strin
           <div style="text-align: center; margin-bottom: 25px;">
             <img src="/img/miau.jpg" alt="Maestro Chasquilla" style="max-width: 180px; height: auto;" />
           </div>
-          
           <div style="background-color: #fff4eb; border-left: 4px solid #f97316; padding: 15px 20px; margin-bottom: 25px; border-radius: 6px;">
             <h2 style="color: #f97316; margin-top: 0; font-size: 24px; font-weight: 600;">¡Bienvenido(a) a bordo, ${name}! 🎉</h2>
             <p style="color: #4b5563; font-size: 16px; margin-bottom: 0;">
               Tu cuenta ha sido creada exitosamente como <strong style="color: #f97316; font-weight: 600;">${userType}</strong>.
             </p>
           </div>
-          
           <div style="background-color: #f9fafb; padding: 20px; border-radius: 8px; margin: 25px 0;">
             <h3 style="color: #374151; margin-top: 0; font-size: 18px; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px;">
               <span style="margin-right: 8px; color: #f97316;">✨</span> Lo que puedes hacer ahora:

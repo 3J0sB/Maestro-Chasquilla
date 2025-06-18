@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     const { id: serviceProvider } = await params;
     if (!serviceProvider) {
         return NextResponse.json({ error: "ID de solicitud de servicio no proporcionado" }, { status: 400 });

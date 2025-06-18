@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { serviceId: string } }
+  { params }: { params: Promise<{ serviceId: string }> }
 ) {
   try {
     const session = await auth();
@@ -87,10 +87,9 @@ export async function PATCH(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { serviceId: string } }
+  { params }: { params: Promise<{ serviceId: string }> }
 ) {
   try {
-    const { status } = await req.json();
     const session = await auth();
 
     if (!session || session.user.role !== 'ADMIN') {
@@ -101,6 +100,7 @@ export async function DELETE(
 
     const resolvedParams = await params;
     const serviceId = resolvedParams.serviceId;
+    const { status } = await req.json();
 
     if (!serviceId) {
       return new NextResponse(JSON.stringify({ error: "Se requiere ID de servicio" }), {
@@ -118,14 +118,12 @@ export async function DELETE(
       });
     }
 
-
     const deletedService = await prisma.services.update({
       where: { id: serviceId },
       data: {
         status: status || 'DELETED',
       },
     });
-
 
     // Notificar al proveedor
     await prisma.notification.create({
