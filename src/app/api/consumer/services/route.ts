@@ -31,6 +31,9 @@ export async function GET(request: NextRequest) {
 
         if (!category) {
             const service = await prisma.services.findMany({
+                where: {
+                    status: 'APPROVED',
+                },
                 include: {
                     user: {
                         select: {
@@ -49,6 +52,9 @@ export async function GET(request: NextRequest) {
         }
 
         const service = await prisma.services.findMany({
+                            where: {
+                    status: 'APPROVED',
+                },
             include: {
                 user: {
                     select: {

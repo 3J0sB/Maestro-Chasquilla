@@ -107,7 +107,7 @@ export function AdminServicesModeration({ session }: { session: Session | null }
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ status: 'ACTIVE' }),
+        body: JSON.stringify({ status: 'APPROVED' }),
       });
 
       if (!response.ok) {
