@@ -225,7 +225,8 @@ function Home() {
         },
         body: JSON.stringify({ 
           requestId: currentRequest.id,
-          cancelReason: reason
+          cancelReason: reason,
+          cancelby: 'provider' 
         })
       });
 

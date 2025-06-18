@@ -74,7 +74,8 @@ export default function RequestedServicesTab({ userId }: RequestedServicesTabPro
                 method: 'PUT',
                 body: JSON.stringify({
                     requestId,
-                    cancelReason: 'El usuario ha cancelado la solicitud'
+                    cancelReason: 'El usuario ha cancelado la solicitud',
+                    cancelby: 'consumer'
                 }),
             })
 
