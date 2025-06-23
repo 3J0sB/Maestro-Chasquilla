@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Maestro Chasquilla",
-  description: "Centralizando los servicios",
+  title: "RED MAESTRO",
+  description: "Encuentra y da a conocer tus servicios de manera fácil y rápida",
 
 };
 
