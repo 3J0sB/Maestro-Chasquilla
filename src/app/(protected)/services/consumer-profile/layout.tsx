@@ -66,6 +66,15 @@ export default function ConsumerProfileLayout({
             <h1 className="text-xl font-bold text-gray-800">Mi Perfil</h1>
             <div className="flex space-x-4">
               <Link
+                href="/services"
+                className="p-2 text-gray-500 hover:text-orange-500"
+                title="Volver a servicios"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12h18M9 6l-6 6 6 6" />
+                </svg>
+              </Link>
+              <Link
                 href="/services/consumer-profile/services"
                 className={`p-2 ${pathname === '/services/consumer-profile/services' ? 'text-orange-500' : 'text-gray-500'}`}
               >

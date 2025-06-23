@@ -39,34 +39,40 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
   const [showConversations, setShowConversations] = useState(true);
 
 
-  useEffect(() => {
-    const fetchConversations = async () => {
-      if (!providerId) return;
+useEffect(() => {
+  const fetchConversations = async () => {
+    if (!providerId) return;
 
-      try {
-        setLoading(true);
-        const response = await fetch(`/api/service-provider/conversations/${providerId}`);
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/service-provider/conversations/${providerId}`);
 
-        if (!response.ok) {
-          throw new Error('No se pudieron cargar las conversaciones');
-        }
-
-        const data = await response.json();
-        setConversations(data);
-
-        if (data.length > 0 && !selectedConversation) {
-          setSelectedConversation(data[0].id);
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error desconocido');
-        console.error('Error al cargar conversaciones:', err);
-      } finally {
-        setLoading(false);
+      if (!response.ok) {
+        throw new Error('No se pudieron cargar las conversaciones');
       }
-    };
 
-    fetchConversations();
-  }, [providerId, selectedConversation]);
+      const data = await response.json();
+      setConversations(data);
+
+      // Solo seleccionar la primera conversación por defecto en desktop
+      if (
+        data.length > 0 &&
+        !selectedConversation &&
+        (window.innerWidth >= 768) // md: breakpoint
+      ) {
+        setSelectedConversation(data[0].id);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error desconocido');
+      console.error('Error al cargar conversaciones:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchConversations();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [providerId]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -386,12 +392,12 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   placeholder="Escribe un mensaje..."
-                  className="flex-1 border rounded-l-lg p-2 focus:outline-none focus:border-orange-500"
+                  className="flex-1 border border-gray-200 rounded-l-lg p-2 focus:outline-none focus:border-orange-500"
                   disabled={sendingMessage}
                 />
                 <button
                   type="submit"
-                  className={`bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-r-lg transition-colors ${sendingMessage ? 'opacity-70 cursor-not-allowed' : ''}`}
+                  className={`bg-orange-500 border border-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-r-lg transition-colors ${sendingMessage ? 'opacity-70 cursor-not-allowed' : ''}`}
                   disabled={sendingMessage || !newMessage.trim()}
                 >
                   {sendingMessage ? (

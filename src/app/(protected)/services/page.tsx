@@ -6,12 +6,13 @@ import SearchBar from '@/components/layout/consumer-components/consumer-searchba
 import { useState, useEffect, useMemo } from 'react';
 import { service } from '@/types';
 import ServiceCard from '@/components/layout/consumer-components/consumer-service-cards';
-
+import { useRouter } from 'next/navigation';
 function ServicesHome() {
   const [category, setCategory] = useState<string>('all');
   const [services, setServices] = useState<service[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
+  const router = useRouter();
 
 
   const handleSearch = (query: string) => {
@@ -28,6 +29,10 @@ function ServicesHome() {
     console.log('Categoría seleccionada:', category);
 
   }
+  const handleClickService = (serviceId: string) => {
+    console.log('Servicio seleccionado:', serviceId);
+    router.push(`/services/${serviceId}`);
+  };
 
   const fetchServices = async () => {
     try {
@@ -118,7 +123,7 @@ function ServicesHome() {
                 <ServiceCard
                   key={service.id}
                   service={service}
-                  onClick={() => console.log(`Servicio seleccionado: ${service.id}`)}
+                  onClick={() => handleClickService(service.id)}
                 />
               ))
             }

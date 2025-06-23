@@ -14,6 +14,7 @@ interface CategoryTabsProps {
 
 const CategoryTabs: React.FC<CategoryTabsProps> = ({ activeCategory = 'all', handleCategory }) => {
   const [active, setActive] = useState('all');
+  const [showMobileCategories, setShowMobileCategories] = useState(false);
 
   const categories = [
     {
@@ -130,38 +131,85 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({ activeCategory = 'all', han
   };
 
   return (
-    <div className="overflow-x-auto">
-      <div className="flex space-x-4 pb-3 pt-1 px-2 min-w-max">
-        {categories.map((category) => (
-          <Link
-            key={category.id}
-            href={``}
-            onClick={() => {
-              handleCategoryClick(category.displayName || '');
-              setActive(category.id);
-            }} 
-            className="flex flex-col items-center w-16"
-          >
-            <div
-              className={`flex justify-center items-center w-14 h-14 rounded-full mb-1 ${
-                active === category.id
-                  ? 'bg-orange-500'
-                  : 'bg-gray-100 hover:bg-gray-200'
-              }`}
+    <div className="w-full">
+      {/* Mobile: botón para mostrar categorías */}
+      <div className="block sm:hidden px-2 mb-2">
+        <button
+          className="w-full p-2 bg-orange-500 text-white font-semibold py-2 rounded-lg shadow mb-2"
+          onClick={() => setShowMobileCategories((prev) => !prev)}
+        >
+          {showMobileCategories ? 'Ocultar categorías' : 'Seleccionar categoría'}
+        </button>
+        {showMobileCategories && (
+          <div className="grid grid-cols-2 gap-2">
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                type="button"
+                onClick={() => {
+                  handleCategoryClick(category.id);
+                  setShowMobileCategories(false);
+                }}
+                className={`flex flex-col items-center justify-center p-2 rounded-lg transition ${
+                  active === category.id
+                    ? 'bg-gray-50 border-orange-500 border'
+                    : 'bg-gray-50 border-gray-200'
+                }`}
+              >
+                <div
+                  className={`flex justify-center items-center w-10 h-10 rounded-full mb-1 ${
+                    active === category.id
+                      ? 'bg-orange-500'
+                      : 'bg-gray-100'
+                  }`}
+                >
+                  <div className={`${active === category.id ? 'text-white' : 'text-gray-500'}`}>
+                    {category.icon}
+                  </div>
+                </div>
+                <span
+                  className={`text-xs text-center line-clamp-2 ${
+                    active === category.id ? 'text-orange-500 font-medium' : 'text-gray-600'
+                  }`}
+                >
+                  {category.displayName || category.name}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+      {/* Desktop: horizontal scroll */}
+      <div className="hidden sm:block overflow-x-auto w-full">
+        <div className="flex space-x-4 pb-2 pt-1 px-2 min-w-max">
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              type="button"
+              onClick={() => handleCategoryClick(category.id)}
+              className="flex flex-col items-center w-20 focus:outline-none"
             >
-              <div className={`${active === category.id ? 'text-white' : 'text-gray-500'}`}>
-                {category.icon}
+              <div
+                className={`flex justify-center items-center w-14 h-14 rounded-full mb-1 ${
+                  active === category.id
+                    ? 'bg-orange-500'
+                    : 'bg-gray-100 hover:bg-gray-200'
+                }`}
+              >
+                <div className={`${active === category.id ? 'text-white' : 'text-gray-500'}`}>
+                  {category.icon}
+                </div>
               </div>
-            </div>
-            <span 
-              className={`text-xs text-center line-clamp-1 ${
-                active === category.id ? 'text-orange-500 font-medium' : 'text-gray-600'
-              }`}
-            >
-              {category.displayName || category.name}
-            </span>
-          </Link>
-        ))}
+              <span
+                className={`text-xs text-center line-clamp-2 ${
+                  active === category.id ? 'text-orange-500 font-medium' : 'text-gray-600'
+                }`}
+              >
+                {category.displayName || category.name}
+              </span>
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );

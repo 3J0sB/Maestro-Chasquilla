@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { service } from '@/types';
+import { formatCLP } from '@/utils/format'; // Asegúrate de importar tu función de formato
 
 interface ServiceCardProps {
   service: service;
@@ -11,10 +12,11 @@ interface ServiceCardProps {
 const ServiceCard: React.FC<ServiceCardProps> = ({ service, onClick }) => {
   // Determinar la imagen a mostrar
   const imageUrl = service.image || '/img/miau.jpg';
+  console.log('ServiceCard component rendered with service:', service);
 
   return (
     <div 
-      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+      className="cursor-pointer bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
       onClick={onClick}
     >
       {/* Sección de imagen */}
@@ -70,14 +72,18 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onClick }) => {
           </div>
         )}
 
-        {/* Precio y botón de acción */}
+        
         <div className="flex justify-between items-center mt-2">
-          <div className="font-medium text-orange-500">
-            <span className='text-black'>Desde </span> 
-            {service.price 
-              ? `$${service.price}` 
-              : 'Precio a consultar'
-            }
+          <div className="font-medium text-orange-500 flex flex-col text-sm">
+            <span className='rounded-full  text-black'>Precio base: {formatCLP(service.price?? 0)}</span>
+            <span className="text-black">
+              {service.minServicePrice !== undefined && service.maxServicePrice !== undefined
+                ? `Desde los ${formatCLP(service.minServicePrice ?? 0)} a ${formatCLP(service.maxServicePrice?? 0)}`
+                : service.price
+                  ? `Desde ${formatCLP(service.price)}`
+                  : 'Precio a consultar'
+              }
+            </span>
           </div>
           <Link 
             href={`/services/${service.id}`} 

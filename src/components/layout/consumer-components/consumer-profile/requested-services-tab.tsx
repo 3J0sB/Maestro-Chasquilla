@@ -8,8 +8,9 @@ import { toast } from 'react-hot-toast'
 import LoadingSpinner from '@/components/shared/loading-spinner'
 import { useSession } from 'next-auth/react'
 import { serviceRequest } from '@/types'
-import { formatDate} from '../../../../../utils'
+import { formatDate } from '../../../../../utils'
 import MessageModal from '@/components/layout/consumer-components/consumer-messages/message-modal'
+import Image from 'next/image'
 
 interface RequestedServicesTabProps {
     userId: string | undefined
@@ -21,7 +22,7 @@ export default function RequestedServicesTab({ userId }: RequestedServicesTabPro
     const [loading, setLoading] = useState(true)
     const [statusFilter, setStatusFilter] = useState('all')
     const router = useRouter()
-    
+
     // Estados para el modal de mensaje
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [selectedRequest, setSelectedRequest] = useState<serviceRequest | null>(null)
@@ -123,61 +124,55 @@ export default function RequestedServicesTab({ userId }: RequestedServicesTabPro
             <div className="flex flex-wrap gap-3 mb-6">
                 <button
                     onClick={() => setStatusFilter('all')}
-                    className={`px-4 py-2 rounded-md text-sm font-medium border transition-colors ${
-                        statusFilter === 'all'
+                    className={`px-4 py-2 rounded-md text-sm font-medium border transition-colors ${statusFilter === 'all'
                             ? 'bg-orange-500 text-white border-orange-500'
                             : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
-                    }`}
+                        }`}
                 >
                     Todos los estados
                 </button>
                 <button
                     onClick={() => setStatusFilter('PENDING')}
-                    className={`px-4 py-2 rounded-md text-sm font-medium border transition-colors ${
-                        statusFilter === 'PENDING'
+                    className={`px-4 py-2 rounded-md text-sm font-medium border transition-colors ${statusFilter === 'PENDING'
                             ? 'bg-orange-500 text-white border-orange-500'
                             : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
-                    }`}
+                        }`}
                 >
                     Pendientes
                 </button>
                 <button
                     onClick={() => setStatusFilter('ACCEPTED')}
-                    className={`px-4 py-2 rounded-md text-sm font-medium border transition-colors ${
-                        statusFilter === 'ACCEPTED'
+                    className={`px-4 py-2 rounded-md text-sm font-medium border transition-colors ${statusFilter === 'ACCEPTED'
                             ? 'bg-orange-500 text-white border-orange-500'
                             : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
-                    }`}
+                        }`}
                 >
                     Aceptados
                 </button>
                 <button
                     onClick={() => setStatusFilter('IN_PROGRESS')}
-                    className={`px-4 py-2 rounded-md text-sm font-medium border transition-colors ${
-                        statusFilter === 'IN_PROGRESS'
+                    className={`px-4 py-2 rounded-md text-sm font-medium border transition-colors ${statusFilter === 'IN_PROGRESS'
                             ? 'bg-orange-500 text-white border-orange-500'
                             : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
-                    }`}
+                        }`}
                 >
                     En Progreso
                 </button>
                 <button
                     onClick={() => setStatusFilter('COMPLETED')}
-                    className={`px-4 py-2 rounded-md text-sm font-medium border transition-colors ${
-                        statusFilter === 'COMPLETED'
+                    className={`px-4 py-2 rounded-md text-sm font-medium border transition-colors ${statusFilter === 'COMPLETED'
                             ? 'bg-orange-500 text-white border-orange-500'
                             : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
-                    }`}
+                        }`}
                 >
                     Completados
                 </button>
                 <button
                     onClick={() => setStatusFilter('CANCELLED')}
-                    className={`px-4 py-2 rounded-md text-sm font-medium border transition-colors ${
-                        statusFilter === 'CANCELLED'
+                    className={`px-4 py-2 rounded-md text-sm font-medium border transition-colors ${statusFilter === 'CANCELLED'
                             ? 'bg-orange-500 text-white border-orange-500'
                             : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
-                    }`}
+                        }`}
                 >
                     Cancelados
                 </button>
@@ -220,8 +215,18 @@ export default function RequestedServicesTab({ userId }: RequestedServicesTabPro
                                 <div className="p-4 border-b border-gray-100 bg-gray-50">
                                     <div className="flex justify-between items-center">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 font-medium">
-                                                {request.service.user?.name?.charAt(0) || 'U'}
+                                            <div 
+                                                style={{ minWidth: 40, minHeight: 40, maxWidth: 40, maxHeight: 40, aspectRatio: "1 / 1" }}
+                                            >
+                                                <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-blue-100">
+                                                    <Image
+                                                        src={request.service.user?.image || '/default-avatar.png'}
+                                                        alt="User Avatar"
+                                                        width={40}
+                                                        height={40}
+                                                        className="object-cover w-full h-full"
+                                                    />
+                                                </div>
                                             </div>
                                             <div>
                                                 <p className="font-medium text-gray-800">

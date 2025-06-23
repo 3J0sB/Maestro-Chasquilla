@@ -35,41 +35,55 @@ const ConsumerMessagesComponent: React.FC<ConsumerMessagesProps> = ({ userId }) 
   const [sendingMessage, setSendingMessage] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Cargar las conversaciones
-  useEffect(() => {
-    const fetchConversations = async () => {
-      if (!userId) return;
+  // NUEVO: para mobile, mostrar/ocultar panel de conversaciones
+  const [showConversations, setShowConversations] = useState(true);
 
-      try {
-        setLoading(true);
-        const response = await fetch(`/api/consumer/conversations/${userId}`);
-        
-        if (!response.ok) {
-          throw new Error('No se pudieron cargar las conversaciones');
-        }
-        
-        const data = await response.json();
-        setConversations(data);
-        
-        // Seleccionar la primera conversación por defecto
-        if (data.length > 0 && !selectedConversation) {
-          setSelectedConversation(data[0].id);
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error desconocido');
-        console.error('Error al cargar conversaciones:', err);
-      } finally {
-        setLoading(false);
+useEffect(() => {
+  const fetchConversations = async () => {
+    if (!userId) return;
+
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/consumer/conversations/${userId}`);
+      if (!response.ok) {
+        throw new Error('No se pudieron cargar las conversaciones');
       }
-    };
+      const data = await response.json();
+      setConversations(data);
 
-    fetchConversations();
-  }, [userId, selectedConversation]);
+      // Solo seleccionar la primera conversación por defecto en desktop
+      if (
+        data.length > 0 &&
+        !selectedConversation &&
+        (window.innerWidth >= 768) // md: breakpoint
+      ) {
+        setSelectedConversation(data[0].id);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error desconocido');
+      console.error('Error al cargar conversaciones:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // Hacer scroll hacia abajo cuando llegan nuevos mensajes
+  fetchConversations();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [userId]);
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [conversations]);
+
+  // NUEVO: cuando seleccionas una conversación, ocultar lista en mobile
+  useEffect(() => {
+    if (selectedConversation) setShowConversations(false);
+  }, [selectedConversation]);
+
+  // NUEVO: volver a mostrar lista en mobile
+  const handleBackToConversations = () => setShowConversations(true);
+
+  // ...resto de funciones (handleSendMessage, getProviderName, etc.)...
 
   // Enviar un nuevo mensaje
   const handleSendMessage = async (e: React.FormEvent) => {
@@ -101,8 +115,7 @@ const ConsumerMessagesComponent: React.FC<ConsumerMessagesProps> = ({ userId }) 
 
       const data = await response.json();
 
-      // Actualizar la conversación local con el nuevo mensaje
-      setConversations(prevConversations => 
+      setConversations(prevConversations =>
         prevConversations.map(conv => {
           if (conv.id === selectedConversation) {
             return {
@@ -124,10 +137,7 @@ const ConsumerMessagesComponent: React.FC<ConsumerMessagesProps> = ({ userId }) 
         })
       );
 
-      // Limpiar el campo de mensaje
       setNewMessage('');
-      
-      // Mostrar notificación de éxito
       toast.success('Mensaje enviado');
     } catch (err) {
       console.error('Error al enviar mensaje:', err);
@@ -137,12 +147,12 @@ const ConsumerMessagesComponent: React.FC<ConsumerMessagesProps> = ({ userId }) 
     }
   };
 
-  // Obtener el nombre del proveedor con formato
+  // ...getProviderName, getLastMessage, getUnreadCount, getLastMessageDate, marcar leídos...
+
   const getProviderName = (conversation: Conversation) => {
     return `${conversation.provider.name} ${conversation.provider.lastName || ''}`.trim();
   };
 
-  // Obtener el último mensaje
   const getLastMessage = (conversation: Conversation) => {
     if (conversation.messages.length === 0) {
       return 'No hay mensajes';
@@ -150,14 +160,12 @@ const ConsumerMessagesComponent: React.FC<ConsumerMessagesProps> = ({ userId }) 
     return conversation.messages[conversation.messages.length - 1].content;
   };
 
-  // Contar mensajes no leídos
   const getUnreadCount = (conversation: Conversation) => {
-    return conversation.messages.filter(msg => 
+    return conversation.messages.filter(msg =>
       !msg.isRead && msg.senderType === 'SERVICE_PROVIDER'
     ).length;
   };
 
-  // Obtener la fecha del último mensaje
   const getLastMessageDate = (conversation: Conversation) => {
     if (conversation.messages.length === 0) {
       return '';
@@ -165,7 +173,6 @@ const ConsumerMessagesComponent: React.FC<ConsumerMessagesProps> = ({ userId }) 
     return formatDate(conversation.messages[conversation.messages.length - 1].createdAt);
   };
 
-  // Marcar mensajes como leídos cuando se selecciona una conversación
   useEffect(() => {
     const markMessagesAsRead = async () => {
       if (!selectedConversation || !userId) return;
@@ -187,13 +194,12 @@ const ConsumerMessagesComponent: React.FC<ConsumerMessagesProps> = ({ userId }) 
           return;
         }
 
-        // Actualizar el estado local para reflejar que los mensajes han sido leídos
-        setConversations(prevConversations => 
+        setConversations(prevConversations =>
           prevConversations.map(conv => {
             if (conv.id === selectedConversation) {
               return {
                 ...conv,
-                messages: conv.messages.map(msg => 
+                messages: conv.messages.map(msg =>
                   msg.senderType === 'SERVICE_PROVIDER' ? { ...msg, isRead: true } : msg
                 ),
               };
@@ -210,10 +216,15 @@ const ConsumerMessagesComponent: React.FC<ConsumerMessagesProps> = ({ userId }) 
   }, [selectedConversation, userId]);
 
   return (
-    <div className="flex h-min-screen">
+    <div className="flex h-full flex-col md:flex-row bg-white rounded-lg shadow overflow-hidden">
       {/* Panel de conversaciones */}
-      <div className="w-1/3 border-r border-gray-200 overflow-y-auto">
-
+      <div
+        className={`
+          w-full md:w-1/3 border-r border-gray-200 overflow-y-auto bg-white
+          ${showConversations ? 'block' : 'hidden'}
+          md:block
+        `}
+      >
         {loading && conversations.length === 0 ? (
           <div className="flex justify-center items-center p-8">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-orange-500"></div>
@@ -272,19 +283,36 @@ const ConsumerMessagesComponent: React.FC<ConsumerMessagesProps> = ({ userId }) 
       </div>
 
       {/* Panel de mensajes */}
-      <div className="w-2/3 flex flex-col">
+      <div
+        className={`
+          flex-1 flex flex-col w-full md:w-2/3
+          ${showConversations ? 'hidden' : 'flex'}
+          md:flex
+        `}
+      >
         {selectedConversation ? (
           <>
-            {/* Cabecera de conversación */}
-            <div className="p-4 border-b border-gray-200 flex items-center">
+            {/* Header con botón volver en mobile */}
+            <div className="p-4 border-b border-gray-200 flex items-center bg-white sticky top-0 z-10">
+              <div className="md:hidden mr-3">
+                <button
+                  onClick={handleBackToConversations}
+                  className="p-2 rounded-full hover:bg-orange-100 transition"
+                  aria-label="Volver"
+                >
+                  <svg width={24} height={24} fill="none" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+              </div>
               {conversations.find(c => c.id === selectedConversation) && (
                 <>
                   <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden mr-3">
                     {conversations.find(c => c.id === selectedConversation)?.provider.image ? (
-                      <img 
-                        src={conversations.find(c => c.id === selectedConversation)?.provider.image} 
-                        alt={conversations.find(c => c.id === selectedConversation)?.provider.name} 
-                        className="w-full h-full object-cover" 
+                      <img
+                        src={conversations.find(c => c.id === selectedConversation)?.provider.image}
+                        alt={conversations.find(c => c.id === selectedConversation)?.provider.name}
+                        className="w-full h-full object-cover"
                       />
                     ) : (
                       <div className="text-gray-500 font-medium">
@@ -315,7 +343,7 @@ const ConsumerMessagesComponent: React.FC<ConsumerMessagesProps> = ({ userId }) 
                       className={`flex ${message.senderType === 'USER' ? 'justify-end' : 'justify-start'}`}
                     >
                       <div
-                        className={`max-w-[70%] rounded-lg p-3 ${
+                        className={`max-w-[85%] md:max-w-[70%] rounded-lg p-3 ${
                           message.senderType === 'USER'
                             ? 'bg-orange-100 text-gray-800'
                             : 'bg-white border border-gray-200 text-gray-800'
@@ -346,12 +374,12 @@ const ConsumerMessagesComponent: React.FC<ConsumerMessagesProps> = ({ userId }) 
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   placeholder="Escribe un mensaje..."
-                  className="flex-1 border rounded-l-lg p-2 focus:outline-none focus:border-orange-500"
+                  className="flex-1 border border-gray-200 rounded-l-lg p-2 focus:outline-none focus:border-orange-500"
                   disabled={sendingMessage}
                 />
                 <button
                   type="submit"
-                  className={`bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-r-lg transition-colors ${
+                  className={`bg-orange-500 border border-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-r-lg transition-colors ${
                     sendingMessage ? 'opacity-70 cursor-not-allowed' : ''
                   }`}
                   disabled={sendingMessage || !newMessage.trim()}

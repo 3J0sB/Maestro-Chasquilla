@@ -9,7 +9,7 @@ export default function MessagesPage() {
   return (
     <>
       {/* Header */}
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">
+      <h1 className="hidden md:block text-2xl font-bold text-gray-800 mb-6">
         Mis Mensajes
       </h1>
 
