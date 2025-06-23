@@ -85,7 +85,7 @@ function RegisterPage() {
                             {/* Logo */}
                             <div className="flex justify-center mb-6">
                                 <Image
-                                    src="/img/red_maestro_icon.png"
+                                    src="https://res.cloudinary.com/dil83zjxy/image/upload/v1750661412/maestro-chasquilla/profiles/ud45ed86grzvdp3bcpg5.png"
                                     width={50}
                                     height={50}
                                     alt='logo'
