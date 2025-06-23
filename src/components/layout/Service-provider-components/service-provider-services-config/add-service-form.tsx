@@ -9,6 +9,7 @@ import { addServiceSchema } from '@/lib/zod'
 import { z } from 'zod'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
+import { max } from 'date-fns'
 
 // Use the type from zod schema
 type FormInputs = z.infer<typeof addServiceSchema>
@@ -43,6 +44,8 @@ function AddServiceForm({ onClose, onSave }: AddServiceFormProps) {
       smallDescription: '',
       price: '',
       category: '',
+      maxServicePrice: '',
+      minServicePrice: '',
     }
   });
 
@@ -127,7 +130,9 @@ function AddServiceForm({ onClose, onSave }: AddServiceFormProps) {
       const serviceData = {
         title: data.serviceName,
         description: data.description,
-        price: parseFloat(data.price),
+        price: parseFloat(data.price || '0'),
+        maxServicePrice: parseFloat(data.maxServicePrice || '0'),
+        minServicePrice: parseFloat(data.minServicePrice || '0'),
         serviceTag: data.category,
         smallDescription: data.smallDescription, 
         userId: session?.user.id,
@@ -279,12 +284,12 @@ function AddServiceForm({ onClose, onSave }: AddServiceFormProps) {
             )}
           </div>
 
-          {/* Price and Category (in row for larger screens) */}
+          {/* Price, Min Price, Max Price y Category (en fila en pantallas grandes) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            {/* Price */}
+            {/* Precio base */}
             <div>
               <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
-                Precio
+                Precio base
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -323,6 +328,54 @@ function AddServiceForm({ onClose, onSave }: AddServiceFormProps) {
               {errors.category && (
                 <p className="mt-1 text-sm text-red-600">{errors.category.message}</p>
               )}
+            </div>
+
+            {/* Precio mínimo */}
+            <div>
+              <label htmlFor="minServicePrice" className="block text-sm font-medium text-gray-700 mb-1">
+                Precio mínimo
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span className="text-gray-500">$</span>
+                </div>
+                <input
+                  type="number"
+                  id="minServicePrice"
+                  min="0"
+                  step="0.01"
+                  className={`w-full pl-7 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${errors.minServicePrice ? 'border-red-500' : 'border-gray-300'}`}
+                  placeholder="0.00"
+                  {...register("minServicePrice")}
+                />
+                {errors.minServicePrice && (
+                  <p className="mt-1 text-sm text-red-600">{errors.minServicePrice.message}</p>
+                )}
+              </div>
+            </div>
+
+            {/* Precio máximo */}
+            <div>
+              <label htmlFor="maxServicePrice" className="block text-sm font-medium text-gray-700 mb-1">
+                Precio máximo
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span className="text-gray-500">$</span>
+                </div>
+                <input
+                  type="number"
+                  id="maxServicePrice"
+                  min="0"
+                  step="0.01"
+                  className={`w-full pl-7 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${errors.maxServicePrice ? 'border-red-500' : 'border-gray-300'}`}
+                  placeholder="0.00"
+                  {...register("maxServicePrice")}
+                />
+                {errors.maxServicePrice && (
+                  <p className="mt-1 text-sm text-red-600">{errors.maxServicePrice.message}</p>
+                )}
+              </div>
             </div>
           </div>
 

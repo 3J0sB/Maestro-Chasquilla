@@ -89,11 +89,10 @@ function ServicesCard({ id, title, status, description, price, serviceTag, image
         className='bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden 
                 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1'>
         
-        {/* Imagen del servicio (si existe) */}
-        {image && (
+
           <div className="w-full h-48 relative overflow-hidden">
             <Image 
-              src={image || 'img/miau.jpg'} 
+              src={image || '/img/miau.jpg'} 
               alt={title} 
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -107,7 +106,7 @@ function ServicesCard({ id, title, status, description, price, serviceTag, image
               </span>
             </div>
           </div>
-        )}
+
 
         <div className='p-6'>
           {/* Cabecera de la tarjeta */}

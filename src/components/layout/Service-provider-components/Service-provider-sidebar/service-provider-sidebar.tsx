@@ -159,9 +159,9 @@ function ServiceProviderSidebar({ userName, userType, userLastName, userImage }:
             </div>
             {!collapsed && (
               <div>
-                <p className="text-sm font-medium text-gray-700">{userName} {userLastName}</p>
+                <p className="text-sm font-medium text-gray-700">{userName}</p>
                 <p className="text-xs text-gray-500">
-                  {userType === 'SERVICE_PROVIDER' ? 'Proveedor de servicios' : userType}
+                  {userType === 'SERVICE_PROVIDER' ? 'Proveedor' : userType}
                 </p>
               </div>
             )}

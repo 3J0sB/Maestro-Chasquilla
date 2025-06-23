@@ -1,4 +1,4 @@
-import { object, string} from "zod";
+import { object, string } from "zod";
 // import { validate } from "rut.js"
 
 export const loginSchema = object({
@@ -67,6 +67,16 @@ export const addServiceSchema = object({
         .min(1, 'El precio es requerido')
         .refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) >= 0, {
             message: "El precio debe ser un número positivo"
+        }),
+    maxServicePrice: string()
+        .min(1, 'El máximo valor del servicio es requerido')
+        .refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) >= 0, {
+            message: "El máximo valor del servicio debe ser un número positivo"
+        }),
+    minServicePrice: string()
+        .min(1, 'El mínimo valor del servicio es requerido')
+        .refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) >= 0, {
+            message: "El mínimo valor del servicio debe ser un número positivo"
         }),
     category: string()
         .min(1, 'La categoría es requerida'),

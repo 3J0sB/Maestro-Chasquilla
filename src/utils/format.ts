@@ -62,3 +62,17 @@ export const formatDateTime = (date: Date): string => {
     minute: '2-digit',
   }).format(date);
 };
+
+/**
+ * Formatea un número como precio en pesos chilenos (CLP)
+ * @param amount - El monto a formatear
+ * @returns El precio formateado como string (ejemplo: $15.000)
+ */
+export const formatCLP = (amount: number): string => {
+  return amount.toLocaleString('es-CL', {
+    style: 'currency',
+    currency: 'CLP',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
+};

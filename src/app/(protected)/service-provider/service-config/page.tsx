@@ -87,7 +87,7 @@ function ServiceConfig() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
             <h1 className="text-2xl font-bold text-orange-600">Mis Servicios</h1>
             <button
-              className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition-colors shadow"
+              className="cursor-pointer flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition-colors shadow"
               onClick={() => setShowForm(true)}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -139,65 +139,64 @@ function ServiceConfig() {
           </div>
 
           {/* Pagination */}
-          <div className="flex justify-center mt-8">
-            <nav className="flex flex-wrap items-center gap-1 bg-white rounded-lg shadow px-2 py-2 border border-gray-200">
-              <button
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page === 1}
-                className={`px-2 md:px-3 py-1 rounded transition-colors font-medium text-sm md:text-base ${
-                  page === 1
+          {filteredServices.length > 0 && (
+            <div className="flex justify-center mt-8">
+              <nav className="flex flex-wrap items-center gap-1 bg-white rounded-lg shadow px-2 py-2 border border-gray-200">
+                <button
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                  className={`px-2 md:px-3 py-1 rounded transition-colors font-medium text-sm md:text-base ${page === 1
                     ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                     : 'bg-orange-500 text-white hover:bg-orange-600'
-                }`}
-              >
-                Anterior
-              </button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1)
-                .filter(
-                  (num) =>
-                    num === 1 ||
-                    num === totalPages ||
-                    (num >= page - 2 && num <= page + 2)
-                )
-                .map((num, idx, arr) => {
-                  // Mostrar puntos suspensivos si hay saltos
-                  if (
-                    idx > 0 &&
-                    num - arr[idx - 1] > 1
-                  ) {
+                    }`}
+                >
+                  Anterior
+                </button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1)
+                  .filter(
+                    (num) =>
+                      num === 1 ||
+                      num === totalPages ||
+                      (num >= page - 2 && num <= page + 2)
+                  )
+                  .map((num, idx, arr) => {
+                    // Mostrar puntos suspensivos si hay saltos
+                    if (
+                      idx > 0 &&
+                      num - arr[idx - 1] > 1
+                    ) {
+                      return (
+                        <span key={`ellipsis-${num}`} className="px-2 text-gray-400 select-none">
+                          ...
+                        </span>
+                      );
+                    }
                     return (
-                      <span key={`ellipsis-${num}`} className="px-2 text-gray-400 select-none">
-                        ...
-                      </span>
-                    );
-                  }
-                  return (
-                    <button
-                      key={num}
-                      onClick={() => setPage(num)}
-                      className={`px-2 md:px-3 py-1 rounded font-medium transition-colors text-sm md:text-base ${
-                        num === page
+                      <button
+                        key={num}
+                        onClick={() => setPage(num)}
+                        className={`px-2 md:px-3 py-1 rounded font-medium transition-colors text-sm md:text-base ${num === page
                           ? 'bg-orange-500 text-white border-2 border-orange-500'
                           : 'bg-white text-orange-500 border border-orange-200 hover:bg-orange-100'
-                      }`}
-                    >
-                      {num}
-                    </button>
-                  );
-                })}
-              <button
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                disabled={page === totalPages}
-                className={`px-2 md:px-3 py-1 rounded transition-colors font-medium text-sm md:text-base ${
-                  page === totalPages
+                          }`}
+                      >
+                        {num}
+                      </button>
+                    );
+                  })}
+                <button
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages}
+                  className={`px-2 md:px-3 py-1 rounded transition-colors font-medium text-sm md:text-base ${page === totalPages
                     ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                     : 'bg-orange-500 text-white hover:bg-orange-600'
-                }`}
-              >
-                Siguiente
-              </button>
-            </nav>
-          </div>
+                    }`}
+                >
+                  Siguiente
+                </button>
+              </nav>
+            </div>
+          )}
 
           {/* Empty state */}
           {!isPending && filteredServices.length === 0 && (
@@ -212,7 +211,8 @@ function ServiceConfig() {
                 </p>
               )}
               {!searchQuery && (
-                <button className="mt-4 bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                <button onClick={() => setShowForm(true)}
+                  className="mt-4 cursor-pointer bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition-colors">
                   Agrega tu primer servicio
                 </button>
               )}

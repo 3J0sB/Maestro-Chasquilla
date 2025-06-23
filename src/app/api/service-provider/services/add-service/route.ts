@@ -8,13 +8,15 @@ import { title } from "process";
 
 export async function POST(request: NextRequest) {
     const body = await request.json()
-    const { title, description, price, serviceTag, userId, image, smallDescription} =  body;
+    const { title, maxServicePrice, minServicePrice, description, price, serviceTag, userId, image, smallDescription} =  body;
 
     const service = await prisma.services.create({
         data: {
             title: title,
             description: description,
             price: parseFloat(price),
+            maxServicePrice: parseFloat(maxServicePrice),
+            minServicePrice: parseFloat(minServicePrice),
             serviceTag: serviceTag,
             smallDescription: smallDescription,
             userId: userId,

@@ -45,13 +45,21 @@ function ServiceProviderMobileDrawer({ userName, userLastName, userType, userIma
         onClick={() => setOpen(false)}
       />
       <aside
-        className={`fixed top-0 left-0 h-full w-64 bg-white z-50 shadow-lg transform transition-transform duration-300 ${open ? 'translate-x-0' : '-translate-x-full'} md:hidden`}
+        className={`fixed top-0 left-0 h-full w-64 bg-white z-50 shadow-lg transform transition-transform duration-300 ${open ? 'translate-x-0' : '-translate-x-full'} md:hidden flex flex-col`}
       >
         <div className="flex items-center gap-2 p-4 border-b border-gray-200">
-          <Image src={userImage || '/img/miau.jpg'} width={40} height={40} alt="user" className="rounded-full" />
-          <div>
-            <p className="font-medium">{userName} {userLastName}</p>
-            <p className="text-xs text-gray-500">{userType === 'SERVICE_PROVIDER' ? 'Proveedor de servicios' : userType}</p>
+          <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
+            <Image
+              src={userImage || '/img/miau.jpg'}
+              width={48}
+              height={48}
+              alt="user"
+              className="object-cover w-full h-full"
+            />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-medium truncate">{userName} {userLastName}</p>
+            <p className="text-xs text-gray-500 truncate">{userType === 'SERVICE_PROVIDER' ? 'Proveedor de servicios' : userType}</p>
           </div>
           <button className="ml-auto" onClick={() => setOpen(false)} aria-label="Cerrar menú">
             <svg width={24} height={24} fill="none" stroke="currentColor" strokeWidth={2}>
@@ -59,7 +67,7 @@ function ServiceProviderMobileDrawer({ userName, userLastName, userType, userIma
             </svg>
           </button>
         </div>
-        <nav className="flex flex-col p-4 gap-2">
+        <nav className="flex flex-col p-4 gap-2 flex-1 overflow-y-auto">
           {links.map(link => (
             <Link
               key={link.href}
