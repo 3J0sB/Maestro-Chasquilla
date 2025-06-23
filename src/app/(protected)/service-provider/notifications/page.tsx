@@ -128,67 +128,62 @@ export default function NotificationsPage() {
 
   return (
     <div className="flex h-screen">
-      <ServiceProviderSidebar
-        userName={session?.user?.name || ''}
-        userType={session?.user?.role || ''}
-        userLastName={session?.user?.lastName || ''}
-        userImage={session?.user?.image || ''}
-      />
-      
-      <div className="flex-1 p-8 overflow-y-auto">
+      <div className="flex-1 p-2 sm:p-4 md:p-8 overflow-y-auto">
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-bold text-gray-900">Notificaciones</h1>
-            
-            <div className="flex items-center gap-4">
-              <div className="flex rounded-md shadow-sm">
+          {/* Header y filtros */}
+          <div className="mb-4 md:mb-6">
+            <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Notificaciones</h1>
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4 w-full md:w-auto">
+                <div className="flex w-full sm:w-auto overflow-x-auto rounded-md shadow-sm">
+                  <button
+                    onClick={() => setFilter('all')}
+                    className={`px-3 py-2 text-xs sm:text-sm font-medium rounded-l-md ${
+                      filter === 'all'
+                        ? 'bg-orange-500 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                    } border border-gray-300 min-w-[80px]`}
+                  >
+                    Todas
+                  </button>
+                  <button
+                    onClick={() => setFilter('unread')}
+                    className={`px-3 py-2 text-xs sm:text-sm font-medium ${
+                      filter === 'unread'
+                        ? 'bg-orange-500 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                    } border-t border-b border-gray-300 min-w-[80px]`}
+                  >
+                    No leídas
+                  </button>
+                  <button
+                    onClick={() => setFilter('read')}
+                    className={`px-3 py-2 text-xs sm:text-sm font-medium rounded-r-md ${
+                      filter === 'read'
+                        ? 'bg-orange-500 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                    } border border-gray-300 min-w-[80px]`}
+                  >
+                    Leídas
+                  </button>
+                </div>
                 <button
-                  onClick={() => setFilter('all')}
-                  className={`px-4 py-2 text-sm font-medium rounded-l-md ${
-                    filter === 'all' 
-                      ? 'bg-orange-500 text-white' 
-                      : 'bg-white text-gray-700 hover:bg-gray-50'
-                  } border border-gray-300`}
+                  onClick={() => markAsRead()}
+                  className="px-3 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 w-full sm:w-auto"
                 >
-                  Todas
-                </button>
-                <button
-                  onClick={() => setFilter('unread')}
-                  className={`px-4 py-2 text-sm font-medium ${
-                    filter === 'unread' 
-                      ? 'bg-orange-500 text-white' 
-                      : 'bg-white text-gray-700 hover:bg-gray-50'
-                  } border-t border-b border-gray-300`}
-                >
-                  No leídas
-                </button>
-                <button
-                  onClick={() => setFilter('read')}
-                  className={`px-4 py-2 text-sm font-medium rounded-r-md ${
-                    filter === 'read' 
-                      ? 'bg-orange-500 text-white' 
-                      : 'bg-white text-gray-700 hover:bg-gray-50'
-                  } border border-gray-300`}
-                >
-                  Leídas
+                  Marcar todas como leídas
                 </button>
               </div>
-              
-              <button
-                onClick={() => markAsRead()}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-              >
-                Marcar todas como leídas
-              </button>
             </div>
           </div>
-          
+
+          {/* Lista de notificaciones */}
           {isLoading ? (
             <div className="flex justify-center py-20">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
             </div>
           ) : notifications.length === 0 ? (
-            <div className="bg-white rounded-lg shadow px-6 py-12 text-center">
+            <div className="bg-white rounded-lg shadow px-4 py-12 text-center">
               <svg
                 className="mx-auto h-12 w-12 text-gray-400"
                 fill="none"
@@ -203,7 +198,9 @@ export default function NotificationsPage() {
                   d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
                 />
               </svg>
-              <p className="mt-4 text-lg text-gray-600">No tienes notificaciones {filter !== 'all' ? (filter === 'unread' ? 'no leídas' : 'leídas') : ''}</p>
+              <p className="mt-4 text-base sm:text-lg text-gray-600">
+                No tienes notificaciones {filter !== 'all' ? (filter === 'unread' ? 'no leídas' : 'leídas') : ''}
+              </p>
             </div>
           ) : (
             <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -212,17 +209,17 @@ export default function NotificationsPage() {
                   const isUnread = !notification.readAt;
                   return (
                     <li key={notification.id} className={`${isUnread ? 'bg-blue-50' : ''}`}>
-                      <div className="px-6 py-5 hover:bg-gray-50">
+                      <div className="px-3 sm:px-6 py-4 sm:py-5 hover:bg-gray-50">
                         <div className="flex items-start">
                           <div className="flex-shrink-0 pt-1">
                             {getNotificationIcon(notification.type)}
                           </div>
-                          <div className="ml-4 flex-1">
-                            <div className="flex items-center justify-between">
+                          <div className="ml-3 sm:ml-4 flex-1">
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                               <p className={`text-sm font-medium text-gray-900 ${isUnread ? 'font-semibold' : ''}`}>
                                 {notification.title}
                               </p>
-                              <div className="ml-2 flex-shrink-0 flex">
+                              <div className="mt-1 sm:mt-0 flex-shrink-0 flex">
                                 <p className="text-xs text-gray-500">
                                   {formatDate(notification.createdAt)}
                                 </p>
@@ -231,9 +228,9 @@ export default function NotificationsPage() {
                             <p className="mt-1 text-sm text-gray-600">
                               {notification.message}
                             </p>
-                            <div className="mt-2 flex">
+                            <div className="mt-2 flex flex-col sm:flex-row gap-2">
                               {notification.linkPath && (
-                                <Link 
+                                <Link
                                   href={notification.linkPath}
                                   onClick={() => !notification.readAt && markAsRead(notification.id)}
                                   className="text-xs font-medium text-blue-600 hover:text-blue-800"
@@ -244,7 +241,7 @@ export default function NotificationsPage() {
                               {isUnread && (
                                 <button
                                   onClick={() => markAsRead(notification.id)}
-                                  className="ml-4 text-xs font-medium text-gray-500 hover:text-gray-700"
+                                  className="text-xs font-medium text-gray-500 hover:text-gray-700 text-left"
                                 >
                                   Marcar como leída
                                 </button>

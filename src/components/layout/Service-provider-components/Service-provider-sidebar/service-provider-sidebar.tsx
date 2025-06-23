@@ -18,48 +18,45 @@ type SidebarProps = {
   userName: string;
   userLastName: string;
   userType: string;
-  userImage: string
-}
-
-const SidebarLink = ({ href, icon, text, active, collapsed }: SidebarLinkProps) => {
-  return (
-    <Link
-      href={href}
-      className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3'} px-4 py-3 rounded-lg transition-colors ${active
-        ? "border border-orange-500 text-orange-500 font-medium"
-        : "text-gray-600 hover:bg-gray-100"
-        }`}
-      title={collapsed ? text : ''}
-    >
-      <div className="flex-shrink-0">{icon}</div>
-      {!collapsed && <span className="truncate">{text}</span>}
-    </Link>
-  );
+  userImage: string;
 };
+
+const SidebarLink = ({ href, icon, text, active, collapsed }: SidebarLinkProps) => (
+  <Link
+    href={href}
+    className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3'} px-3 py-2 rounded-lg transition-colors group
+      ${active
+        ? 'border border-orange-500 text-orange-600 font-semibold'
+        : 'text-gray-600 hover:bg-gray-100 hover:text-orange-600'
+      }`}
+    title={collapsed ? text : ''}
+  >
+    <span className={`flex-shrink-0 transition-colors ${active ? 'text-orange-500' : 'group-hover:text-orange-500'}`}>{icon}</span>
+    {!collapsed && <span className="truncate">{text}</span>}
+  </Link>
+);
 
 function ServiceProviderSidebar({ userName, userType, userLastName, userImage }: SidebarProps) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
 
-  const toggleSidebar = () => {
-    setCollapsed(!collapsed);
-  };
+  const toggleSidebar = () => setCollapsed(!collapsed);
 
   return (
     <>
-      <aside className={`bg-white border-r border-gray-200 shadow-lg flex flex-col ${collapsed ? 'w-16' : 'w-64'} transition-all duration-300`}>
+      <aside className={`hidden md:flex flex-col bg-white shadow-lg h-full md:h-screen transition-all duration-300 ${collapsed ? 'w-20' : 'w-64'}`}>
         {/* Logo */}
-        <div className={`p-4 border-b border-gray-100 flex ${collapsed ? 'justify-center' : ''}`}>
-          <Link href="/service-provider/home" className={`flex items-center ${collapsed ? '' : 'gap-2'}`}>
+        <div className={`flex items-center border-b border-gray-100 px-4 py-5 ${collapsed ? 'justify-center' : 'gap-3'}`}>
+          <Link href="/service-provider/home" className="flex items-center gap-2">
             <Image
               src="/img/miau.jpg"
               width={40}
               height={40}
-              alt='Maestro Chasquilla logo'
-              className="rounded-full"
+              alt="Maestro Chasquilla logo"
+              className="rounded-full border-2 border-orange-500"
             />
             {!collapsed && (
-              <span className="font-bold text-lg">
+              <span className="font-bold text-lg tracking-tight">
                 Maestro <span className="text-orange-500">Chasquilla</span>
               </span>
             )}
@@ -67,7 +64,7 @@ function ServiceProviderSidebar({ userName, userType, userLastName, userImage }:
         </div>
 
         {/* Main Navigation */}
-        <nav className="flex-1 p-4 space-y-1">
+        <nav className="flex-1 px-2 py-4 space-y-1">
           <SidebarLink
             href="/service-provider/home"
             icon={
@@ -79,7 +76,6 @@ function ServiceProviderSidebar({ userName, userType, userLastName, userImage }:
             active={pathname === "/service-provider/home"}
             collapsed={collapsed}
           />
-
           <SidebarLink
             href="/service-provider/service-config"
             icon={
@@ -91,7 +87,6 @@ function ServiceProviderSidebar({ userName, userType, userLastName, userImage }:
             active={pathname.startsWith("/service-provider/service-config")}
             collapsed={collapsed}
           />
-
           <SidebarLink
             href="/service-provider/request"
             icon={
@@ -102,7 +97,8 @@ function ServiceProviderSidebar({ userName, userType, userLastName, userImage }:
             text="Solicitudes"
             active={pathname.startsWith("/service-provider/request")}
             collapsed={collapsed}
-          />          <SidebarLink
+          />
+          <SidebarLink
             href="/service-provider/messages"
             icon={
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -113,7 +109,6 @@ function ServiceProviderSidebar({ userName, userType, userLastName, userImage }:
             active={pathname === "/service-provider/messages"}
             collapsed={collapsed}
           />
-
           <SidebarLink
             href="/service-provider/notifications"
             icon={
@@ -125,8 +120,6 @@ function ServiceProviderSidebar({ userName, userType, userLastName, userImage }:
             active={pathname === "/service-provider/notifications"}
             collapsed={collapsed}
           />
-
-
           <SidebarLink
             href="/service-provider/profile"
             icon={
@@ -138,7 +131,6 @@ function ServiceProviderSidebar({ userName, userType, userLastName, userImage }:
             active={pathname === "/service-provider/profile"}
             collapsed={collapsed}
           />
-
           <SidebarLink
             href="/service-provider/provider-config"
             icon={
@@ -151,43 +143,30 @@ function ServiceProviderSidebar({ userName, userType, userLastName, userImage }:
             active={pathname === "/service-provider/provider-config"}
             collapsed={collapsed}
           />
-
         </nav>
 
         {/* User Profile */}
-        <div className={`p-4 border-t border-gray-200 ${collapsed ? 'items-center justify-center' : ''}`}>
-          {!collapsed ? (
-            <Link href="/service-provider/profile" className="flex items-center gap-3 hover:bg-gray-100 p-2 rounded-lg transition-colors">
-              <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-                <Image
-                  src={userImage || '/img/miau.jpg'}
-                  alt={`${userName} ${userLastName}`}
-                  width={40}
-                  height={40}
-                  className="w-full h-full object-cover"
-                />
-              </div>
+        <div className={`p-4 border-t border-gray-200 flex ${collapsed ? 'flex-col items-center' : 'items-center gap-3'}`}>
+          <Link href="/service-provider/profile" className="flex items-center gap-3 hover:bg-orange-50 p-2 rounded-lg transition-colors w-full">
+            <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border-2 border-orange-200">
+              <Image
+                src={userImage || '/img/miau.jpg'}
+                alt={`${userName} ${userLastName}`}
+                width={40}
+                height={40}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            {!collapsed && (
               <div>
                 <p className="text-sm font-medium text-gray-700">{userName} {userLastName}</p>
                 <p className="text-xs text-gray-500">
                   {userType === 'SERVICE_PROVIDER' ? 'Proveedor de servicios' : userType}
                 </p>
               </div>
-            </Link>
-          ) : (
-            <div className="flex justify-center">
-              <div className="w-10 h-10 rounded-full overflow-hidden">
-                <Image
-                  src={userImage || '/img/miau.jpg'}
-                  alt={`${userName}`}
-                  width={40}
-                  height={40}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-          )}
-          <div className='flex justify-center mt-4'>
+            )}
+          </Link>
+          <div className={`mt-4 w-full ${collapsed ? 'flex justify-center' : ''}`}>
             <LogoutButton />
           </div>
         </div>
@@ -196,10 +175,11 @@ function ServiceProviderSidebar({ userName, userType, userLastName, userImage }:
       {/* Botón para colapsar/expandir */}
       <button
         onClick={toggleSidebar}
-        className="absolute top-4  z-10 p-1 rounded-full bg-white border border-gray-300 shadow-md hover:bg-gray-100 transition-all duration-300"
-        style={{ left: collapsed ? '50px' : '245px' }}
+        className={`absolute top-6 left-0 z-20 p-1 rounded-full bg-white border border-gray-300 shadow-md hover:bg-orange-100 transition-all duration-300
+          ${collapsed ? 'translate-x-16' : 'translate-x-60'}`}
+        aria-label={collapsed ? 'Expandir menú' : 'Colapsar menú'}
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           {collapsed ? (
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
           ) : (

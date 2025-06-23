@@ -3,7 +3,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
 import AccessDenied from '@/components/Access-denied/access-denied';
-import ServiceProviderSidebar from '@/components/layout/Service-provider-components/Service-provider-sidebar/service-provider-sidebar';
 import RequestCard from '@/components/layout/Service-provider-components/Service-provider-home/service-provider-request-card';
 import { serviceRequest } from '@/types';
 import AcceptRequestModal from '@/components/layout/Service-provider-components/service-provider-services-config/accept-request-modal';
@@ -20,7 +19,7 @@ function Home() {
   const [serviceRequests, setServiceRequests] = useState<serviceRequest[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   
-  // Estado para los modales
+
   const [showAcceptModal, setShowAcceptModal] = useState(false);
   const [showDeclineModal, setShowDeclineModal] = useState(false);
   const [showStartProgressModal, setShowStartProgressModal] = useState(false);
@@ -257,18 +256,12 @@ function Home() {
 
   return (
     <div className="flex h-screen">
-      <ServiceProviderSidebar
-        userName={session?.user.name || ''}
-        userType={session?.user.role || ''}
-        userLastName={session?.user.lastName || ''}
-        userImage={session?.user.image || ''}
-      />
 
       <div className="flex-1 p-8 overflow-y-auto px-4 md:px-10 lg:px-20 xl:px-40">
         <div className="mb-4">
           <div className="border border-gray-200 rounded-lg p-4 bg-white shadow-md">
             <div className="mb-6">
-              <div className='flex justify-between items-center mb-4'>
+              <div className='flex flex-col md:flex-row justify-between items-center mb-4'>
                 <h2 className="text-xl font-semibold mb-4">Solicitudes Recientes</h2>
                 <div className="flex flex-col md:flex-row md:justify-end gap-3">
                   {/* Filtros existentes */}

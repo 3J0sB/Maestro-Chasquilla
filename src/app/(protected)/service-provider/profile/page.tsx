@@ -87,12 +87,6 @@ function ServiceProviderProfile() {
 
     return (
         <div className='flex h-screen'>
-            <ServiceProviderSidebar
-                userName={session?.user.name || ''}
-                userType={session?.user.role || ''}
-                userLastName={session?.user.lastName || ''}
-                userImage={session?.user.image || ''}
-            />
             <div className='flex-1 overflow-y-auto bg-gray-50'>
                 <div className='max-w-5xl mx-auto py-8 px-4'>
                     {loading ? (
@@ -129,7 +123,6 @@ function ServiceProviderProfile() {
                                 ratingBreakdown={reviewsData?.ratingDistribution || { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 }}
                             />
                         </div>
-
                     )}
                 </div>
             </div>

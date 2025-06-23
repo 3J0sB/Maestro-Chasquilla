@@ -59,23 +59,15 @@ export default function ProviderDashboard() {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      {/* Sidebar - ahora está incluida en el contenedor flex principal */}
-      <ServiceProviderSidebar
-        userName={session?.user.name || ''}
-        userType={session?.user.role || ''}
-        userLastName={session?.user.lastName || ''}
-        userImage={session?.user.image || ''}
-      />
 
-      {/* Contenido principal - flex-1 para que ocupe el espacio restante */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 sticky flex flex-col">
         <DashboardHeader
           providerName={session.user.name || 'Proveedor'}
           timeRange={timeRange}
           onTimeRangeChange={setTimeRange}
         />
 
-        <main className="flex-1 p-6 overflow-y-auto">
+        <main className="flex-1 p-6 ">
           <h1 className="text-2xl font-bold text-gray-900 mb-6">Panel de Control</h1>
 
           {dashboardData ? (

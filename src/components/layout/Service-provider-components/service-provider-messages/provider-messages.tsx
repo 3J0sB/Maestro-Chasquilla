@@ -35,7 +35,10 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
   const [sendingMessage, setSendingMessage] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Cargar las conversaciones
+
+  const [showConversations, setShowConversations] = useState(true);
+
+
   useEffect(() => {
     const fetchConversations = async () => {
       if (!providerId) return;
@@ -51,7 +54,6 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
         const data = await response.json();
         setConversations(data);
 
-        // Seleccionar la primera conversación por defecto
         if (data.length > 0 && !selectedConversation) {
           setSelectedConversation(data[0].id);
         }
@@ -66,12 +68,10 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
     fetchConversations();
   }, [providerId, selectedConversation]);
 
-  // Hacer scroll hacia abajo cuando llegan nuevos mensajes
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [conversations]);
 
-  // Enviar un nuevo mensaje
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -101,7 +101,7 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
 
       const data = await response.json();
 
-      // Actualizar la conversación local con el nuevo mensaje
+
       setConversations(prevConversations =>
         prevConversations.map(conv => {
           if (conv.id === selectedConversation) {
@@ -124,10 +124,9 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
         })
       );
 
-      // Limpiar el campo de mensaje
+
       setNewMessage('');
 
-      // Opcionalmente, puedes mostrar una notificación de éxito
       toast.success('Mensaje enviado');
     } catch (err) {
       console.error('Error al enviar mensaje:', err);
@@ -137,8 +136,6 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
     }
   };
 
-  // Formatear la fecha
-  // Formatear la fecha de manera más corta y contextual
   const formatMessageDate = (dateString: string) => {
     if (!dateString) return '';
 
@@ -147,30 +144,24 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
 
-    // Si es hoy, mostrar solo la hora
     if (date.toDateString() === today.toDateString()) {
       return `Hoy, ${date.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' })}`;
     }
-    // Si es ayer, mostrar "Ayer" y la hora
     else if (date.toDateString() === yesterday.toDateString()) {
       return `Ayer, ${date.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' })}`;
     }
-    // Si es este año pero no hoy ni ayer, mostrar día y mes y hora
     else if (date.getFullYear() === today.getFullYear()) {
       return date.toLocaleDateString('es', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
     }
-    // Si es otro año, mostrar día/mes/año
     else {
       return date.toLocaleDateString('es', { day: '2-digit', month: '2-digit', year: '2-digit' });
     }
   };
 
-  // Obtener el nombre de usuario con formato
   const getUserName = (conversation: Conversation) => {
     return `${conversation.user.name} ${conversation.user.lastName || ''}`.trim();
   };
 
-  // Obtener el último mensaje
   const getLastMessage = (conversation: Conversation) => {
     if (conversation.messages.length === 0) {
       return 'No hay mensajes';
@@ -178,14 +169,12 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
     return conversation.messages[conversation.messages.length - 1].content;
   };
 
-  // Contar mensajes no leídos
   const getUnreadCount = (conversation: Conversation) => {
     return conversation.messages.filter(msg =>
       !msg.isRead && msg.senderType === 'USER'
     ).length;
   };
 
-  // Obtener la fecha del último mensaje
   const getLastMessageDate = (conversation: Conversation) => {
     if (conversation.messages.length === 0) {
       return '';
@@ -193,7 +182,6 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
     return formatMessageDate(conversation.messages[conversation.messages.length - 1].createdAt);
   };
 
-  // Marcar mensajes como leídos cuando se selecciona una conversación
   useEffect(() => {
     const markMessagesAsRead = async () => {
       if (!selectedConversation || !providerId) return;
@@ -215,7 +203,6 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
           return;
         }
 
-        // Actualizar el estado local para reflejar que los mensajes han sido leídos
         setConversations(prevConversations =>
           prevConversations.map(conv => {
             if (conv.id === selectedConversation) {
@@ -236,33 +223,41 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
 
     markMessagesAsRead();
   }, [selectedConversation, providerId]);
+
+  useEffect(() => {
+    if (selectedConversation) setShowConversations(false);
+  }, [selectedConversation]);
+
+  // Cuando se deselecciona, volver a mostrar lista en mobile
+  const handleBackToConversations = () => setShowConversations(true);
+
   return (
-    <div className="flex h-full">
+    <div className="flex h-full flex-col md:flex-row bg-white rounded-lg shadow overflow-hidden">
       {/* Panel de conversaciones */}
-      <div className="w-1/3 border-r border-gray-200 overflow-y-auto">
-        <div className="p-4 border-b border-gray-200">
+      <div
+        className={`
+          w-full md:w-1/3 border-r border-gray-200 overflow-y-auto bg-white
+          ${showConversations ? 'block' : 'hidden'}
+          md:block
+        `}
+      >
+        <div className="p-4 border-b border-gray-200 sticky top-0 bg-white z-10">
           <h2 className="text-lg font-semibold text-gray-800">Conversaciones</h2>
         </div>
-
         {loading && conversations.length === 0 ? (
           <div className="flex justify-center items-center p-8">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-orange-500"></div>
           </div>
         ) : error ? (
-          <div className="p-4 text-center text-red-500">
-            {error}
-          </div>
+          <div className="p-4 text-center text-red-500">{error}</div>
         ) : conversations.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">
-            No tienes conversaciones activas.
-          </div>
+          <div className="p-8 text-center text-gray-500">No tienes conversaciones activas.</div>
         ) : (
           conversations.map(conversation => (
             <div
               key={conversation.id}
               onClick={() => setSelectedConversation(conversation.id)}
-              className={`p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer ${selectedConversation === conversation.id ? 'bg-orange-50' : ''
-                }`}
+              className={`p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer ${selectedConversation === conversation.id ? 'bg-orange-50' : ''}`}
             >
               <div className="flex items-center">
                 <div className="relative">
@@ -301,11 +296,28 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
       </div>
 
       {/* Panel de mensajes */}
-      <div className="w-2/3 flex flex-col">
+      <div
+        className={`
+          flex-1 flex flex-col w-full md:w-2/3
+          ${showConversations ? 'hidden' : 'flex'}
+          md:flex
+        `}
+      >
         {selectedConversation ? (
           <>
-            {/* Cabecera de conversación */}
-            <div className="p-4 border-b border-gray-200 flex items-center">
+            {/* Header con botón volver en mobile */}
+            <div className="p-4 border-b border-gray-200 flex items-center bg-white sticky top-0 z-10">
+              <div className="md:hidden mr-3">
+                <button
+                  onClick={handleBackToConversations}
+                  className="p-2 rounded-full hover:bg-orange-100 transition"
+                  aria-label="Volver"
+                >
+                  <svg width={24} height={24} fill="none" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+              </div>
               {conversations.find(c => c.id === selectedConversation) && (
                 <>
                   <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden mr-3">
@@ -344,10 +356,10 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
                       className={`flex ${message.senderType === 'SERVICE_PROVIDER' ? 'justify-end' : 'justify-start'}`}
                     >
                       <div
-                        className={`max-w-[70%] rounded-lg p-3 ${message.senderType === 'SERVICE_PROVIDER'
-                            ? 'bg-orange-100 text-gray-800'
-                            : 'bg-white border border-gray-200 text-gray-800'
-                          }`}
+                        className={`max-w-[85%] md:max-w-[70%] rounded-lg p-3 ${message.senderType === 'SERVICE_PROVIDER'
+                          ? 'bg-orange-100 text-gray-800'
+                          : 'bg-white border border-gray-200 text-gray-800'
+                        }`}
                       >
                         <div className="flex justify-between items-center mb-1">
                           <span className="text-xs font-medium">
@@ -366,7 +378,7 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
               )}
             </div>
 
-            {/* Área de entrada de mensaje - Con funcionalidad */}
+            {/* Área de entrada de mensaje */}
             <div className="p-3 border-t border-gray-200 bg-white">
               <form onSubmit={handleSendMessage} className="flex items-center">
                 <input
@@ -379,8 +391,7 @@ const ProviderMessagesComponent: React.FC<ProviderMessagesProps> = ({ providerId
                 />
                 <button
                   type="submit"
-                  className={`bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-r-lg transition-colors ${sendingMessage ? 'opacity-70 cursor-not-allowed' : ''
-                    }`}
+                  className={`bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-r-lg transition-colors ${sendingMessage ? 'opacity-70 cursor-not-allowed' : ''}`}
                   disabled={sendingMessage || !newMessage.trim()}
                 >
                   {sendingMessage ? (
