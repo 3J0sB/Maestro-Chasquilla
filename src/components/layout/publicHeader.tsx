@@ -43,7 +43,7 @@ function PublicHeader() {
             <Link href="/#inicio" className="text-gray-600 cursor-pointer hover:text-orange-500 px-3 py-2 text-sm font-medium transition-colors">
               Inicio
             </Link>
-            <Link href="//#servicios" className="text-gray-600 cursor-pointer hover:text-orange-500 px-3 py-2 text-sm font-medium transition-colors">
+            <Link href="/#servicios" className="text-gray-600 cursor-pointer hover:text-orange-500 px-3 py-2 text-sm font-medium transition-colors">
               Servicios
             </Link>
             <Link href="/#como-funciona" className="text-gray-600 cursor-pointer hover:text-orange-500 px-3 py-2 text-sm font-medium transition-colors">
