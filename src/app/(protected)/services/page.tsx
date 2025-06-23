@@ -14,7 +14,7 @@ function ServicesHome() {
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
-
+  
   const handleSearch = (query: string) => {
     console.log('Búsqueda realizada:', query);
     setSearchQuery(query);

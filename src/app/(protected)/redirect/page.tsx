@@ -120,9 +120,9 @@ export default function RedirectPage() {
             <div className="bg-white rounded-lg shadow-md p-8 max-w-md w-full text-center">
                 <div className="flex justify-center mb-6">
                     <Image
-                        src="/img/miau.jpg"
-                        width={60}
-                        height={60}
+                        src="/img/logo.png"
+                        width={100}
+                        height={100}
                         alt='logo'
                         className="rounded-full"
                         priority={true}

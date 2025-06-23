@@ -50,7 +50,7 @@ function ServiceProviderMobileDrawer({ userName, userLastName, userType, userIma
         <div className="flex items-center gap-2 p-4 border-b border-gray-200">
           <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
             <Image
-              src={userImage || '/img/miau.jpg'}
+              src={userImage || '/img/default-user.png'}
               width={48}
               height={48}
               alt="user"

@@ -10,14 +10,14 @@ function FooterSeccion() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <Image 
-                  src="/img/miau.jpg" 
+                  src="/img/red_maestro_icon.png" 
                   width={40} 
                   height={40} 
                   alt='Maestro Chasquilla logo' 
-                  className="rounded-full bg-white"
+                  className="rounded-full "
                 />
                 <h2 className="text-xl font-bold">
-                  Maestro <span className="text-orange-500">Chasquilla</span>
+                  RED <span className="text-orange-500">MAESTRO</span>
                 </h2>
               </div>
               <p className="text-gray-400 mb-4">
@@ -56,7 +56,7 @@ function FooterSeccion() {
           </div>
           
           <div className="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400">© 2025 Maestro Chasquilla. Todos los derechos reservados.</p>
+            <p className="text-gray-400">© 2025 RED MAESTRO. Todos los derechos reservados.</p>
             <div className="mt-4 md:mt-0">
               <a href="#" className="text-gray-400 hover:text-white mr-4">Privacidad</a>
               <a href="#" className="text-gray-400 hover:text-white mr-4">Términos</a>

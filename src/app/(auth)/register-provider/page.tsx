@@ -91,7 +91,7 @@ function RegisterPage() {
                             {/* Logo */}
                             <div className="flex justify-center mb-6">
                                 <Image
-                                    src="/img/miau.jpg"
+                                    src="/img/red_maestro_icon.png"
                                     width={50}
                                     height={50}
                                     alt='logo'

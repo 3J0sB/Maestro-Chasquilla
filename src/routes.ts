@@ -4,7 +4,8 @@ export const publicRoutes = [
     '/auth/register',
     '/api/auth',
     '/favicon.ico',
-
+    '/services',
+    '/services/:path*',
     '/register'
   ];
 

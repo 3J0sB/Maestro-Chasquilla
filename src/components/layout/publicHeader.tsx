@@ -20,20 +20,20 @@ function PublicHeader() {
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
+      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center h-auto md:h-16 gap-2 md:gap-0">
           {/* Logo y nombre */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 justify-center md:justify-start">
             <Link href="/" className="flex items-center gap-2">
               <Image
-                src="/img/miau.jpg"
-                width={40}
-                height={40}
-                alt='Maestro Chasquilla logo'
+                src="/img/red_maestro_icon.png"
+                width={32}
+                height={32}
+                alt="Maestro Chasquilla logo"
                 className="rounded-full"
               />
-              <h1 className="text-xl font-bold text-gray-800">
-                Maestro <span className="text-orange-500">Chasquilla</span>
+              <h1 className="text-lg md:text-xl font-bold text-gray-800">
+                RED <span className="text-orange-500">MAESTRO</span>
               </h1>
             </Link>
           </div>
@@ -53,24 +53,24 @@ function PublicHeader() {
           </nav>
 
           {/* Botones de acción */}
-          <div className="flex items-center space-x-4">
+          <div className="flex flex-col md:flex-row items-stretch md:items-center gap-2 md:gap-4 w-full md:w-auto">
             <button
               onClick={handleLoginClick}
-              className="text-orange-500 cursor-pointer hover:text-orange-700 px-4 py-2 rounded-md text-sm font-medium transition-colors"
+              className="text-orange-500 hover:text-orange-700 px-4 py-2 rounded-md text-sm font-medium transition-colors w-full md:w-auto"
             >
               Iniciar Sesión
             </button>
             <button
               onClick={handleRegisterClickUser}
-              className="bg-orange-500 cursor-pointer hover:bg-orange-600 text-white px-5 py-2 rounded-md text-sm font-medium shadow-sm transition-colors"
+              className="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded-md text-sm font-medium shadow-sm transition-colors w-full md:w-auto"
             >
-              Unete como Consumidor
+              Para consumidores
             </button>
             <button
               onClick={handleRegisterClickProvider}
-              className="bg-orange-500 cursor-pointer hover:bg-orange-600 text-white px-5 py-2 rounded-md text-sm font-medium shadow-sm transition-colors"
+              className="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded-md text-sm font-medium shadow-sm transition-colors w-full md:w-auto"
             >
-              Unete como Proveedor
+              Para proveedores
             </button>
           </div>
         </div>

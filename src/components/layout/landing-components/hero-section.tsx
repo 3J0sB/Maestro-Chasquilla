@@ -29,7 +29,7 @@ function HeroSection() {
           </div>
           <div className="md:w-1/2 flex justify-center">
             <Image 
-              src="/img/miau.jpg" 
+              src="/img/red_maestro_icon.png" 
               width={500} 
               height={400} 
               alt="Maestro Chasquilla Hero" 

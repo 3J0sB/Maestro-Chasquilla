@@ -49,15 +49,15 @@ function ServiceProviderSidebar({ userName, userType, userLastName, userImage }:
         <div className={`flex items-center border-b border-gray-100 px-4 py-5 ${collapsed ? 'justify-center' : 'gap-3'}`}>
           <Link href="/service-provider/home" className="flex items-center gap-2">
             <Image
-              src="/img/miau.jpg"
+              src="/img/red_maestro_icon.png"
               width={40}
               height={40}
               alt="Maestro Chasquilla logo"
-              className="rounded-full border-2 border-orange-500"
+              className="rounded-full "
             />
             {!collapsed && (
               <span className="font-bold text-lg tracking-tight">
-                Maestro <span className="text-orange-500">Chasquilla</span>
+                RED <span className="text-orange-500">MAESTRO</span>
               </span>
             )}
           </Link>

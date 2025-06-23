@@ -20,14 +20,14 @@ const ConsumerHeader: React.FC<ConsumerHeaderProps> = ({ }) => {
                     <div className="flex-shrink-0">
                         <Link className='flex gap-2' href="/services">
                             <Image
-                                src="/img/miau.jpg"
+                                src="/img/red_maestro_icon.png"
                                 alt="Maestro Chasquilla"
                                 width={40}
                                 height={40}
                                 className="object-contain"
                             />
-                            <h1 className="hidden md:block text-xl font-bold text-gray-800">
-                                Maestro <span className="text-orange-500">Chasquilla</span>
+                            <h1 className=" text-xl font-bold text-gray-800">
+                                RED <span className="text-orange-500">MAESTRO</span>
                             </h1>
                         </Link>
                     </div>
@@ -68,30 +68,35 @@ const ConsumerHeader: React.FC<ConsumerHeaderProps> = ({ }) => {
                                 />
                             </svg>
                         </button> */}
-
-                        <div className="ml-4 relative flex items-center">
-                            <div className="relative mx-4">
-                                <Link href="/services/consumer-profile" className="flex items-center space-x-2 text-gray-500 hover:text-gray-700">
-                                    <div
-                                        className="w-10 h-10 aspect-square rounded-full overflow-hidden flex items-center justify-center bg-gray-200"
-                                        style={{ minWidth: 40, minHeight: 40, maxWidth: 40, maxHeight: 40, aspectRatio: "1 / 1" }}
-                                    >
-                                        <Image
-                                            src={session?.user?.image || "/img/miau.jpg"}
-                                            alt="User Avatar"
-                                            width={40}
-                                            height={40}
-                                            className="object-cover w-full h-full"
-                                            style={{ borderRadius: "9999px" }}
-                                        />
-                                    </div>
-                                    {session?.user?.name && (
-                                        <span className="hidden md:block text-sm font-medium">{session.user.name}</span>
-                                    )}
-                                </Link>
+                        {session?.user ? (
+                            <div className="ml-4 relative flex items-center">
+                                <div className="relative mx-4">
+                                    <Link href="/services/consumer-profile" className="flex items-center space-x-2 text-gray-500 hover:text-gray-700">
+                                        <div
+                                            className="w-10 h-10 aspect-square rounded-full overflow-hidden flex items-center justify-center bg-gray-200"
+                                            style={{ minWidth: 40, minHeight: 40, maxWidth: 40, maxHeight: 40, aspectRatio: "1 / 1" }}
+                                        >
+                                            <Image
+                                                src={session?.user?.image || "/img/miau.jpg"}
+                                                alt="User Avatar"
+                                                width={40}
+                                                height={40}
+                                                className="object-cover w-full h-full"
+                                                style={{ borderRadius: "9999px" }}
+                                            />
+                                        </div>
+                                        {session?.user?.name && (
+                                            <span className="hidden md:block text-sm font-medium">{session.user.name}</span>
+                                        )}
+                                    </Link>
+                                </div>
+                                <LogoutButton />
                             </div>
-                            <LogoutButton />
-                        </div>
+                        ) :
+                            <Link href="/login" className="bg-white text-orange-500 border border-orange-500 hover:text-white hover:bg-orange-500 hover:border-transparent px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                                Iniciar Sesión
+                            </Link>
+                        }
                     </div>
                 </div>
             </div>
