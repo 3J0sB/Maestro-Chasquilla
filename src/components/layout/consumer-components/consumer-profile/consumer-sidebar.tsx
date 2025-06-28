@@ -53,7 +53,7 @@ export default function ConsumerSidebar({ userName, userLastName, userImage }: C
         <div className={`p-4 border-b border-gray-100 flex ${collapsed ? 'justify-center' : ''}`}>
           <Link href="/services" className={`flex items-center ${collapsed ? '' : 'gap-2'}`}>
             <Image
-              src="/img/miau.jpg"
+              src="https://res.cloudinary.com/dil83zjxy/image/upload/v1750661412/maestro-chasquilla/profiles/ud45ed86grzvdp3bcpg5.png"
               width={40}
               height={40}
               alt='Maestro Chasquilla logo'

@@ -21,7 +21,7 @@ export default function ConsumerProfilePage() {
     }
   }, [status, router])
 
-  // Show loading spinner while checking authentication or redirecting
+
   return (
     <div className="flex h-screen items-center justify-center">
       <LoadingSpinner />

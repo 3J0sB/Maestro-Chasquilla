@@ -20,7 +20,7 @@ const ConsumerHeader: React.FC<ConsumerHeaderProps> = ({ }) => {
                     <div className="flex-shrink-0">
                         <Link className='flex gap-2' href="/services">
                             <Image
-                                src="/img/red_maestro_icon.png"
+                                src="https://res.cloudinary.com/dil83zjxy/image/upload/v1750661412/maestro-chasquilla/profiles/ud45ed86grzvdp3bcpg5.png"
                                 alt="Maestro Chasquilla"
                                 width={40}
                                 height={40}
