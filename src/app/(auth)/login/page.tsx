@@ -151,7 +151,7 @@ function LoginPage() {
                   {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>}
 
                   <div className="text-center mt-1 md:text-right">
-                    <Link href="/auth/forgot-password" className="text-sm text-orange-500 hover:text-orange-700 ">
+                    <Link href="/password-recovery" className="text-sm text-orange-500 hover:text-orange-700 ">
                       ¿Olvidaste tu contraseña?
                     </Link>
                   </div>

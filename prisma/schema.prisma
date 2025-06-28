@@ -42,6 +42,7 @@ model User {
   serviceRequest ServiceRequest[]
   location       Location?        @relation(fields: [locationId], references: [id])
   Messages       Messages[]       @relation("UserMessages")
+  passwordResetTokens PasswordResetToken[]
 
   @@map("users")
 }
@@ -63,14 +64,15 @@ model ServiceProviderUser {
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
   deletedAt        DateTime? @map("deleted_at")
-  locationId       String?   @unique @map("location_id") // Hacemos esto @unique para garantizar relación 1:1
+  locationId       String?   @unique @map("location_id")
 
-  conversations Conversation[]
-  services      Services[]
-  requests      ServiceRequest[]
-  location      Location?        @relation(fields: [locationId], references: [id])
-  Messages      Messages[]       @relation("ProviderMessages")
-  notifications Notification[] // Relación con las notificaciones
+  conversations       Conversation[]
+  services            Services[]
+  requests            ServiceRequest[]
+  location            Location?           @relation(fields: [locationId], references: [id])
+  Messages            Messages[]          @relation("ProviderMessages")
+  notifications       Notification[]
+  passwordResetTokens PasswordResetToken[]
 
   @@map("service_provider_users")
 }
@@ -243,4 +245,21 @@ model Notification {
   @@index([providerId])
   @@index([type])
   @@map("notifications")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String?   @map("user_id")
+  providerId String? @map("provider_id") // Solo si es un proveedor de servicios
+  userType  String   @map("user_type") 
+  token     String   @unique
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  used      Boolean  @default(false)
+  
+  // Relaciones opcionales según el tipo con nombres de FK únicos
+  user                User?                @relation(fields: [userId], references: [id], onDelete: Cascade, map: "password_reset_user_fk")
+  serviceProviderUser ServiceProviderUser? @relation(fields: [providerId], references: [id], onDelete: Cascade, map: "password_reset_provider_fk")
+  
+  @@map("password_reset_tokens")
 }

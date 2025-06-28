@@ -297,3 +297,183 @@ export async function sendServiceCancelledEmail(
     return false;
   }
 }
+
+
+export async function sendPasswordRecoveryEmail(to: string, name: string, totpCode: string) {
+  try {
+    const info = await transporter.sendMail({
+      from: `"Maestro Chasquilla" <${process.env.EMAIL_FROM}>`,
+      to,
+      subject: 'Código de verificación para recuperar tu contraseña 🔐',
+      html: `
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #e0e0e0; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+          <div style="text-align: center; margin-bottom: 25px;">
+            <img src="${process.env.NEXT_PUBLIC_APP_URL}/img/miau.jpg" alt="Maestro Chasquilla" style="max-width: 180px; height: auto;" />
+          </div>
+          
+          <div style="background-color: #eff6ff; border-left: 4px solid #2563eb; padding: 15px 20px; margin-bottom: 25px; border-radius: 6px;">
+            <h2 style="color: #2563eb; margin-top: 0; font-size: 24px; font-weight: 600;">Recuperación de contraseña 🔒</h2>
+            <p style="color: #4b5563; font-size: 16px; margin-bottom: 0;">
+              Hemos recibido una solicitud para restablecer la contraseña de tu cuenta.
+            </p>
+          </div>
+          
+          <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+            Hola <strong>${name}</strong>,
+          </p>
+          
+          <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 25px;">
+            Para completar el proceso de recuperación de tu contraseña, utiliza el siguiente código de verificación:
+          </p>
+          
+          <div style="background-color: #f8fafc; border: 2px solid #e2e8f0; border-radius: 8px; padding: 30px; text-align: center; margin: 30px 0;">
+            <h3 style="color: #1e293b; margin: 0 0 15px 0; font-size: 18px;">Tu código de verificación:</h3>
+            <div style="background-color: #ffffff; border: 2px solid #2563eb; border-radius: 6px; padding: 20px; display: inline-block; margin: 10px 0;">
+              <span style="font-family: 'Courier New', monospace; font-size: 32px; font-weight: bold; color: #2563eb; letter-spacing: 8px;">
+                ${totpCode}
+              </span>
+            </div>
+            <p style="color: #64748b; font-size: 14px; margin: 15px 0 0 0;">
+              <strong>⏰ Este código expira en 10 minutos</strong>
+            </p>
+          </div>
+          
+          <div style="background-color: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 15px; margin: 25px 0;">
+            <div style="display: flex; align-items: flex-start;">
+              <span style="color: #f59e0b; font-size: 18px; margin-right: 10px;">⚠️</span>
+              <div>
+                <p style="color: #92400e; font-size: 14px; font-weight: 600; margin: 0 0 5px 0;">Importante:</p>
+                <ul style="color: #92400e; font-size: 14px; margin: 0; padding-left: 15px;">
+                  <li>No compartas este código con nadie</li>
+                  <li>Si no solicitaste este cambio, ignora este correo</li>
+                  <li>El código solo puede usarse una vez</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${process.env.NEXT_PUBLIC_APP_URL}/verify-code" 
+               style="background-color: #2563eb; color: white; padding: 12px 28px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px; display: inline-block; transition: background-color 0.3s ease;">
+               Verificar código
+            </a>
+          </div>
+          
+          <div style="background-color: #f3f4f6; padding: 15px; border-radius: 8px; margin: 25px 0 20px;">
+            <p style="color: #4b5563; font-size: 15px; line-height: 1.5; margin: 0; text-align: center;">
+              <strong>¿Necesitas ayuda?</strong> Si tienes problemas con la recuperación de tu contraseña, 
+              <a href="${process.env.NEXT_PUBLIC_APP_URL}/contacto" style="color: #2563eb; text-decoration: none; font-weight: 500;">contacta a nuestro equipo de soporte</a>.
+            </p>
+          </div>
+          
+          <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #e0e0e0; text-align: center;">
+            <p style="font-size: 14px; color: #6b7280; margin-bottom: 15px;">
+              Si no solicitaste este cambio, tu cuenta sigue siendo segura.<br>
+              <strong style="color: #f97316;">El equipo de Maestro Chasquilla</strong>
+            </p>
+            
+            <div style="margin-top: 15px;">
+              <a href="${process.env.NEXT_PUBLIC_APP_URL}/terms" style="color: #6b7280; text-decoration: none; font-size: 12px; margin: 0 10px;">Términos y Condiciones</a>
+              <a href="${process.env.NEXT_PUBLIC_APP_URL}/privacy" style="color: #6b7280; text-decoration: none; font-size: 12px; margin: 0 10px;">Política de Privacidad</a>
+              <a href="${process.env.NEXT_PUBLIC_APP_URL}/help" style="color: #6b7280; text-decoration: none; font-size: 12px; margin: 0 10px;">Centro de Ayuda</a>
+            </div>
+            
+            <div style="margin-top: 20px;">
+              <span style="color: #9ca3af; font-size: 12px;">© ${new Date().getFullYear()} Maestro Chasquilla. Todos los derechos reservados.</span>
+            </div>
+          </div>
+        </div>
+      `
+    });
+
+    console.log('Correo de recuperación enviado correctamente:', info.messageId);
+    return true;
+  } catch (error) {
+    console.error('Error al enviar el correo de recuperación:', error);
+    return false;
+  }
+}
+
+// ...existing code...
+
+// Función para enviar confirmación de cambio de contraseña
+export async function sendPasswordChangeConfirmationEmail(to: string, name: string) {
+  try {
+    const info = await transporter.sendMail({
+      from: `"Maestro Chasquilla" <${process.env.EMAIL_FROM}>`,
+      to,
+      subject: 'Contraseña actualizada exitosamente 🔒',
+      html: `
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #e0e0e0; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+          <div style="text-align: center; margin-bottom: 25px;">
+            <img src="${process.env.NEXT_PUBLIC_APP_URL}/img/miau.jpg" alt="Maestro Chasquilla" style="max-width: 180px; height: auto;" />
+          </div>
+          
+          <div style="background-color: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 15px 20px; margin-bottom: 25px; border-radius: 6px;">
+            <h2 style="color: #0ea5e9; margin-top: 0; font-size: 24px; font-weight: 600;">¡Contraseña actualizada! ✅</h2>
+            <p style="color: #4b5563; font-size: 16px; margin-bottom: 0;">
+              Tu contraseña ha sido cambiada exitosamente.
+            </p>
+          </div>
+          
+          <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+            Hola <strong>${name}</strong>,
+          </p>
+          
+          <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 25px;">
+            Te confirmamos que tu contraseña ha sido actualizada correctamente el ${new Date().toLocaleString('es-ES', { 
+              year: 'numeric', 
+              month: 'long', 
+              day: 'numeric', 
+              hour: '2-digit', 
+              minute: '2-digit' 
+            })}.
+          </p>
+          
+          <div style="background-color: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 15px; margin: 25px 0;">
+            <div style="display: flex; align-items: flex-start;">
+              <span style="color: #f59e0b; font-size: 18px; margin-right: 10px;">🔐</span>
+              <div>
+                <p style="color: #92400e; font-size: 14px; font-weight: 600; margin: 0 0 5px 0;">Importante:</p>
+                <p style="color: #92400e; font-size: 14px; margin: 0;">
+                  Si no realizaste este cambio, por favor contacta inmediatamente a nuestro equipo de soporte.
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${process.env.NEXT_PUBLIC_APP_URL}/login" 
+               style="background-color: #0ea5e9; color: white; padding: 12px 28px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px; display: inline-block; transition: background-color 0.3s ease;">
+               Iniciar sesión
+            </a>
+          </div>
+          
+          <div style="background-color: #f3f4f6; padding: 15px; border-radius: 8px; margin: 25px 0 20px;">
+            <p style="color: #4b5563; font-size: 15px; line-height: 1.5; margin: 0; text-align: center;">
+              <strong>¿Necesitas ayuda?</strong> Si tienes alguna pregunta sobre tu cuenta, 
+              <a href="${process.env.NEXT_PUBLIC_APP_URL}/contacto" style="color: #0ea5e9; text-decoration: none; font-weight: 500;">contacta a nuestro equipo de soporte</a>.
+            </p>
+          </div>
+          
+          <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #e0e0e0; text-align: center;">
+            <p style="font-size: 14px; color: #6b7280; margin-bottom: 15px;">
+              Tu cuenta está protegida y segura.<br>
+              <strong style="color: #f97316;">El equipo de Maestro Chasquilla</strong>
+            </p>
+            
+            <div style="margin-top: 20px;">
+              <span style="color: #9ca3af; font-size: 12px;">© ${new Date().getFullYear()} Maestro Chasquilla. Todos los derechos reservados.</span>
+            </div>
+          </div>
+        </div>
+      `
+    });
+
+    console.log('Correo de confirmación enviado correctamente:', info.messageId);
+    return true;
+  } catch (error) {
+    console.error('Error al enviar el correo de confirmación:', error);
+    return false;
+  }
+}

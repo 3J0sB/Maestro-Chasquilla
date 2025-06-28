@@ -275,6 +275,17 @@ exports.Prisma.NotificationScalarFieldEnum = {
   deletedAt: 'deletedAt'
 };
 
+exports.Prisma.PasswordResetTokenScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  providerId: 'providerId',
+  userType: 'userType',
+  token: 'token',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  used: 'used'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -318,7 +329,8 @@ exports.Prisma.ModelName = {
   Messages: 'Messages',
   Account: 'Account',
   VerificationToken: 'VerificationToken',
-  Notification: 'Notification'
+  Notification: 'Notification',
+  PasswordResetToken: 'PasswordResetToken'
 };
 
 /**

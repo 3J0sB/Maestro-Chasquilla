@@ -6,7 +6,9 @@ export const publicRoutes = [
     '/favicon.ico',
     '/services',
     '/services/:path*',
-    '/register'
+    '/register',
+    '/auth/password-recovery',
+    '/auth/verify',
   ];
 
 export const protectedRoutes = [
@@ -23,4 +25,9 @@ export const authRoutes = [
     '/register',
     '/register-provider',
     '/login',
+    '/password-recovery',
+    '/password-recovery/reset',
+    '/password-recovery/verify',
+    '/auth/password-recovery',
+    '/auth/verify',
   ];

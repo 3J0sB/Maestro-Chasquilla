@@ -216,7 +216,7 @@ useEffect(() => {
   }, [selectedConversation, userId]);
 
   return (
-    <div className="flex h-full flex-col md:flex-row bg-white rounded-lg shadow overflow-hidden">
+    <div className="flex h-full flex-col md:flex-row bg-white  overflow-hidden">
       {/* Panel de conversaciones */}
       <div
         className={`
@@ -330,13 +330,13 @@ useEffect(() => {
             </div>
 
             {/* Mensajes */}
-            <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
+            <div className="flex-1 h-screen p-4 overflow-y-auto bg-gray-50">
               {conversations.find(c => c.id === selectedConversation)?.messages.length === 0 ? (
                 <div className="flex justify-center items-center h-full">
                   <p className="text-gray-500">No hay mensajes en esta conversación.</p>
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-3 h-[300px]">
                   {conversations.find(c => c.id === selectedConversation)?.messages.map(message => (
                     <div
                       key={message.id}
