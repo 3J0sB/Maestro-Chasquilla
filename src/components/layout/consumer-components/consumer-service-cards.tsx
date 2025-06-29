@@ -11,7 +11,7 @@ interface ServiceCardProps {
 
 const ServiceCard: React.FC<ServiceCardProps> = ({ service, onClick }) => {
   // Determinar la imagen a mostrar
-  const imageUrl = service.image || '/img/miau.jpg';
+  const imageUrl = service.image || 'https://res.cloudinary.com/dil83zjxy/image/upload/v1750661412/maestro-chasquilla/profiles/ud45ed86grzvdp3bcpg5.png';
   console.log('ServiceCard component rendered with service:', service);
 
   return (
@@ -28,11 +28,11 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onClick }) => {
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover"
           priority={false}
-          // Manejo de errores de imagen
+
           onError={(e) => {
             const target = e.target as HTMLImageElement;
             target.onerror = null; // Evita bucle infinito
-            target.src = '/img/miau.jpg'; // Imagen de respaldo si falla la carga
+            target.src = 'https://res.cloudinary.com/dil83zjxy/image/upload/v1750661412/maestro-chasquilla/profiles/ud45ed86grzvdp3bcpg5.png'; // Imagen de respaldo si falla la carga
           }}
         />
         {/* Badge para mostrar estado o etiqueta destacada */}

@@ -28,6 +28,7 @@ export default function SettingsPage() {
       }
 
       const data = await response.json()
+      console.log('User data:', data)
       setUserData(data)
     } catch (error) {
       console.error('Error:', error)
@@ -44,7 +45,7 @@ export default function SettingsPage() {
       </div>
     )
   }
-
+ 
   return (
     <>
       {/* Header */}

@@ -234,12 +234,12 @@ model Notification {
   readAt     DateTime?           @map("read_at")
   title      String
   message    String
-  type       String // REQUEST_NEW, REQUEST_ACCEPTED, REQUEST_CANCELLED, REVIEW_NEW, etc.
-  linkPath   String?             @map("link_path") // Ruta a la que dirigir cuando se hace clic
+  type       String 
+  linkPath   String?             @map("link_path") 
   providerId String              @map("provider_id")
   provider   ServiceProviderUser @relation(fields: [providerId], references: [id], onDelete: Cascade)
-  relatedId  String?             @map("related_id") // ID del objeto relacionado (servicio, solicitud, etc.)
-  metadata   Json? // Datos adicionales en formato JSON
+  relatedId  String?             @map("related_id") 
+  metadata   Json? 
   deletedAt  DateTime?           @map("deleted_at")
 
   @@index([providerId])
