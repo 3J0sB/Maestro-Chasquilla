@@ -49,7 +49,7 @@ function AdminDashboard({ session }: { session: Session | null }) {
     totalUsers: 0,
     activeServiceProviders: 0,
     totalCategories: 0,
-    recentReports: 0
+    totalPendingReports: 0
   });
   const [recentServices, setRecentServices] = useState<any[]>([]);
   const [recentReviews, setRecentReviews] = useState<any[]>([]);
@@ -74,7 +74,7 @@ function AdminDashboard({ session }: { session: Session | null }) {
           totalUsers: data.stats.totalUsers || 0,
           activeServiceProviders: data.stats.serviceProvidersCount || 0,
           totalCategories: data.stats.categoriesCount || 0,
-          recentReports: 0 // Este dato no está en el endpoint, se deja en 0
+          totalPendingReports: data.stats.totalPendingReports || 0, // Este dato no está en el endpoint, se deja en 0
         });
         
         setRecentServices(data.recentPendingServices || []);
@@ -172,7 +172,7 @@ function AdminDashboard({ session }: { session: Session | null }) {
 
           <DashboardCard 
             title="Reportes Recientes" 
-            value={stats.recentReports} 
+            value={stats.totalPendingReports} 
             color="text-red-600"
             isLoading={loading}
             icon={

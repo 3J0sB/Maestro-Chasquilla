@@ -33,7 +33,7 @@ export async function GET() {
       }
     });
 
-    // Contar servicios pendientes de aprobación (usando status como filtro)
+    // Contar servicios pendientes de aprobación
     const pendingServicesCount = await prisma.services.count({
       where: { 
         status: 'PENDING', 
@@ -41,7 +41,7 @@ export async function GET() {
       }
     });
 
-    // Contar reseñas (asumiendo que no tienen un campo de aprobación, mostramos todas)
+    // Contar reseñas
     const reviewsCount = await prisma.reviews.count({
       where: { deletedAt: null }
     });
@@ -49,7 +49,26 @@ export async function GET() {
     // Contar categorías
     const categoriesCount = await prisma.categories.count();
 
-    // Obtener servicios pendientes recientes para mostrar en el dashboard
+    // Contar reportes de servicios pendientes
+    const pendingServiceReportsCount = await prisma.serviceReport.count({
+      where: { 
+        status: 'pending',
+        deletedAt: null
+      }
+    });
+
+    // Contar reportes de proveedores pendientes
+    const pendingProviderReportsCount = await prisma.serviceProviderReport.count({
+      where: { 
+        status: 'pending',
+        deletedAt: null
+      }
+    });
+
+    // Total de reportes pendientes
+    const totalPendingReports = pendingServiceReportsCount + pendingProviderReportsCount;
+
+    // Obtener servicios pendientes recientes
     const recentPendingServices = await prisma.services.findMany({
       where: { 
         status: 'PENDING',
@@ -107,6 +126,76 @@ export async function GET() {
       take: 5
     });
 
+    // Obtener reportes de servicios recientes
+    const recentServiceReports = await prisma.serviceReport.findMany({
+      where: { 
+        status: 'pending',
+        deletedAt: null
+      },
+      select: {
+        id: true,
+        reason: true,
+        description: true,
+        createdAt: true,
+        reporter: {
+          select: {
+            id: true,
+            name: true,
+            lastName: true,
+            image: true
+          }
+        },
+        service: {
+          select: {
+            id: true,
+            title: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                lastName: true
+              }
+            }
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 5
+    });
+
+    // Obtener reportes de proveedores recientes
+    const recentProviderReports = await prisma.serviceProviderReport.findMany({
+      where: { 
+        status: 'pending',
+        deletedAt: null
+      },
+      select: {
+        id: true,
+        reason: true,
+        description: true,
+        createdAt: true,
+        reporter: {
+          select: {
+            id: true,
+            name: true,
+            lastName: true,
+            image: true
+          }
+        },
+        provider: {
+          select: {
+            id: true,
+            name: true,
+            lastName: true,
+            lastName2: true,
+            image: true
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 5
+    });
+
     return NextResponse.json({
       stats: {
         usersCount,
@@ -115,10 +204,15 @@ export async function GET() {
         pendingServicesCount,
         reviewsCount,
         categoriesCount,
+        pendingServiceReportsCount,
+        pendingProviderReportsCount,
+        totalPendingReports,
         totalUsers: usersCount + serviceProvidersCount + adminsCount
       },
       recentPendingServices,
-      recentReviews
+      recentReviews,
+      recentServiceReports,
+      recentProviderReports
     });
   } catch (error) {
     console.error("Error al obtener estadísticas:", error);

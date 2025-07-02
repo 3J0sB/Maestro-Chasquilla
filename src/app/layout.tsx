@@ -38,27 +38,41 @@ export default async function RootLayout({
         {children}
         </SessionProvider>
 
-        {/* Toaster para las notificaciones */}
         <Toaster
           position="top-right"
           toastOptions={{
             duration: 4000,
             style: {
-              background: '#363636',
-              color: '#fff',
+              borderRadius: '10px',
+              padding: '12px 16px',
+              fontSize: '14px',
+              fontWeight: '500',
+              boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
             },
             success: {
-              duration: 3000,
               style: {
                 background: '#10B981',
-                color: '#fff',
+                color: 'white',
+              },
+              iconTheme: {
+                primary: 'white',
+                secondary: '#10B981',
               },
             },
             error: {
-              duration: 5000,
               style: {
                 background: '#EF4444',
-                color: '#fff',
+                color: 'white',
+              },
+              iconTheme: {
+                primary: 'white',
+                secondary: '#EF4444',
+              },
+            },
+            loading: {
+              style: {
+                background: '#F97316', 
+                color: 'white',
               },
             },
           }}
