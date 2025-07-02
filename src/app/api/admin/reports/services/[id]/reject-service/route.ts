@@ -4,7 +4,7 @@ import db from '@/lib/prisma';
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -13,7 +13,7 @@ export async function PATCH(
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
     }
 
-    const reportId = params.id;
+    const {id: reportId}  = await params;
 
     // Obtener el reporte para acceder al servicio
     const report = await db.serviceReport.findUnique({
