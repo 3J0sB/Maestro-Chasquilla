@@ -16,6 +16,7 @@ interface ProviderProfileHeaderProps {
   location?: string;
   isVerified?: boolean;
   role: string | undefined;
+  onReport?: () => void // Nueva prop opcional
 }
 
 const ProviderProfileHeader: React.FC<ProviderProfileHeaderProps> = ({
@@ -29,7 +30,8 @@ const ProviderProfileHeader: React.FC<ProviderProfileHeaderProps> = ({
   reviewCount,
   location,
   role,
-  isVerified = false
+  isVerified = false,
+  onReport 
 }) => {
   const fullName = [name, lastName, lastName2].filter(Boolean).join(' ');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -44,7 +46,7 @@ const ProviderProfileHeader: React.FC<ProviderProfileHeaderProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+    <div className="bg-white rounded-xl shadow p-6 mb-6">
       <div className="flex flex-col md:flex-row items-center md:items-start">
         {/* Avatar */}
         <div className="w-32 h-32 rounded-full overflow-hidden mb-4 md:mb-0 md:mr-6 flex-shrink-0 border-4 border-white shadow">
@@ -119,6 +121,21 @@ const ProviderProfileHeader: React.FC<ProviderProfileHeaderProps> = ({
             </div>
           )
         }
+      </div>
+
+      {/* Botón de reportar */}
+      <div className="flex gap-3 mt-4">
+        {onReport && (
+          <button
+            onClick={onReport}
+            className="px-4 py-2 border border-red-500 text-red-500 rounded-lg hover:bg-red-50 transition-colors flex items-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.232 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+            Reportar proveedor
+          </button>
+        )}
       </div>
 
       {/* Modal de mensaje */}

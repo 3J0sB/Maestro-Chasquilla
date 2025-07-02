@@ -15,6 +15,7 @@ import { useSession } from 'next-auth/react'
 import { toast } from 'react-hot-toast'
 import ProviderReviews from '@/components/layout/consumer-components/provider-profile/provider-profile-reviews'
 import AddReviewModal from '@/components/layout/consumer-components/service-profile/consumer-service-profile-add-review'
+import ReportServiceModal from '@/components/layout/consumer-components/service-profile/consumer-service-profile-report-service-modal'
 
 
 type ProviderReviewsResponse = {
@@ -61,11 +62,12 @@ function ServiceProfile({ params }: ServiceProfileParams) {
     const [error, setError] = useState<string | null>(null)
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+    const [isReportModalOpen, setIsReportModalOpen] = useState(false)
     const [hasAlreadyRequested, setHasAlreadyRequested] = useState(false);
     const { id } = React.use(params)
     const { data: session, status } = useSession()
 
-    // Función declarada fuera del useEffect
+
     const fetchServiceDetails = async () => {
         try {
             setLoading(true)
@@ -85,7 +87,7 @@ function ServiceProfile({ params }: ServiceProfileParams) {
             console.log('Datos del servicio:', serviceData)
             setService(serviceData)
 
-            // Establecer el providerId si existe
+
             if (serviceData && serviceData.user && serviceData.user.id) {
                 setProviderId(serviceData.user.id)
             }
@@ -96,9 +98,9 @@ function ServiceProfile({ params }: ServiceProfileParams) {
         }
     }
 
-    // Función para obtener todas las reseñas del proveedor
+    
     const fetchServiceReviews = async (pid: string) => {
-        if (!pid) return; // No hacer la llamada si no hay ID
+        if (!pid) return; 
 
         try {
             const response = await fetch(`/api/consumer/provider-reviews/${pid}`, {
@@ -121,7 +123,7 @@ function ServiceProfile({ params }: ServiceProfileParams) {
         }
     }
 
-    // Nueva función para obtener las reseñas específicas del servicio actual
+
     const fetchServiceSpecificReviews = async (serviceId: string) => {
         if (!serviceId) return;
 
@@ -146,35 +148,36 @@ function ServiceProfile({ params }: ServiceProfileParams) {
         }
     }
 
-    // useEffect para cargar los detalles del servicio
+
     useEffect(() => {
         if (id) {
             fetchServiceDetails()
-            fetchServiceSpecificReviews(id) // Obtener reseñas específicas del servicio
+            fetchServiceSpecificReviews(id) 
         }
     }, [id])
 
-    // useEffect separado para las reseñas del proveedor, que depende del providerId
+ 
     useEffect(() => {
         if (providerId) {
             fetchServiceReviews(providerId)
         }
     }, [providerId])
 
-    // Añadir esta función para comprobar si el usuario ya ha solicitado este servicio
+
     const checkIfUserHasRequested = async () => {
         if (!session?.user?.id || !id) return;
         
         try {
             const response = await fetch(`/api/consumer/request/hasRequested/${id}?userId=${session.user.id}`);
             const data = await response.json();
+            console.log('Respuesta de verificación de solicitud:', data);
             setHasAlreadyRequested(data.hasRequested);
         } catch (error) {
             console.error('Error al verificar solicitud:', error);
         }
     };
 
-    // Añadir este useEffect para verificar si el usuario ha solicitado el servicio
+
     useEffect(() => {
         if (session?.user?.id && id) {
             checkIfUserHasRequested();
@@ -248,7 +251,7 @@ function ServiceProfile({ params }: ServiceProfileParams) {
                     providerLastName2={service.user.lastName2}
                     providerRating={reviewsData?.averageRating || 0}
                     providerRatingCount={reviewsData?.totalReviews || 0}
-                    providerImage={service.user.image || '/img/miau.jpg'}
+                    providerImage={service.user.image || 'https://res.cloudinary.com/dil83zjxy/image/upload/v1750661412/maestro-chasquilla/profiles/ud45ed86grzvdp3bcpg5.png'}
                     areaOfExpertise={service.user.areasOfExpertise}
                 />
                 <div className='bg-white rounded-xl shadow p-6 mb-6 flex justify-between items-start'>
@@ -277,15 +280,26 @@ function ServiceProfile({ params }: ServiceProfileParams) {
                             Dejar reseña
                           </button>
                         )}
+
+                        {/* Botón de reportar */}
+                        <button
+                            onClick={() => setIsReportModalOpen(true)}
+                            className="bg-white border border-red-500 text-red-500 hover:bg-red-50 font-medium py-2 px-4 rounded transition-colors flex items-center justify-center gap-2"
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.232 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                            </svg>
+                            Reportar
+                        </button>
                     </div>
                 </div>
 
                 <ServiceDetailDescription
                     description = {service.description}
-                    serviceImage={service.image ? service.image : '/img/miau.jpg'}
+                    serviceImage={service.image ? service.image : 'https://res.cloudinary.com/dil83zjxy/image/upload/v1750661412/maestro-chasquilla/profiles/ud45ed86grzvdp3bcpg5.png'}
                 />
 
-                {/* Modal de solicitud */}
+     
                 <RequestModal
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
@@ -302,7 +316,6 @@ function ServiceProfile({ params }: ServiceProfileParams) {
                     ratingBreakdown={serviceReviewsData?.ratingDistribution || {5: 0, 4: 0, 3: 0, 2: 0, 1: 0}}
                 />
 
-                {/* Al final del componente, añadir el modal de reseña */}
                 <AddReviewModal
                   isOpen={isReviewModalOpen}
                   onClose={() => setIsReviewModalOpen(false)}
@@ -312,6 +325,14 @@ function ServiceProfile({ params }: ServiceProfileParams) {
                     // Recargar las reseñas después de añadir una nueva
                     fetchServiceSpecificReviews(id);
                   }}
+                />
+
+                {/* Modal de reporte */}
+                <ReportServiceModal
+                    isOpen={isReportModalOpen}
+                    onClose={() => setIsReportModalOpen(false)}
+                    serviceId={service.id}
+                    serviceName={service.title}
                 />
             </div>
         </div>

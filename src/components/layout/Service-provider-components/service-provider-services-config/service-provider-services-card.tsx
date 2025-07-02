@@ -92,7 +92,7 @@ function ServicesCard({ id, title, status, description, price, serviceTag, image
 
           <div className="w-full h-48 relative overflow-hidden">
             <Image 
-              src={image || '/img/miau.jpg'} 
+              src={image || 'https://res.cloudinary.com/dil83zjxy/image/upload/v1750661412/maestro-chasquilla/profiles/ud45ed86grzvdp3bcpg5.png'} 
               alt={title} 
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

@@ -33,7 +33,7 @@ export async function GET(
             where: {
                 serviceId: serviceId,
                 consumerId: userId,
-                status: { in: ['PENDING', 'ACCEPTED'] },
+                status: { in: ['PENDING', 'ACCEPTED', 'COMPLETED'] },
                 deletedAt: null, 
             },
         });

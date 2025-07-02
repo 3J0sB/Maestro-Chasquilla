@@ -50,7 +50,7 @@ const ProviderServices: React.FC<ProviderServicesProps> = ({
                                 <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-md transition-shadow hover:transform hover:scale-105">
                                     <div className="relative h-48">
                                         <Image
-                                            src={service.image || '/img/miau.jpg'}
+                                            src={service.image || 'https://res.cloudinary.com/dil83zjxy/image/upload/v1750661412/maestro-chasquilla/profiles/ud45ed86grzvdp3bcpg5.png'}
                                             alt={service.title}
                                             fill
                                             className="object-cover group-hover:scale-105 transition-transform duration-300"

@@ -286,6 +286,32 @@ exports.Prisma.PasswordResetTokenScalarFieldEnum = {
   used: 'used'
 };
 
+exports.Prisma.ServiceProviderReportScalarFieldEnum = {
+  id: 'id',
+  reason: 'reason',
+  description: 'description',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  resolvedAt: 'resolvedAt',
+  deletedAt: 'deletedAt',
+  reporterId: 'reporterId',
+  providerId: 'providerId'
+};
+
+exports.Prisma.ServiceReportScalarFieldEnum = {
+  id: 'id',
+  reason: 'reason',
+  description: 'description',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  resolvedAt: 'resolvedAt',
+  deletedAt: 'deletedAt',
+  reporterId: 'reporterId',
+  serviceId: 'serviceId'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -330,7 +356,9 @@ exports.Prisma.ModelName = {
   Account: 'Account',
   VerificationToken: 'VerificationToken',
   Notification: 'Notification',
-  PasswordResetToken: 'PasswordResetToken'
+  PasswordResetToken: 'PasswordResetToken',
+  ServiceProviderReport: 'ServiceProviderReport',
+  ServiceReport: 'ServiceReport'
 };
 
 /**

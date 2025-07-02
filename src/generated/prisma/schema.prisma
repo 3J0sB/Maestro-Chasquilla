@@ -34,15 +34,18 @@ model User {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   deletedAt      DateTime? @map("deleted_at")
-  locationId     String?   @unique @map("location_id") // También hacemos esto @unique para garantizar relación 1:1
+  locationId     String?   @unique @map("location_id")
 
   conversations       Conversation[]
   reviews             reviews[]
   accounts            Account[]
   serviceRequest      ServiceRequest[]
-  location            Location?            @relation(fields: [locationId], references: [id])
-  Messages            Messages[]           @relation("UserMessages")
+  location            Location?               @relation(fields: [locationId], references: [id])
+  Messages            Messages[]              @relation("UserMessages")
   passwordResetTokens PasswordResetToken[]
+  // Nuevas relaciones para reportes
+  providerReports     ServiceProviderReport[] @relation("UserReports")
+  serviceReports      ServiceReport[]         @relation("UserServiceReports")
 
   @@map("users")
 }
@@ -69,10 +72,12 @@ model ServiceProviderUser {
   conversations       Conversation[]
   services            Services[]
   requests            ServiceRequest[]
-  location            Location?            @relation(fields: [locationId], references: [id])
-  Messages            Messages[]           @relation("ProviderMessages")
+  location            Location?               @relation(fields: [locationId], references: [id])
+  Messages            Messages[]              @relation("ProviderMessages")
   notifications       Notification[]
   passwordResetTokens PasswordResetToken[]
+  // Nueva relación para reportes
+  reports             ServiceProviderReport[] @relation("ProviderReports")
 
   @@map("service_provider_users")
 }
@@ -116,6 +121,8 @@ model Services {
   reviews        reviews[]
   user           ServiceProviderUser @relation(fields: [userId], references: [id], onDelete: Cascade)
   serviceRequest ServiceRequest[]
+  // Nueva relación para reportes
+  reports        ServiceReport[]     @relation("ServiceReports")
 
   @@map("services")
 }
@@ -234,12 +241,12 @@ model Notification {
   readAt     DateTime?           @map("read_at")
   title      String
   message    String
-  type       String // REQUEST_NEW, REQUEST_ACCEPTED, REQUEST_CANCELLED, REVIEW_NEW, etc.
-  linkPath   String?             @map("link_path") // Ruta a la que dirigir cuando se hace clic
+  type       String
+  linkPath   String?             @map("link_path")
   providerId String              @map("provider_id")
   provider   ServiceProviderUser @relation(fields: [providerId], references: [id], onDelete: Cascade)
-  relatedId  String?             @map("related_id") // ID del objeto relacionado (servicio, solicitud, etc.)
-  metadata   Json? // Datos adicionales en formato JSON
+  relatedId  String?             @map("related_id")
+  metadata   Json?
   deletedAt  DateTime?           @map("deleted_at")
 
   @@index([providerId])
@@ -250,16 +257,60 @@ model Notification {
 model PasswordResetToken {
   id         String   @id @default(cuid())
   userId     String?  @map("user_id")
-  providerId String?  @map("provider_id") // Solo si es un proveedor de servicios
+  providerId String?  @map("provider_id")
   userType   String   @map("user_type")
   token      String   @unique
   expiresAt  DateTime @map("expires_at")
   createdAt  DateTime @default(now()) @map("created_at")
   used       Boolean  @default(false)
 
-  // Relaciones opcionales según el tipo con nombres de FK únicos
   user                User?                @relation(fields: [userId], references: [id], onDelete: Cascade, map: "password_reset_user_fk")
   serviceProviderUser ServiceProviderUser? @relation(fields: [providerId], references: [id], onDelete: Cascade, map: "password_reset_provider_fk")
 
   @@map("password_reset_tokens")
+}
+
+model ServiceProviderReport {
+  id          String    @id @default(cuid())
+  reason      String
+  description String?
+  status      String    @default("pending")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  resolvedAt  DateTime? @map("resolved_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  reporterId String @map("reporter_id")
+  providerId String @map("provider_id")
+
+  reporter User                @relation("UserReports", fields: [reporterId], references: [id], onDelete: Cascade)
+  provider ServiceProviderUser @relation("ProviderReports", fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@index([providerId])
+  @@index([reporterId])
+  @@index([status])
+  @@map("service_provider_reports")
+}
+
+model ServiceReport {
+  id          String    @id @default(cuid())
+  reason      String
+  description String?
+  status      String    @default("pending")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  resolvedAt  DateTime? @map("resolved_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  // Referencias
+  reporterId String @map("reporter_id")
+  serviceId  String @map("service_id")
+
+  reporter User     @relation("UserServiceReports", fields: [reporterId], references: [id], onDelete: Cascade)
+  service  Services @relation("ServiceReports", fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@index([serviceId])
+  @@index([reporterId])
+  @@index([status])
+  @@map("service_reports")
 }

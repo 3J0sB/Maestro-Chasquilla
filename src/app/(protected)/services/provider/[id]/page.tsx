@@ -14,6 +14,8 @@ import ProviderServices from '@/components/layout/consumer-components/provider-p
 import ProviderReviews from '@/components/layout/consumer-components/provider-profile/provider-profile-reviews'
 import ProviderProfileAbout from '@/components/layout/consumer-components/provider-profile/provider-profile-about'
 import { useSession } from 'next-auth/react'
+import ReportProviderModal from '@/components/layout/consumer-components/provider-profile/provider-profile-report-provider'
+
 type ProviderProfileParams = {
   params: Promise<{ id: string }>
 }
@@ -36,6 +38,7 @@ function ProviderProfile({ params }: ProviderProfileParams) {
   const [provider, setProvider] = useState<serviceProvider | null>(null)
   const [loading, setLoading] = useState(true)
   const [reviewsData, setReviewsData] = useState<ProviderReviewsResponse | null>(null)
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false)
   const { data: session } = useSession();
   const { id } = use(params)
 
@@ -156,7 +159,9 @@ function ProviderProfile({ params }: ProviderProfileParams) {
           location={provider.location?.city || 'Ciudad no especificada'}
           isVerified={true}
           role={session?.user.role || ''}
+          onReport={() => setIsReportModalOpen(true)} // Nueva prop
         />
+        
         <ProviderProfileAbout
           description={provider.description || 'texto de ejemplo para la descripción del proveedor.'}
         />
@@ -167,12 +172,19 @@ function ProviderProfile({ params }: ProviderProfileParams) {
           totalReviews={reviewsData?.totalReviews || 0}
           averageRating={reviewsData?.averageRating || 0}
           ratingBreakdown={reviewsData?.ratingDistribution || {5: 0,4: 0,3: 0,2: 0,1: 0}}
-        
           reviews={reviewsData?.reviews.map(review => ({
             ...review,
-            reviewer: { name: review.user.name, image: review.user.image || '/img/miau.jpg' },
+            reviewer: { name: review.user.name, image: review.user.image || 'https://res.cloudinary.com/dil83zjxy/image/upload/v1750661412/maestro-chasquilla/profiles/ud45ed86grzvdp3bcpg5.png' },
             date: review.createdAt ? new Date(review.createdAt).toLocaleDateString('es-ES') : 'Fecha no disponible',
           }))}
+        />
+
+        {/* Modal de reporte */}
+        <ReportProviderModal
+          isOpen={isReportModalOpen}
+          onClose={() => setIsReportModalOpen(false)}
+          providerId={provider.id}
+          providerName={`${provider.name} ${provider.lastName} ${provider.lastName2}`.trim()}
         />
       </div>
     </div>

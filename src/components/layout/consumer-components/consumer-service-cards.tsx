@@ -32,7 +32,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onClick }) => {
           onError={(e) => {
             const target = e.target as HTMLImageElement;
             target.onerror = null; // Evita bucle infinito
-            target.src = 'https://res.cloudinary.com/dil83zjxy/image/upload/v1750661412/maestro-chasquilla/profiles/ud45ed86grzvdp3bcpg5.png'; // Imagen de respaldo si falla la carga
+            target.src = 'https://res.cloudinary.com/dil83zjxy/image/upload/v1750661412/maestro-chasquilla/profiles/ud45ed86grzvdp3bcpg5.png';
           }}
         />
         {/* Badge para mostrar estado o etiqueta destacada */}
