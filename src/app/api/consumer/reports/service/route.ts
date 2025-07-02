@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
         reporterId,
         reason,
         description,
-        status: 'pending'
+        status: 'PENDING'
       }
     })
 
