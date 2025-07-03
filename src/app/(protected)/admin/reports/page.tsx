@@ -9,7 +9,7 @@ async function AdminReportsPage() {
     if (session?.user.role !== 'ADMIN') {
       return(      
       <div>
-        <AccessDenied message="No tienes permisos para acceder a esta página"/>
+        <AccessDenied message="No tienes permisos para acceder a esta página 🧐"/>
       </div>) 
     }
    

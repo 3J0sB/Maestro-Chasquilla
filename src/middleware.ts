@@ -10,7 +10,8 @@ export default middleware((req) => {
   const isLoggedIn = !!req.auth;
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
   const isPublicRoute = publicRoutes.some(route =>
-    nextUrl.pathname === route || nextUrl.pathname.startsWith('/api/auth/')
+    nextUrl.pathname === route || nextUrl.pathname.startsWith('/api/auth/') ||
+    nextUrl.pathname.startsWith('/services/') 
   );
 
   console.log("isLoggedIn", isLoggedIn)

@@ -1,10 +1,20 @@
 'use client'
+import AccessDenied from '@/components/Access-denied/access-denied'
 import ServiceProviderSidebar from '@/components/layout/Service-provider-components/Service-provider-sidebar/service-provider-sidebar'
 import ServiceProviderMobileDrawer from '@/components/layout/Service-provider-components/Service-provider-sidebar/service-provider-sidebar-mobile'
+import { se } from 'date-fns/locale'
 import { useSession } from 'next-auth/react'
 
 export default function ServiceProviderLayout({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession()
+
+    if (session?.user.role !== 'SERVICE_PROVIDER') {
+      return(      
+      <div>
+        <AccessDenied message="Esta no deberias estar aqui 🥸"/>
+      </div>) 
+
+    }
 
   return (
     <div className="h-screen flex flex-col md:flex-row bg-gradient-to-tr from-white/50 to-white">

@@ -100,7 +100,7 @@ function ServicesSection() {
 
       <div className="text-center mt-12">
         <Link
-          href="/servicios"
+          href="/services"
           className="bg-white border border-orange-500 text-orange-500 hover:text-white hover:bg-orange-500 px-6 py-3 rounded-lg inline-block font-medium transition-colors"
         >
           Ver todos los servicios

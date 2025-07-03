@@ -14,6 +14,7 @@ import ProviderServices from '@/components/layout/consumer-components/provider-p
 import ProviderReviews from '@/components/layout/consumer-components/provider-profile/provider-profile-reviews'
 import ProviderProfileAbout from '@/components/layout/consumer-components/provider-profile/provider-profile-about'
 import { useSession } from 'next-auth/react'
+import { toast } from 'react-hot-toast'
 import ReportProviderModal from '@/components/layout/consumer-components/provider-profile/provider-profile-report-provider'
 
 type ProviderProfileParams = {
@@ -39,7 +40,7 @@ function ProviderProfile({ params }: ProviderProfileParams) {
   const [loading, setLoading] = useState(true)
   const [reviewsData, setReviewsData] = useState<ProviderReviewsResponse | null>(null)
   const [isReportModalOpen, setIsReportModalOpen] = useState(false)
-  const { data: session } = useSession();
+  const { data: session, status } = useSession() // Agregué status
   const { id } = use(params)
 
   const fetchProvider = async (id: string) => {
@@ -91,6 +92,15 @@ function ProviderProfile({ params }: ProviderProfileParams) {
       fetchProviderReviews(id)
     }
   }, [id])
+
+  const handleReportClick = () => {
+    if (status === 'unauthenticated') {
+      toast.error('Debes iniciar sesión para reportar proveedores')
+      return
+    }
+
+    setIsReportModalOpen(true)
+  }
 
   if (loading) {
     return (
@@ -159,7 +169,7 @@ function ProviderProfile({ params }: ProviderProfileParams) {
           location={provider.location?.city || 'Ciudad no especificada'}
           isVerified={true}
           role={session?.user.role || ''}
-          onReport={() => setIsReportModalOpen(true)} // Nueva prop
+          onReport={handleReportClick} // Cambié de () => setIsReportModalOpen(true) a handleReportClick
         />
         
         <ProviderProfileAbout
@@ -179,13 +189,15 @@ function ProviderProfile({ params }: ProviderProfileParams) {
           }))}
         />
 
-        {/* Modal de reporte */}
-        <ReportProviderModal
-          isOpen={isReportModalOpen}
-          onClose={() => setIsReportModalOpen(false)}
-          providerId={provider.id}
-          providerName={`${provider.name} ${provider.lastName} ${provider.lastName2}`.trim()}
-        />
+        {/* Modal de reporte - solo se renderiza si el usuario está autenticado */}
+        {session && (
+          <ReportProviderModal
+            isOpen={isReportModalOpen}
+            onClose={() => setIsReportModalOpen(false)}
+            providerId={provider.id}
+            providerName={`${provider.name} ${provider.lastName} ${provider.lastName2}`.trim()}
+          />
+        )}
       </div>
     </div>
   )

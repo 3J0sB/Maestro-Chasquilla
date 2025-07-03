@@ -6,6 +6,7 @@ export const publicRoutes = [
     '/favicon.ico',
     '/services',
     '/services/:path*',
+    /^\/services\/[^\/]+$/,
     '/register',
     '/auth/password-recovery',
     '/auth/verify',

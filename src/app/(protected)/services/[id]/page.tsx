@@ -193,6 +193,15 @@ function ServiceProfile({ params }: ServiceProfileParams) {
         setIsModalOpen(true)
     }
 
+        const handleReportClick = () => {
+        if (status === 'unauthenticated') {
+            toast.error('Debes iniciar sesión para reportar servicios')
+            return
+        }
+
+        setIsReportModalOpen(true)
+    }
+
     if (loading) {
         return (
             <div className="min-h-screen bg-gray-50">
@@ -264,7 +273,9 @@ function ServiceProfile({ params }: ServiceProfileParams) {
                         serviceTag3={service.serviceTag3}
                         userImage={service.user.image}
                     />
-                    <div className="flex flex-col gap-2">
+
+                    {!session && (
+                        <div className="flex flex-col gap-2">
                         <button
                             onClick={handleRequestClick}
                             className="mt-4 bg-orange-500 cursor-pointer hover:bg-orange-600 text-white font-medium py-2 px-4 rounded transition-colors"
@@ -283,7 +294,7 @@ function ServiceProfile({ params }: ServiceProfileParams) {
 
                         {/* Botón de reportar */}
                         <button
-                            onClick={() => setIsReportModalOpen(true)}
+                            onClick={handleReportClick}
                             className="bg-white border border-red-500 text-red-500 hover:bg-red-50 font-medium py-2 px-4 rounded transition-colors flex items-center justify-center gap-2"
                         >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -292,6 +303,9 @@ function ServiceProfile({ params }: ServiceProfileParams) {
                             Reportar
                         </button>
                     </div>
+
+                    )}
+                    
                 </div>
 
                 <ServiceDetailDescription
