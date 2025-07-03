@@ -11,6 +11,7 @@ import { serviceRequest } from '@/types'
 import { formatDate } from '../../../../../utils'
 import MessageModal from '@/components/layout/consumer-components/consumer-messages/message-modal'
 import Image from 'next/image'
+import ConfirmationModal from '@/components/layout/consumer-components/consumer-confirmation-modal'
 
 interface RequestedServicesTabProps {
     userId: string | undefined
@@ -26,6 +27,10 @@ export default function RequestedServicesTab({ userId }: RequestedServicesTabPro
     // Estados para el modal de mensaje
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [selectedRequest, setSelectedRequest] = useState<serviceRequest | null>(null)
+
+    // Estados para el modal de confirmación
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false)
+    const [requestToCancel, setRequestToCancel] = useState<string | null>(null)
 
     useEffect(() => {
         if (userId) {
@@ -64,17 +69,21 @@ export default function RequestedServicesTab({ userId }: RequestedServicesTabPro
         ? requests
         : requests.filter(req => req.status === statusFilter)
 
-    // Cancelar solicitud
-    const cancelRequest = async (requestId: string) => {
-        if (!confirm('¿Estás seguro de que quieres cancelar esta solicitud?')) {
-            return
-        }
+    // Abrir modal de confirmación para cancelar
+    const handleCancelClick = (requestId: string) => {
+        setRequestToCancel(requestId)
+        setIsConfirmModalOpen(true)
+    }
+
+    // Confirmar cancelación
+    const confirmCancel = async () => {
+        if (!requestToCancel) return
 
         try {
             const response = await fetch(`/api/service-provider/service-requests/cancel-service-request`, {
                 method: 'PUT',
                 body: JSON.stringify({
-                    requestId,
+                    requestId: requestToCancel,
                     cancelReason: 'El usuario ha cancelado la solicitud',
                     cancelby: 'consumer'
                 }),
@@ -91,7 +100,16 @@ export default function RequestedServicesTab({ userId }: RequestedServicesTabPro
         } catch (error) {
             console.error('Error:', error)
             toast.error('No se pudo cancelar la solicitud')
+        } finally {
+            setIsConfirmModalOpen(false)
+            setRequestToCancel(null)
         }
+    }
+
+    // Cerrar modal de confirmación
+    const closeConfirmModal = () => {
+        setIsConfirmModalOpen(false)
+        setRequestToCancel(null)
     }
 
     // Obtener texto y color según el estado
@@ -277,7 +295,7 @@ export default function RequestedServicesTab({ userId }: RequestedServicesTabPro
                                         {/* Para el estado PENDING */}
                                         {request.status === 'PENDING' && (
                                             <button
-                                                onClick={() => cancelRequest(request.id)}
+                                                onClick={() => handleCancelClick(request.id)}
                                                 className="w-full px-4 py-2 border border-red-500 text-red-500 rounded-md text-sm hover:bg-red-50 transition-colors"
                                             >
                                                 Cancelar
@@ -297,7 +315,7 @@ export default function RequestedServicesTab({ userId }: RequestedServicesTabPro
                                                     Mensaje
                                                 </button>
                                                 <button
-                                                    onClick={() => cancelRequest(request.id)}
+                                                    onClick={() => handleCancelClick(request.id)}
                                                     className="flex-1 px-4 py-2 border border-red-500 text-red-500 rounded-md text-sm hover:bg-red-50 transition-colors"
                                                 >
                                                     Cancelar
@@ -318,7 +336,7 @@ export default function RequestedServicesTab({ userId }: RequestedServicesTabPro
                                                     Mensaje
                                                 </button>
                                                 <button
-                                                    onClick={() => cancelRequest(request.id)}
+                                                    onClick={() => handleCancelClick(request.id)}
                                                     className="flex-1 px-4 py-2 border border-red-500 text-red-500 rounded-md text-sm hover:bg-red-50 transition-colors"
                                                 >
                                                     Cancelar
@@ -362,6 +380,18 @@ export default function RequestedServicesTab({ userId }: RequestedServicesTabPro
                     requestId={selectedRequest.id}
                 />
             )}
+
+            {/* Modal de confirmación */}
+            <ConfirmationModal
+                isOpen={isConfirmModalOpen}
+                onClose={closeConfirmModal}
+                onConfirm={confirmCancel}
+                title="Cancelar solicitud"
+                message="¿Estás seguro de que quieres cancelar esta solicitud? Esta acción no se puede deshacer."
+                confirmText="Sí, cancelar"
+                cancelText="No, mantener"
+                type="danger"
+            />
         </div>
     )
 }

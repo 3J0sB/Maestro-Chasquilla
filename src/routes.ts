@@ -15,6 +15,8 @@ export const publicRoutes = [
 export const protectedRoutes = [
     '/admin',
     '/admin/:path*',
+    '/service-provider',
+    '/service-provider/:path*',
     '/home',
     '/redirect',
 
