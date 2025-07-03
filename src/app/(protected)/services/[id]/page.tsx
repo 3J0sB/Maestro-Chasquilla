@@ -274,7 +274,7 @@ function ServiceProfile({ params }: ServiceProfileParams) {
                         userImage={service.user.image}
                     />
 
-                    {!session && (
+                    {session && (
                         <div className="flex flex-col gap-2">
                         <button
                             onClick={handleRequestClick}
