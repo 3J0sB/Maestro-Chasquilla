@@ -52,7 +52,7 @@ export async function GET() {
     // Contar reportes de servicios pendientes
     const pendingServiceReportsCount = await prisma.serviceReport.count({
       where: { 
-        status: 'pending',
+        status: 'PENDING',
         deletedAt: null
       }
     });
@@ -60,7 +60,7 @@ export async function GET() {
     // Contar reportes de proveedores pendientes
     const pendingProviderReportsCount = await prisma.serviceProviderReport.count({
       where: { 
-        status: 'pending',
+        status: 'PENDING',
         deletedAt: null
       }
     });

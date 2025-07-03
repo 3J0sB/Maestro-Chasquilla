@@ -266,7 +266,7 @@ export function AdminServicesModeration({ session }: { session: Session | null }
                         <td className="py-4 whitespace-nowrap text-sm text-gray-500 ">
                           <button
                             onClick={() => openServiceDetails(service)}
-                            className="text-blue-600 hover:text-blue-800 mr-3 bg-blue-100 px-2 py-1 rounded-md text-sm font-medium"
+                            className="text-blue-600 cursor-pointer hover:text-blue-800 mr-3 bg-blue-100 px-2 py-1 rounded-md text-sm font-medium"
                           >
                             Ver
                           </button>
@@ -274,13 +274,13 @@ export function AdminServicesModeration({ session }: { session: Session | null }
                             <>
                               <button
                                 onClick={() => approveService(service.id)}
-                                className="text-green-600 hover:text-green-800 mr-3 bg-green-100 px-2 py-1 rounded-md text-sm font-medium"
+                                className="text-green-600 cursor-pointer hover:text-green-800 mr-3 bg-green-100 px-2 py-1 rounded-md text-sm font-medium"
                               >
                                 Aprobar
                               </button>
                               <button
                                 onClick={() => rejectService(service.id)}
-                                className="text-red-600 hover:text-red-800 bg-red-100 px-2 py-1 rounded-md text-sm font-medium"
+                                className="text-red-600 cursor-pointer hover:text-red-800 bg-red-100 px-2 py-1 rounded-md text-sm font-medium"
                               >
                                 Rechazar
                               </button>
@@ -291,12 +291,20 @@ export function AdminServicesModeration({ session }: { session: Session | null }
                             <>
                               <button
                                 onClick={() => approveService(service.id)}
-                                className="text-green-600 hover:text-green-800 mr-3 bg-green-100 px-2 py-1 rounded-md text-sm font-medium"
+                                className="text-green-600 cursor-pointer hover:text-green-800 mr-3 bg-green-100 px-2 py-1 rounded-md text-sm font-medium"
                               >
                                 Aprobar
                               </button>
   
                             </>
+                          )}
+                          {service.status === 'APPROVED' && (
+                            <button
+                              onClick={() => rejectService(service.id)}
+                              className="text-red-600 cursor-pointer hover:text-red-800 bg-red-100 px-2 py-1 rounded-md text-sm font-medium"
+                            >
+                              Rechazar
+                            </button>
                           )}
                         </td>
                       </tr>
