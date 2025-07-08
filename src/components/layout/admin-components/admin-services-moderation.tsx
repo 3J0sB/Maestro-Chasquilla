@@ -53,8 +53,6 @@ export function AdminServicesModeration({ session }: { session: Session | null }
         const data = await response.json();
         console.log('Datos de servicios recibidos:', data);
         const mappedServices = data.services.map((service: any) => {
-          // Mantener el estado original si no está en deletedAt
-          // Si deletedAt tiene valor, marcar como REJECTED independientemente del estado actual
           const standardStatus = service.deletedAt ? 'REJECTED' : service.status;
 
           return {
@@ -77,11 +75,11 @@ export function AdminServicesModeration({ session }: { session: Session | null }
     fetchServices();
   }, []);
 
-  // Estado para el servicio seleccionado en el modal
+
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Función para formatear la fecha
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('es-ES', {
@@ -93,7 +91,7 @@ export function AdminServicesModeration({ session }: { session: Session | null }
     }).format(date);
   };
 
-  // Función para mostrar el rango de precios
+
   const formatPriceRange = (service: Service) => {
     if (service.minServicePrice && service.maxServicePrice) {
       return `${formatCurrency(service.minServicePrice)} - ${formatCurrency(service.maxServicePrice)}`;
@@ -103,7 +101,6 @@ export function AdminServicesModeration({ session }: { session: Session | null }
     return 'Precio no especificado';
   };
 
-  // Función para aprobar un servicio
   const approveService = async (id: string) => {
     try {
       const response = await fetch(`/api/admin/services/${id}`, {
@@ -118,7 +115,7 @@ export function AdminServicesModeration({ session }: { session: Session | null }
         throw new Error('Error al aprobar el servicio');
       }
 
-      // Actualizar estado local
+
       setServices(services.map(service =>
         service.id === id ? { ...service, status: 'APPROVED', deletedAt: null } : service
       ));
@@ -132,7 +129,6 @@ export function AdminServicesModeration({ session }: { session: Session | null }
     }
   };
 
-  // Función para rechazar un servicio
   const rejectService = async (id: string) => {
     try {
       console.log('Rechazando servicio con ID:', id);
@@ -148,7 +144,6 @@ export function AdminServicesModeration({ session }: { session: Session | null }
         throw new Error('Error al rechazar el servicio');
       }
 
-      // Actualizar estado local
       setServices(services.map(service =>
         service.id === id ? { ...service, status: 'REJECTED', deletedAt: new Date().toISOString() } : service
       ));
@@ -162,19 +157,19 @@ export function AdminServicesModeration({ session }: { session: Session | null }
     }
   };
 
-  // Función para abrir el modal con los detalles del servicio
+
   const openServiceDetails = (service: Service) => {
     setSelectedService(service);
     setIsModalOpen(true);
   };
 
-  // Función para cerrar el modal
+
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedService(null);
   };
 
-  // Filtrar servicios basado en el estado y término de búsqueda
+
   const filteredServices = services.filter(service => {
     const matchesStatus = filterStatus === 'all' || service.status === filterStatus;
     const matchesSearch = searchTerm === '' ||
@@ -319,95 +314,96 @@ export function AdminServicesModeration({ session }: { session: Session | null }
 
       {/* Modal de detalles del servicio */}
       {isModalOpen && selectedService && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl mx-4">
-            <div className="flex justify-between items-start mb-4">
-              <h3 className="text-xl font-bold text-gray-900">Detalles del Servicio</h3>
-              <button onClick={closeModal} className="text-gray-500 hover:text-gray-700">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-
-            {selectedService.image && (
-              <div className="mb-6">
-                <img
-                  src={selectedService.image}
-                  alt={selectedService.title}
-                  className="w-full h-120 object-cover rounded-lg"
-                />
-              </div>
-            )}
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <div className="mb-4">
-                  <h4 className="text-sm font-medium text-gray-500 mb-1">Nombre del Servicio</h4>
-                  <p className="text-base text-gray-900">{selectedService.title}</p>
-                </div>
-
-                <div className="mb-4">
-                  <h4 className="text-sm font-medium text-gray-500 mb-1">Descripción</h4>
-                  <p className="text-sm text-gray-700">{selectedService.description || selectedService.smallDescription}</p>
-                </div>
-
-                <div className="mb-4">
-                  <h4 className="text-sm font-medium text-gray-500 mb-1">Precio</h4>
-                  <p className="text-base text-gray-900">{formatPriceRange(selectedService)}</p>
-                </div>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-start mb-4">
+                <h3 className="text-xl font-bold text-gray-900">Detalles del Servicio</h3>
+                <button onClick={closeModal} className="text-gray-500 hover:text-gray-700">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
               </div>
 
-              <div>
-                <div className="mb-4">
-                  <h4 className="text-sm font-medium text-gray-500 mb-1">Proveedor</h4>
-                  <p className="text-base text-gray-900">{selectedService.user.name} {selectedService.user.lastName}</p>
-                  <p className="text-sm text-gray-600">{selectedService.user.email}</p>
+              {selectedService.image && (
+                <div className="mb-6">
+                  <img
+                    src={selectedService.image}
+                    alt={selectedService.title}
+                    className="w-full h-64 object-cover rounded-lg"
+                  />
                 </div>
-
-                <div className="mb-4">
-                  <h4 className="text-sm font-medium text-gray-500 mb-1">Fecha de Creación</h4>
-                  <p className="text-base text-gray-900">{formatDate(selectedService.createdAt)}</p>
-                </div>
-
-                <div className="mb-4">
-                  <h4 className="text-sm font-medium text-gray-500 mb-1">Estado</h4>
-                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-              ${selectedService.status === 'APPROVED' ? 'bg-green-100 text-green-800' :
-                      selectedService.status === 'REJECTED' ? 'bg-red-100 text-red-800' :
-                        'bg-yellow-100 text-yellow-800'}`}>
-                    {selectedService.status === 'APPROVED' ? 'Aprobado' :
-                      selectedService.status === 'REJECTED' ? 'Rechazado' :
-                        'Pendiente'}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-6 flex justify-end space-x-3">
-              <button
-                onClick={closeModal}
-                className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
-              >
-                Cerrar
-              </button>
-              {selectedService.status === 'PENDING' && (
-                <>
-                  <button
-                    onClick={() => approveService(selectedService.id)}
-                    className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700"
-                  >
-                    Aprobar
-                  </button>
-                  <button
-                    onClick={() => rejectService(selectedService.id)}
-                    className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700"
-                  >
-                    Rechazar
-                  </button>
-                </>
               )}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <div className="mb-4">
+                    <h4 className="text-sm font-medium text-gray-500 mb-1">Nombre del Servicio</h4>
+                    <p className="text-base text-gray-900">{selectedService.title}</p>
+                  </div>
+
+                  <div className="mb-4">
+                    <h4 className="text-sm font-medium text-gray-500 mb-1">Descripción</h4>
+                    <p className="text-sm text-gray-700 max-h-32 overflow-y-auto">{selectedService.description || selectedService.smallDescription}</p>
+                  </div>
+
+                  <div className="mb-4">
+                    <h4 className="text-sm font-medium text-gray-500 mb-1">Precio</h4>
+                    <p className="text-base text-gray-900">{formatPriceRange(selectedService)}</p>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="mb-4">
+                    <h4 className="text-sm font-medium text-gray-500 mb-1">Proveedor</h4>
+                    <p className="text-base text-gray-900">{selectedService.user.name} {selectedService.user.lastName}</p>
+                    <p className="text-sm text-gray-600">{selectedService.user.email}</p>
+                  </div>
+
+                  <div className="mb-4">
+                    <h4 className="text-sm font-medium text-gray-500 mb-1">Fecha de Creación</h4>
+                    <p className="text-base text-gray-900">{formatDate(selectedService.createdAt)}</p>
+                  </div>
+
+                  <div className="mb-4">
+                    <h4 className="text-sm font-medium text-gray-500 mb-1">Estado</h4>
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                      ${selectedService.status === 'APPROVED' ? 'bg-green-100 text-green-800' :
+                        selectedService.status === 'REJECTED' ? 'bg-red-100 text-red-800' :
+                          'bg-yellow-100 text-yellow-800'}`}>
+                      {selectedService.status === 'APPROVED' ? 'Aprobado' :
+                        selectedService.status === 'REJECTED' ? 'Rechazado' :
+                          'Pendiente'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 flex justify-end space-x-3">
+                <button
+                  onClick={closeModal}
+                  className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+                >
+                  Cerrar
+                </button>
+                {selectedService.status === 'PENDING' && (
+                  <>
+                    <button
+                      onClick={() => approveService(selectedService.id)}
+                      className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700"
+                    >
+                      Aprobar
+                    </button>
+                    <button
+                      onClick={() => rejectService(selectedService.id)}
+                      className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700"
+                    >
+                      Rechazar
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </div>

@@ -339,7 +339,7 @@ function AdminUsersManagement({ session }: { session: Session | null }) {
 
       {/* Modal de detalles del usuario */}
       {isModalOpen && selectedUser && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl mx-4">
             <div className="flex justify-between items-start mb-4">
               <h3 className="text-xl font-bold text-gray-900">Detalles del Usuario</h3>
