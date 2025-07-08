@@ -13,13 +13,13 @@ export const transporter = nodemailer.createTransport({
 export async function sendWelcomeEmail(to: string, name: string, userType: string) {
   try {
     const info = await transporter.sendMail({
-      from: `"Maestro Chasquilla" <${process.env.EMAIL_FROM}>`,
+      from: `"Red Maestro" <${process.env.EMAIL_FROM}>`,
       to,
-      subject: '¡Bienvenido a Maestro Chasquilla! 🛠️',
+      subject: '¡Bienvenido a Red Maestro! 🛠️',
       html: `
         <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #e0e0e0; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
           <div style="text-align: center; margin-bottom: 25px;">
-            <img src="/img/miau.jpg" alt="Maestro Chasquilla" style="max-width: 180px; height: auto;" />
+            <img src="https://res.cloudinary.com/dil83zjxy/image/upload/v1750661412/maestro-chasquilla/profiles/ud45ed86grzvdp3bcpg5.png" alt="Red Maestro" style="max-width: 180px; height: auto;" />
           </div>
           <div style="background-color: #fff4eb; border-left: 4px solid #f97316; padding: 15px 20px; margin-bottom: 25px; border-radius: 6px;">
             <h2 style="color: #f97316; margin-top: 0; font-size: 24px; font-weight: 600;">¡Bienvenido(a) a bordo, ${name}! 🎉</h2>
@@ -89,7 +89,7 @@ export async function sendWelcomeEmail(to: string, name: string, userType: strin
           <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #e0e0e0; text-align: center;">
             <p style="font-size: 14px; color: #6b7280; margin-bottom: 15px;">
               ¡Gracias por unirte a nuestra comunidad!<br>
-              <strong style="color: #f97316;">El equipo de Maestro Chasquilla</strong>
+              <strong style="color: #f97316;">El equipo de Red Maestro</strong>
             </p>
             
             <div style="margin-top: 15px;">
@@ -99,7 +99,7 @@ export async function sendWelcomeEmail(to: string, name: string, userType: strin
             </div>
             
             <div style="margin-top: 20px;">
-              <span style="color: #9ca3af; font-size: 12px;">© ${new Date().getFullYear()} Maestro Chasquilla. Todos los derechos reservados.</span>
+              <span style="color: #9ca3af; font-size: 12px;">© ${new Date().getFullYear()} Red Maestro. Todos los derechos reservados.</span>
             </div>
           </div>
         </div>
@@ -125,13 +125,13 @@ export async function sendServiceAcceptedEmail(
 ) {
   try {
     const info = await transporter.sendMail({
-      from: `"Maestro Chasquilla" <${process.env.EMAIL_FROM}>`,
+      from: `"Red Maestro" <${process.env.EMAIL_FROM}>`,
       to,
       subject: '¡Tu solicitud de servicio ha sido aceptada! 🎉',
       html: `
         <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #e0e0e0; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
           <div style="text-align: center; margin-bottom: 20px;">
-            <img src="${process.env.NEXT_PUBLIC_APP_URL}/public/img/miau.jpg" alt="Maestro Chasquilla" style="max-width: 150px; height: auto;" />
+            <img src="https://res.cloudinary.com/dil83zjxy/image/upload/v1750661412/maestro-chasquilla/profiles/ud45ed86grzvdp3bcpg5.png" alt="Red Maestro" style="max-width: 150px; height: auto;" />
           </div>
           
           <div style="background-color: #fff4eb; border-left: 4px solid #f97316; padding: 15px; margin-bottom: 25px;">
@@ -175,7 +175,7 @@ export async function sendServiceAcceptedEmail(
           </div>
           
           <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0; text-align: center;">
-            <p style="font-size: 14px; color: #6b7280;">¡Gracias por confiar en nosotros!<br>El equipo de <strong style="color: #f97316;">Maestro Chasquilla</strong></p>
+            <p style="font-size: 14px; color: #6b7280;">¡Gracias por confiar en nosotros!<br>El equipo de <strong style="color: #f97316;">Red Maestro</strong></p>
             
             <div style="margin-top: 15px;">
               <a href="${process.env.NEXT_PUBLIC_APP_URL}/terms" style="color: #6b7280; text-decoration: none; font-size: 12px; margin: 0 10px;">Términos y Condiciones</a>
@@ -205,13 +205,13 @@ export async function sendServiceCancelledEmail(
 ) {
   try {
     const info = await transporter.sendMail({
-      from: `"Maestro Chasquilla" <${process.env.EMAIL_FROM}>`,
+      from: `"Red Maestro" <${process.env.EMAIL_FROM}>`,
       to,
       subject: 'Información importante sobre tu servicio 📋',
       html: `
         <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #e0e0e0; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
           <div style="text-align: center; margin-bottom: 25px;">
-            <img src="${process.env.NEXT_PUBLIC_APP_URL}/public/img/miau.png" alt="Maestro Chasquilla" style="max-width: 180px; height: auto;" />
+            <img src="https://res.cloudinary.com/dil83zjxy/image/upload/v1750661412/maestro-chasquilla/profiles/ud45ed86grzvdp3bcpg5.png" alt="Red Maestro" style="max-width: 180px; height: auto;" />
           </div>
           
           <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 15px 20px; margin-bottom: 25px; border-radius: 6px;">
@@ -272,7 +272,7 @@ export async function sendServiceCancelledEmail(
           <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #e0e0e0; text-align: center;">
             <p style="font-size: 14px; color: #6b7280; margin-bottom: 15px;">
               Gracias por usar nuestra plataforma.<br>
-              <strong style="color: #f97316;">El equipo de Maestro Chasquilla</strong>
+              <strong style="color: #f97316;">El equipo de Red Maestro</strong>
             </p>
             
             <div style="margin-top: 15px;">
@@ -282,7 +282,7 @@ export async function sendServiceCancelledEmail(
             </div>
             
             <div style="margin-top: 20px;">
-              <span style="color: #9ca3af; font-size: 12px;">© ${new Date().getFullYear()} Maestro Chasquilla. Todos los derechos reservados.</span>
+              <span style="color: #9ca3af; font-size: 12px;">© ${new Date().getFullYear()} Red Maestro. Todos los derechos reservados.</span>
             </div>
           </div>
         </div>
@@ -302,13 +302,13 @@ export async function sendServiceCancelledEmail(
 export async function sendPasswordRecoveryEmail(to: string, name: string, totpCode: string) {
   try {
     const info = await transporter.sendMail({
-      from: `"Maestro Chasquilla" <${process.env.EMAIL_FROM}>`,
+      from: `"Red Maestro" <${process.env.EMAIL_FROM}>`,
       to,
       subject: 'Código de verificación para recuperar tu contraseña 🔐',
       html: `
         <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #e0e0e0; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
           <div style="text-align: center; margin-bottom: 25px;">
-            <img src="${process.env.NEXT_PUBLIC_APP_URL}/img/miau.jpg" alt="Maestro Chasquilla" style="max-width: 180px; height: auto;" />
+            <img src="https://res.cloudinary.com/dil83zjxy/image/upload/v1750661412/maestro-chasquilla/profiles/ud45ed86grzvdp3bcpg5.png" alt="Red Maestro" style="max-width: 180px; height: auto;" />
           </div>
           
           <div style="background-color: #eff6ff; border-left: 4px solid #2563eb; padding: 15px 20px; margin-bottom: 25px; border-radius: 6px;">
@@ -369,7 +369,7 @@ export async function sendPasswordRecoveryEmail(to: string, name: string, totpCo
           <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #e0e0e0; text-align: center;">
             <p style="font-size: 14px; color: #6b7280; margin-bottom: 15px;">
               Si no solicitaste este cambio, tu cuenta sigue siendo segura.<br>
-              <strong style="color: #f97316;">El equipo de Maestro Chasquilla</strong>
+              <strong style="color: #f97316;">El equipo de Red Maestro</strong>
             </p>
             
             <div style="margin-top: 15px;">
@@ -379,7 +379,7 @@ export async function sendPasswordRecoveryEmail(to: string, name: string, totpCo
             </div>
             
             <div style="margin-top: 20px;">
-              <span style="color: #9ca3af; font-size: 12px;">© ${new Date().getFullYear()} Maestro Chasquilla. Todos los derechos reservados.</span>
+              <span style="color: #9ca3af; font-size: 12px;">© ${new Date().getFullYear()} Red Maestro. Todos los derechos reservados.</span>
             </div>
           </div>
         </div>
@@ -394,19 +394,17 @@ export async function sendPasswordRecoveryEmail(to: string, name: string, totpCo
   }
 }
 
-// ...existing code...
 
-// Función para enviar confirmación de cambio de contraseña
 export async function sendPasswordChangeConfirmationEmail(to: string, name: string) {
   try {
     const info = await transporter.sendMail({
-      from: `"Maestro Chasquilla" <${process.env.EMAIL_FROM}>`,
+      from: `"Red Maestro" <${process.env.EMAIL_FROM}>`,
       to,
       subject: 'Contraseña actualizada exitosamente 🔒',
       html: `
         <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #e0e0e0; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
           <div style="text-align: center; margin-bottom: 25px;">
-            <img src="${process.env.NEXT_PUBLIC_APP_URL}/img/miau.jpg" alt="Maestro Chasquilla" style="max-width: 180px; height: auto;" />
+            <img src="https://res.cloudinary.com/dil83zjxy/image/upload/v1750661412/maestro-chasquilla/profiles/ud45ed86grzvdp3bcpg5.png" alt="Red Maestro" style="max-width: 180px; height: auto;" />
           </div>
           
           <div style="background-color: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 15px 20px; margin-bottom: 25px; border-radius: 6px;">
@@ -459,11 +457,11 @@ export async function sendPasswordChangeConfirmationEmail(to: string, name: stri
           <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #e0e0e0; text-align: center;">
             <p style="font-size: 14px; color: #6b7280; margin-bottom: 15px;">
               Tu cuenta está protegida y segura.<br>
-              <strong style="color: #f97316;">El equipo de Maestro Chasquilla</strong>
+              <strong style="color: #f97316;">El equipo de Red Maestro</strong>
             </p>
             
             <div style="margin-top: 20px;">
-              <span style="color: #9ca3af; font-size: 12px;">© ${new Date().getFullYear()} Maestro Chasquilla. Todos los derechos reservados.</span>
+              <span style="color: #9ca3af; font-size: 12px;">© ${new Date().getFullYear()} Red Maestro. Todos los derechos reservados.</span>
             </div>
           </div>
         </div>

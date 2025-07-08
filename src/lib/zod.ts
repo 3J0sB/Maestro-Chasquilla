@@ -1,5 +1,5 @@
 import { object, string } from "zod";
-// import { validate } from "rut.js"
+import { validate } from "rut.js"
 
 export const loginSchema = object({
     email: string({ required_error: "El correo es requerido" })
@@ -11,15 +11,15 @@ export const loginSchema = object({
         .max(20, "La contraseña no puede tener más de 20 caracteres"),
 })
 
-// interface RegisterProviderSchema {
-//     email: string;
-//     name: string;
-//     lastName: string;
-//     lastName2?: string;
-//     rut: string;
-//     password: string;
-//     confirmPassword: string;
-// }
+interface RegisterProviderSchema {
+    email: string;
+    name: string;
+    lastName: string;
+    lastName2?: string;
+    rut: string;
+    password: string;
+    confirmPassword: string;
+}
 
 export const registerProviderSchema = object({
     email: string()
@@ -35,22 +35,22 @@ export const registerProviderSchema = object({
         .optional(),
     rut: string()
         .min(1, 'El RUT es requerido')
-    // .regex(/^[0-9]{1,2}(\.[0-9]{3}){2}-[0-9kK]{1}$/, 'Formato de RUT inválido (ej: 12.345.678-9)')
-    // .refine((val) => validate(val), {
-    //     message: "El RUT no es válido"
-    // })
+        .regex(/^[0-9]{1,2}(\.[0-9]{3}){2}-[0-9kK]{1}$/, 'Formato de RUT inválido (ej: 12.345.678-9)')
+        .refine((val) => validate(val), {
+            message: "El RUT no es válido"
+        })
     ,
-    password: string(),
-    // .min(8, 'La contraseña debe tener al menos 8 caracteres'),
-    //         .max(50, 'La contraseña no puede exceder los 50 caracteres')
-    //         .regex(/[A-Z]/, 'Debe incluir al menos una letra mayúscula')
-    //         .regex(/[a-z]/, 'Debe incluir al menos una letra minúscula')
-    //         .regex(/[0-9]/, 'Debe incluir al menos un número'),
+    password: string()
+        .min(8, 'La contraseña debe tener al menos 8 caracteres')
+        .max(50, 'La contraseña no puede exceder los 50 caracteres')
+        .regex(/[A-Z]/, 'Debe incluir al menos una letra mayúscula')
+        .regex(/[a-z]/, 'Debe incluir al menos una letra minúscula')
+        .regex(/[0-9]/, 'Debe incluir al menos un número'),
     confirmPassword: string()
-    //         .min(1, 'La confirmación es requerida'),
-    // }).refine((data: RegisterProviderSchema) => data.password === data.confirmPassword, {
-    //     message: "Las contraseñas no coinciden",
-    //     path: ["confirmPassword"],
+        .min(1, 'La confirmación es requerida'),
+}).refine((data: RegisterProviderSchema) => data.password === data.confirmPassword, {
+    message: "Las contraseñas no coinciden",
+    path: ["confirmPassword"],
 });
 
 export const addServiceSchema = object({
