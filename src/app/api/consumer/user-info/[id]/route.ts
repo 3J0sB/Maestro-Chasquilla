@@ -28,6 +28,9 @@ export async function GET(
         lastName: true,
         email: true,
         image: true,
+        phone: true,
+        address: true,
+        city: true,
       },
     });
 
@@ -61,7 +64,7 @@ export async function PUT(
     const body = await request.json();
     
     // Validar los campos recibidos
-    const { name, lastName, email, image } = body;
+    const { name, lastName, email, image, phone, address, city } = body;
 
     if (!name || !lastName || !email) {
       return new NextResponse("Missing required fields", { status: 400 });
@@ -90,6 +93,9 @@ export async function PUT(
         lastName,
         email,
         image: image || null,
+        phone,
+        address,
+        city,
       },
       select: {
         id: true,
