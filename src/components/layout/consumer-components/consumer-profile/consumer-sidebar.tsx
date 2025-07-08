@@ -129,7 +129,7 @@ export default function ConsumerSidebar({ userName, userLastName, userImage }: C
             <div className="flex items-center gap-3 hover:bg-gray-100 p-2 rounded-lg transition-colors">
               <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
                 <Image
-                  src={userImage || '/img/miau.jpg'}
+                  src={userImage || 'https://res.cloudinary.com/dil83zjxy/image/upload/v1750661412/maestro-chasquilla/profiles/ud45ed86grzvdp3bcpg5.png'}
                   alt={`${userName} ${userLastName}`}
                   width={40}
                   height={40}

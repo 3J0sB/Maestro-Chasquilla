@@ -238,7 +238,7 @@ export default function RequestedServicesTab({ userId }: RequestedServicesTabPro
                                             >
                                                 <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-blue-100">
                                                     <Image
-                                                        src={request.service.user?.image || '/default-avatar.png'}
+                                                        src={request.service.user?.image || 'https://res.cloudinary.com/dil83zjxy/image/upload/v1750661412/maestro-chasquilla/profiles/ud45ed86grzvdp3bcpg5.png'}
                                                         alt="User Avatar"
                                                         width={40}
                                                         height={40}
