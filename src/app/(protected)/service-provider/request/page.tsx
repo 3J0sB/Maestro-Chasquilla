@@ -257,7 +257,7 @@ function Home() {
   return (
     <div className="flex h-screen">
 
-      <div className="flex-1 p-8 overflow-y-auto px-4 md:px-10 lg:px-20 xl:px-40">
+      <div className="flex-1 p-8 overflow-y-auto px-4 md:px-10 lg:px-20 xl:px-10">
         <div className="mb-4">
           <div className="border border-gray-200 rounded-lg p-4 bg-white shadow-md">
             <div className="mb-6">

@@ -150,7 +150,7 @@ function ServiceProviderSidebar({ userName, userType, userLastName, userImage }:
           <Link href="/service-provider/profile" className="flex items-center gap-3 hover:bg-orange-50 p-2 rounded-lg transition-colors w-full">
             <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border-2 border-orange-200">
               <Image
-                src={userImage || '/img/miau.jpg'}
+                src={userImage || 'https://res.cloudinary.com/dil83zjxy/image/upload/v1750661412/maestro-chasquilla/profiles/ud45ed86grzvdp3bcpg5.png'}
                 alt={`${userName} ${userLastName}`}
                 width={40}
                 height={40}

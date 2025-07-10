@@ -11,7 +11,6 @@ interface ServiceCardProps {
 
 const ServiceCard: React.FC<ServiceCardProps> = ({ service, onClick }) => {
   // Determinar la imagen a mostrar
-  const imageUrl = service.image || 'https://res.cloudinary.com/dil83zjxy/image/upload/v1750661412/maestro-chasquilla/profiles/ud45ed86grzvdp3bcpg5.png';
   console.log('ServiceCard component rendered with service:', service);
 
   return (
@@ -22,7 +21,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onClick }) => {
       {/* Sección de imagen */}
       <div className="relative h-48 w-full">
         <Image
-          src={imageUrl}
+          src={service.image || "https://res.cloudinary.com/dil83zjxy/image/upload/v1750661412/maestro-chasquilla/profiles/ud45ed86grzvdp3bcpg5.png"}
           alt={service.title || 'Imagen de servicio'}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -60,7 +59,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onClick }) => {
           <div className="flex items-center mb-3">
             <div className="relative h-6 w-6 rounded-full overflow-hidden">
               <Image
-                src={service.user.image || '/img/miau.jpg'}
+                src={service.user.image || 'https://res.cloudinary.com/dil83zjxy/image/upload/v1750661412/maestro-chasquilla/profiles/ud45ed86grzvdp3bcpg5.png'}
                 alt={service.user.name || 'Proveedor'}
                 fill
                 className="object-cover"

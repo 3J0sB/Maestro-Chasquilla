@@ -71,13 +71,13 @@ const ConsumerHeader: React.FC<ConsumerHeaderProps> = ({ }) => {
                         {session?.user ? (
                             <div className="ml-4 relative flex items-center">
                                 <div className="relative mx-4">
-                                    <Link href="/services/consumer-profile" className="flex items-center space-x-2 text-gray-500 hover:text-gray-700">
+                                    <Link href="/services/consumer-profile" className="flex items-center space-x-2 p-2 rounded-full text-gray-500 hover:bg-orange-100 hover:text-gray-700">
                                         <div
-                                            className="w-10 h-10 aspect-square rounded-full overflow-hidden flex items-center justify-center bg-gray-200"
+                                            className="w-10 h-10 aspect-square rounded-full overflow-hidden flex items-center justify-center"
                                             style={{ minWidth: 40, minHeight: 40, maxWidth: 40, maxHeight: 40, aspectRatio: "1 / 1" }}
                                         >
                                             <Image
-                                                src={session?.user?.image || "/img/miau.jpg"}
+                                                src={session?.user?.image || "https://res.cloudinary.com/dil83zjxy/image/upload/v1750661412/maestro-chasquilla/profiles/ud45ed86grzvdp3bcpg5.png"}
                                                 alt="User Avatar"
                                                 width={40}
                                                 height={40}
